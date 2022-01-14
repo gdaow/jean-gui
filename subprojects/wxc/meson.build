@@ -3,7 +3,7 @@ wx_widgets = dependency('wxwidgets', required : true)
 wxc_includes = include_directories('include')
 wxc_lib = static_library(
     'wxc',
-    'src/app.cc',
+    'src/wxc_app.cc',
     'src/frame.cc',
     'src/msgdlg.cc',
     dependencies: wx_widgets,

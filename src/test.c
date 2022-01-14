@@ -1,6 +1,7 @@
 #include "wxc/app.h"
 
 int main(int argc, char** argv) {
-    wxc_app_create();
+    WxcApp* app = wxc_app_create();
+    wxc_app_destroy(app);
     return 0;
 }

@@ -1,11 +1,4 @@
-#include "wxc/app.h"
-#include "wx/wx.h"
-
-struct WxcApp : public wxApp {
-    virtual bool OnInit() override;
-    WxcOnInitCallback _on_init = nullptr;
-    void* _on_init_arg = nullptr;
-};
+#include "wxc_app.h"
 
 bool WxcApp::OnInit() {
     if(_on_init) {
@@ -16,6 +9,10 @@ bool WxcApp::OnInit() {
 
 WxcApp* wxc_app_create() {
     return new WxcApp();
+}
+
+void wxc_app_destroy(WxcApp* app) {
+    delete app;
 }
 
 void wxc_app_on_init(WxcApp* app, WxcOnInitCallback callback, void* arg) {
