@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/gdaow/wxc
+	branch = main
+	commit = 9218a8f41a3ed55c4b8c6ad59e2b117b33c7b84a
+	parent = 20f801521476a01cc7331c5b439869b9a0ef209e
+	method = merge
+	cmdver = 0.4.0
