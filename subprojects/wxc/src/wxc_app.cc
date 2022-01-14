@@ -1,10 +1,7 @@
 #include "wxc_app.h"
 
 bool WxcApp::OnInit() {
-    if(_on_init) {
-        return (*_on_init)(_on_init_arg);
-    }
-    return wxApp::OnInit();
+    return on_init(this);
 }
 
 WxcApp* wxc_app_create() {
@@ -15,9 +12,12 @@ void wxc_app_destroy(WxcApp* app) {
     delete app;
 }
 
-void wxc_app_on_init(WxcApp* app, WxcOnInitCallback callback, void* arg) {
-    app->_on_init = callback;
-    app->_on_init_arg = arg;
+void wxc_app_on_init(WxcApp* app, WxcOnInitCallback callback, void* data) {
+    app->on_init.set(callback, data);
+}
+
+bool wxc_app_on_init_parent(WxcApp* app) {
+    return app->wxApp::OnInit();
 }
 
 static WxcApp* g_app;
@@ -27,6 +27,7 @@ wxAppConsole* _wxc_initialize() {
 }
 
 void wxc_app_run(WxcApp* app) {
+    g_app = app;
     wxApp::SetInitializerFunction(_wxc_initialize);
     int argc = 1;
     char** argv = new char*[1];

@@ -1,4 +1,7 @@
-project('wxc', 'cpp')
+project('wxc',
+    'cpp',
+    default_options : ['cpp_std=c++14']
+)
 wx_widgets = dependency('wxwidgets', required : true)
 wxc_includes = include_directories('include')
 wxc_lib = static_library(
