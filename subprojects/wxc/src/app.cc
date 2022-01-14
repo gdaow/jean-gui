@@ -1,36 +1,36 @@
 #include "wxc/app.h"
 #include "wx/wx.h"
 
-struct wxcApp : public wxApp {
+struct WxcApp : public wxApp {
     virtual bool OnInit() override;
-    wxcOnInitCallback _on_init = nullptr;
+    WxcOnInitCallback _on_init = nullptr;
     void* _on_init_arg = nullptr;
 };
 
-bool wxcApp::OnInit() {
+bool WxcApp::OnInit() {
     if(_on_init) {
         return (*_on_init)(_on_init_arg);
     }
     return wxApp::OnInit();
 }
 
-wxcApp* wxcApp_Create() {
-    return new wxcApp();
+WxcApp* wxc_app_create() {
+    return new WxcApp();
 }
 
-void wxcApp_OnInit(wxcApp* app, wxcOnInitCallback callback, void* arg) {
+void wxc_app_on_init(WxcApp* app, WxcOnInitCallback callback, void* arg) {
     app->_on_init = callback;
     app->_on_init_arg = arg;
 }
 
-static wxcApp* globalApp;
+static WxcApp* g_app;
 
-wxAppConsole* wxcInitialize() {
-    return globalApp;
+wxAppConsole* _wxc_initialize() {
+    return g_app;
 }
 
-void wxcRun(wxcApp* app) {
-    wxApp::SetInitializerFunction(wxcInitialize);
+void wxc_app_run(WxcApp* app) {
+    wxApp::SetInitializerFunction(_wxc_initialize);
     int argc = 1;
     char** argv = new char*[1];
     argv[0] = new char[4];

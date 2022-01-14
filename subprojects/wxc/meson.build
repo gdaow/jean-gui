@@ -1,9 +1,18 @@
 project('wxc', 'cpp')
 wx_widgets = dependency('wxwidgets', required : true)
-static_library(
+wxc_includes = include_directories('include')
+wxc_lib = static_library(
     'wxc',
     'src/app.cc',
     'src/frame.cc',
     'src/msgdlg.cc',
-    dependencies: wx_widgets
+    dependencies: wx_widgets,
+    include_directories: wxc_includes
 )
+
+wxc_dep = declare_dependency(
+    include_directories: wxc_includes,
+    link_with: wxc_lib
+)
+
+meson.override_dependency('wxc', wxc_dep)
