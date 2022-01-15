@@ -1,5 +1,4 @@
-project('wxligi', 'c')
-
+project('uiligi', 'c')
 
 wxc = dependency('wxc', required : true)
 

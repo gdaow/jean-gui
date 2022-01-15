@@ -1,10 +1,10 @@
 #include "wxc/app.h"
-#include "wxligi.h"
+#include "uiligi.h"
 #include <stdio.h>
 
 bool on_init(WxcApp* app, void* data) {
-    WlgContext* context = wlg_context_create();
-    WlgTemplate* template = wlg_template_from_string(
+    UlgContext* context = ulg_context_create();
+    UlgTemplate* template = ulg_template_from_string(
         context,
         "frame:"
         "  box:"
@@ -12,9 +12,9 @@ bool on_init(WxcApp* app, void* data) {
         "        label: 'Hello World'"
     );
 
-    wlg_template_instanciate(template);
+    ulg_template_instanciate(template);
     /*
-    wlg_frame_show(frame, true);
+    ulg_frame_show(frame, true);
     */
     return wxc_app_on_init_parent(app);
 }

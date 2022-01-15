@@ -1,10 +1,10 @@
 #include <stdlib.h>
-#include "wxligi/context.h"
+#include "uiligi/context.h"
 
-struct WlgContext {
+struct UlgContext {
     int dummy;
 };
 
-WlgContext* wlg_context_create() {
-    return malloc(sizeof(WlgContext));
+UlgContext* ulg_context_create() {
+    return malloc(sizeof(UlgContext));
 }

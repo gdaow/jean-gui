@@ -3,17 +3,17 @@
 
 #include <yaml.h>
 
-#include "wxligi/template.h"
+#include "uiligi/template.h"
 
-#include "wxligi/context.h"
+#include "uiligi/context.h"
 
-struct WlgTemplate {
-    WlgContext* context;
+struct UlgTemplate {
+    UlgContext* context;
     yaml_document_t document;
 };
 
-WlgTemplate* wlg_template_from_string(WlgContext* context, const unsigned char* source) {
-    WlgTemplate* template = malloc(sizeof(WlgTemplate));
+UlgTemplate* ulg_template_from_string(UlgContext* context, const unsigned char* source) {
+    UlgTemplate* template = malloc(sizeof(UlgTemplate));
     template->context = context;
 
     yaml_parser_t parser;
@@ -32,12 +32,12 @@ WlgTemplate* wlg_template_from_string(WlgContext* context, const unsigned char* 
     return template;
 }
 
-void wlg_template_destroy(WlgTemplate* template) {
+void ulg_template_destroy(UlgTemplate* template) {
     yaml_document_delete(&template->document);
     free(template);
 }
 
-void wlg_template_instanciate(WlgTemplate* template) {
+void ulg_template_instanciate(UlgTemplate* template) {
     yaml_document_t* document = &template->document;
     yaml_node_t* root_node = yaml_document_get_root_node(document);
     if(root_node->type != YAML_MAPPING_NODE) {
@@ -62,5 +62,5 @@ void wlg_template_instanciate(WlgTemplate* template) {
     }
 
     const unsigned char* builder_name = key_node->data.scalar.value;
-    WlgContext* context = template->context;
+    UlgContext* context = template->context;
 }
