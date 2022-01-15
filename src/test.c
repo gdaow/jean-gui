@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 bool on_init(WxcApp* app, void* data) {
-    WlgApp* wlg_app = wlg_app_create();
+    WlgContext* context = wlg_context_create();
     WlgTemplate* template = wlg_template_from_string(
-        wlg_app,
+        context,
         "frame:"
         "  box:"
         "    - button:"

@@ -1,4 +1,4 @@
 #pragma once
 
-#include "wxligi/app.h"
+#include "wxligi/context.h"
 #include "wxligi/template.h"

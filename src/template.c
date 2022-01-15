@@ -1,13 +1,15 @@
 #include <stdlib.h>
 #include <yaml.h>
+
 #include "wxligi/template.h"
-#include "wxligi/app.h"
+
+#include "wxligi/context.h"
 
 struct WlgTemplate {
-
+    WlgContext* context;
 };
 
-WlgTemplate* wlg_template_from_string(WlgApp* app, const char* source) {
+WlgTemplate* wlg_template_from_string(WlgContext* context, const char* source) {
     return malloc(sizeof(WlgTemplate));
 }
 

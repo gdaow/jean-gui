@@ -12,7 +12,7 @@ wlg_includes = include_directories('include')
 
 executable(
     'wxligi',
-    'src/app.c',
+    'src/context.c',
     'src/template.c',
     'src/test.c',
     'src/utils/hashmap.c',

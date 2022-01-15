@@ -1,14 +1,14 @@
 #pragma once
-#include "wxligi/app.h"
+#include "wxligi/context.h"
 
 typedef struct WlgTemplate WlgTemplate;
 
 /**
  * Create a template from a YAML source string.
  *
- * @param app Previously created and initialized WlgApp.
+ * @param context Previously created and initialized WlgContext.
  */
-WlgTemplate* wlg_template_from_string(WlgApp* app, const char* source);
+WlgTemplate* wlg_template_from_string(WlgContext* context, const char* source);
 
 /**
  * Instanciate a template to a widget hierarchy and, binds the given view model to it.
