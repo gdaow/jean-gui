@@ -1,5 +1,5 @@
 #pragma once
 
-struct UlgClass;
+typedef struct UlgClass UlgClass;
 
-struct UlgClass* ulg_create_user_class();
+UlgClass* ulg_create_user_class();
