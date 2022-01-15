@@ -16,6 +16,7 @@ ulg_lib = static_library(
     'src/object.c',
     'src/template.c',
     'src/utils/hashmap.c',
+    'src/value.c',
     dependencies: [wxc, yaml],
     include_directories: ulg_includes
 )

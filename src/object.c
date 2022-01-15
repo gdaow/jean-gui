@@ -17,3 +17,15 @@ void ulg_object_destroy(UlgObject* object) {
     object_class->destructor(object->data);
     free(object);
 }
+
+void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value) {
+    UlgClass* object_class = object->klass;
+    UlgProperty* property = ulg_class_get_property(object_class, property_name);
+    property->setter(object->data, value);
+}
+
+UlgValue ulg_object_get(UlgObject* object, const char* property_name) {
+    UlgClass* object_class = object->klass;
+    UlgProperty* property = ulg_class_get_property(object_class, property_name);
+    return property->getter(object->data);
+}
