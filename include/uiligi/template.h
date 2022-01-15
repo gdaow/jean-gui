@@ -1,4 +1,5 @@
 #pragma once
+
 #include "uiligi/context.h"
 
 typedef struct UlgTemplate UlgTemplate;
