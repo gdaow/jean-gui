@@ -1,3 +1,9 @@
 {
-    "mesonbuild.buildFolder": ".build"
+    "mesonbuild.buildFolder": ".build",
+    "clang.cflags": [
+        "-I${workspaceRoot}/subprojects/wxc/include",
+        "-I${workspaceRoot}/.build/subprojects/check/__CMake_build/src",
+        "-I../subprojects/libyaml/include",
+        "-I${workspaceRoot}/include"
+    ]
 }

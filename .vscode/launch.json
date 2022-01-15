@@ -7,10 +7,13 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceFolder}/build/wxligi",
+            "name": "Unit Tests",
+            "program": "${workspaceFolder}/.build/uiligi-tests",
             "args": [],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "CK_FORK": "no"
+            }
         }
     ]
 }

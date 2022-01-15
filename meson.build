@@ -7,15 +7,28 @@ cmake = import('cmake')
 yaml_project = cmake.subproject('libyaml')
 yaml = yaml_project.dependency('yaml')
 
-wlg_includes = include_directories('include')
+ulg_includes = include_directories('include')
 
-executable(
-    'wxligi',
+ulg_lib = static_library(
+    'uiligi',
     'src/context.c',
     'src/template.c',
-    'src/test.c',
     'src/utils/hashmap.c',
     dependencies: [wxc, yaml],
-    include_directories: wlg_includes
+    include_directories: ulg_includes
 )
 
+ulg_dep = declare_dependency(
+    include_directories: ulg_includes,
+    link_with: ulg_lib
+)
+
+check_project = cmake.subproject('check')
+check = check_project.dependency('check')
+
+executable(
+    'uiligi-tests',
+    'tests/test_object.c',
+    'tests/main.c',
+    dependencies: [ulg_dep, check],
+)
