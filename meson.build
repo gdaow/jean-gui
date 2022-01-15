@@ -30,6 +30,7 @@ check = check_project.dependency('check')
 
 executable(
     'uiligi-tests',
+    'tests/fixtures/user.c',
     'tests/test_object.c',
     'tests/main.c',
     dependencies: [ulg_dep, check],

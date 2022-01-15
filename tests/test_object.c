@@ -6,6 +6,7 @@
 #include "uiligi/object.h"
 
 #include "test_object.h"
+#include "fixtures/user.h"
 
 /**
  * UlgClass should be able to instanciate object dynamically.
@@ -25,10 +26,11 @@ void test_object_destructor(void* object) {
 }
 
 START_TEST (create_object) {
-    UlgClass* class = ulg_class_create("TestClass", &test_object_constructor, &test_object_destructor);
-    UlgObject* object = ulg_object_create(class);
+    UlgClass* user_class = ulg_create_user_class();
+    UlgObject* object = ulg_object_create(user_class);
     ulg_object_destroy(object);
 }
+
 END_TEST
 
 Suite* object_suite(void)
