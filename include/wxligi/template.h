@@ -8,7 +8,12 @@ typedef struct WlgTemplate WlgTemplate;
  *
  * @param context Previously created and initialized WlgContext.
  */
-WlgTemplate* wlg_template_from_string(WlgContext* context, const char* source);
+WlgTemplate* wlg_template_from_string(WlgContext* context, const unsigned char* source);
+
+/**
+ * Release the given template
+ */
+void wlg_template_destroy(WlgTemplate* template);
 
 /**
  * Instanciate a template to a widget hierarchy and, binds the given view model to it.
