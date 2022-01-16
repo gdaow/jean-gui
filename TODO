@@ -1,0 +1,1 @@
+ - Move properties hashmap directly in the UlgClass structure, do not allocate it on the heap.

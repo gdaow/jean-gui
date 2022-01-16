@@ -6,7 +6,7 @@
 UlgValue ulg_value_from_str(const char* value) {
     UlgValue result = {
         .type = ULG_STRING,
-        .data = (void *)value
+        .data.str_value = (char *)value
     };
 
     return result;
@@ -19,5 +19,5 @@ UlgValue ulg_value_from_str(const char* value) {
  */
 const char* ulg_value_to_str(UlgValue value) {
     assert(value.type == ULG_STRING);
-    return (const char*)value.data;
+    return (const char*)value.data.str_value;
 }

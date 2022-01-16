@@ -3,6 +3,6 @@
 struct UlgClass;
 
 struct UlgObject {
-    UlgClass* klass;
-    void* data;
+    UlgClass* class_;
+    char data[];
 };

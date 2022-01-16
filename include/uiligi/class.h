@@ -1,23 +1,29 @@
 #pragma once
 
-#include "uiligi/value.h"
+#include <uiligi/value.h>
 
 typedef struct UlgObject UlgObject;
 typedef struct UlgClass UlgClass;
 
-typedef void* (*UlgConstructor)();
-typedef void (*UlgDestructor)(void*);
+typedef void (*UlgInitialize)(void*);
+typedef void (*UlgCleanup)(void*);
 
-typedef UlgValue (*UlgGetter)(void*);
-typedef void (*UlgSetter)(void*, UlgValue);
+typedef UlgValue (*UlgGetter)(UlgObject*, void*);
+typedef void (*UlgSetter)(UlgObject*, void*, UlgValue);
 
 /**
  * Create a new class object.
  * @param name The name of the class.
- * @param constructor Callback called to initialize data for objects of this class.
- * @param destructor  Callback called to release data for objects of this class.
+ * @param initializer Callback called to initialize data for objects of this class.
+ * @param cleaner  Callback called to release data for objects of this class.
  */
-UlgClass* ulg_class_create(const char* name, UlgConstructor constructor, UlgDestructor destructor);
+UlgClass* ulg_class_create(
+    const char* name,
+    size_t size,
+    UlgInitialize initialize,
+    UlgCleanup cleanup,
+    UlgClass* parent
+);
 
 /**
  * Add a property to this class.

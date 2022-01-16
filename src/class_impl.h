@@ -13,9 +13,12 @@ typedef struct {
 
 struct UlgClass {
     const char* name;
-    UlgConstructor constructor;
-    UlgDestructor destructor;
+    size_t size;
+    size_t offset;
+    UlgInitialize initialize;
+    UlgCleanup cleanup;
+    UlgClass* parent;
     struct hashmap* properties;
 };
 
-UlgProperty* ulg_class_get_property(UlgClass* class, const char* name);
+UlgProperty* ulg_class_get_property(UlgClass* class, const char* name, UlgClass** owner);

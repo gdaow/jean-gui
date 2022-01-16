@@ -6,7 +6,9 @@ typedef enum {
 
 typedef struct UlgValue {
     UlgValueType type;
-    void* data;
+    union {
+        char* str_value;
+    } data;
 } UlgValue;
 
 /**
