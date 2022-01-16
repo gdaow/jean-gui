@@ -2,8 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "uiligi/class.h"
-#include "uiligi/object.h"
+#include <uiligi/object.h>
 
 #include "test_object.h"
 #include "fixtures/user.h"
@@ -30,7 +29,7 @@ START_TEST (create_object) {
     UlgClass* user_class = ulg_create_user_class();
     UlgObject* object = ulg_object_create(user_class);
     ulg_object_destroy(object);
-    free(user_class);
+    ulg_class_destroy(user_class);
 }
 
 void test_set_user_name(UlgClass* class_) {
@@ -48,14 +47,14 @@ void test_set_user_name(UlgClass* class_) {
 START_TEST (set_property) {
     UlgClass* user_class = ulg_create_user_class();
     test_set_user_name(user_class);
-    free(user_class);
+    ulg_class_destroy(user_class);
 }
 END_TEST
 
 START_TEST (set_parent_property) {
     UlgClass* admin_class = ulg_create_admin_class();
     test_set_user_name(admin_class);
-    free(admin_class);
+    ulg_class_destroy(admin_class);
 }
 END_TEST
 

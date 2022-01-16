@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
-#include "uiligi/class.h"
-#include "uiligi/object.h"
+#include <uiligi/object.h>
 
 #include "user.h"
 
@@ -9,11 +8,9 @@ typedef struct User {
     const char* name;
 } User;
 
-void* user_initialize() {
-}
+void user_initialize(void* data) { }
 
-void user_cleanup(void* data) {
-}
+void user_cleanup(void* data) {}
 
 void user_set_name(UlgObject* object, void* data, UlgValue value) {
     User* user = data;
