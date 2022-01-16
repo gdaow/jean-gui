@@ -17,8 +17,8 @@ void admin_cleanup(void* data) {
 
 }
 
-UlgValue admin_get_role(UlgObject* object, void* data) {
-    Admin* admin = data;
+UlgValue admin_get_role(const UlgObject* object, const void* data) {
+    const Admin* admin = data;
     return ulg_value_from_str(admin->role);
 }
 

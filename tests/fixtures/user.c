@@ -17,8 +17,8 @@ void user_set_name(UlgObject* object, void* data, UlgValue value) {
     user->name = ulg_value_to_str(value);
 }
 
-UlgValue user_get_name(UlgObject* object, void* data) {
-    User* user = data;
+UlgValue user_get_name(const UlgObject* object, const void* data) {
+    const User* user = data;
     return ulg_value_from_str(user->name);
 }
 

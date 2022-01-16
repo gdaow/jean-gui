@@ -19,26 +19,26 @@ struct UlgClass {
     size_t offset;
     UlgInitialize initialize;
     UlgCleanup cleanup;
-    UlgClass* parent;
+    const UlgClass* parent;
     struct hashmap* properties;
 };
 
 struct UlgObject {
-    UlgClass* class_;
+    const UlgClass* class_;
     char data[];
 };
 
-void _object_initialize(UlgClass* class_, char* data);
+void _object_initialize(const UlgClass* class_, char* data);
 uint64_t _property_hash(const void* item, uint64_t seed0, uint64_t seed1);
 int _property_compare(const void* a, const void* b, void* udata);
-
+const UlgProperty* _get_property(const UlgClass* class_, const char* name, const UlgClass** owner);
 
 UlgClass* ulg_class_create(
     const char* name,
     size_t size,
     UlgInitialize initialize,
     UlgCleanup cleanup,
-    UlgClass* parent
+    const UlgClass* parent
 ) {
     struct hashmap* properties = hashmap_new(
         sizeof(UlgProperty),
@@ -83,33 +83,16 @@ void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter
     });
 }
 
-UlgProperty* ulg_class_get_property(UlgClass* class_, const char* name, UlgClass** owner) {
-    while(class_) {
-        UlgProperty* result = hashmap_get(
-            class_->properties,
-            &(UlgProperty){ .name=name }
-        );
-
-        if(result) {
-            *owner = class_;
-            return result;
-        }
-
-        class_ = class_->parent;
-    }
-    
-    assert(0); // TODO: Handle error.
-}
-
-UlgObject* ulg_object_create(UlgClass* class_) {
+UlgObject* ulg_object_create(const UlgClass* class_) {
     UlgObject* result = malloc(sizeof(UlgObject) + class_->size);
     result->class_ = class_;
+    // Recursively initialize hierarchy, parent-first.
     _object_initialize(class_, result->data);
     return result;
 }
 
 void ulg_object_destroy(UlgObject* object) {
-    UlgClass* class_ = object->class_;
+    const UlgClass* class_ = object->class_;
     char* data = object->data;
 
     while(class_) {
@@ -120,21 +103,21 @@ void ulg_object_destroy(UlgObject* object) {
 }
 
 void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value) {
-    UlgClass* object_class = object->class_;
-    UlgClass* owner;
-    UlgProperty* property = ulg_class_get_property(object_class, property_name, &owner);
+    const UlgClass* class_ = object->class_;
+    const UlgClass* owner;
+    const UlgProperty* property = _get_property(class_, property_name, &owner);
     property->setter(object, object->data + owner->offset, value);
 }
 
-UlgValue ulg_object_get(UlgObject* object, const char* property_name) {
-    UlgClass* object_class = object->class_;
-    UlgClass* owner;
-    UlgProperty* property = ulg_class_get_property(object_class, property_name, &owner);
+UlgValue ulg_object_get(const UlgObject* object, const char* property_name) {
+    const UlgClass* object_class = object->class_;
+    const UlgClass* owner;
+    const UlgProperty* property = _get_property(object_class, property_name, &owner);
     return property->getter(object, object->data + owner->offset);
 }
 
-void _object_initialize(UlgClass* class_, char* data) {
-    UlgClass* parent = class_->parent;
+void _object_initialize(const UlgClass* class_, char* data) {
+    const UlgClass* parent = class_->parent;
     if(parent) {
         _object_initialize(parent, data);
     }
@@ -152,4 +135,22 @@ int _property_compare(const void* a, const void* b, void* udata) {
     const UlgProperty *property_a = a;
     const UlgProperty *property_b = b;
     return strcmp(property_a->name, property_b->name);
+}
+
+const UlgProperty* _get_property(const UlgClass* class_, const char* name, const UlgClass** owner) {
+    while(class_) {
+        UlgProperty* result = hashmap_get(
+            class_->properties,
+            &(UlgProperty){ .name=name }
+        );
+
+        if(result) {
+            *owner = class_;
+            return result;
+        }
+
+        class_ = class_->parent;
+    }
+    
+    assert(0); // TODO: Handle error.
 }

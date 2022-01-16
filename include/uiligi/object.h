@@ -12,7 +12,7 @@ typedef void (*UlgInitialize)(void*);
 typedef void (*UlgCleanup)(void*);
 
 /** Callback for UlgObjects property getter.*/
-typedef UlgValue (*UlgGetter)(UlgObject*, void*);
+typedef UlgValue (*UlgGetter)(const UlgObject*, const void*);
 
 /** Callback for UlgObjects property setter.*/
 typedef void (*UlgSetter)(UlgObject*, void*, UlgValue);
@@ -28,7 +28,7 @@ UlgClass* ulg_class_create(
     size_t size,
     UlgInitialize initialize,
     UlgCleanup cleanup,
-    UlgClass* parent
+    const UlgClass* parent
 );
 
 /**
@@ -48,7 +48,7 @@ void ulg_class_add_property(UlgClass* ulg_class, const char* name, UlgGetter get
 /**
  * Create an object of the given class.
  */
-UlgObject* ulg_object_create(UlgClass* ulg_class);
+UlgObject* ulg_object_create(const UlgClass* ulg_class);
 
 /**
  * Release the given UlgObject.
@@ -71,4 +71,4 @@ void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value
  * @param property_name Name of the property to set.
  * @return              The property value.
  */
-UlgValue ulg_object_get(UlgObject* object, const char* property_name);
+UlgValue ulg_object_get(const UlgObject* object, const char* property_name);
