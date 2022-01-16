@@ -38,17 +38,17 @@ void ulg_class_destroy(UlgClass* class_);
 
 /**
  * Add a property to this class.
- * @param ulg_class Add a property to this class.
- * @param name      The name of the property.
- * @param setter    Callback that get the property value.
- * @param getter    Callback that set the property value.
+ * @param class_  Add a property to this class.
+ * @param name    The name of the property.
+ * @param setter  Callback that get the property value.
+ * @param getter  Callback that set the property value.
  */
-void ulg_class_add_property(UlgClass* ulg_class, const char* name, UlgGetter getter, UlgSetter setter);
+void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter, UlgSetter setter);
 
 /**
  * Create an object of the given class.
  */
-UlgObject* ulg_object_create(const UlgClass* ulg_class);
+UlgObject* ulg_object_create(const UlgClass* class_);
 
 /**
  * Release the given UlgObject.
