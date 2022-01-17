@@ -42,7 +42,20 @@ typedef const UlgClass* (UlgClassDefinition)(UlgClassFactory*);
 /**
  * Register a class in the class context, using the given definition.
  *
- * If the class was already registered, it will return the previously created class.
+ * It will assert if the class is already registered in the context.
+ *
+ * @param context    A previously created UlgContext.
+ * @param definition A class definition callback.
+ *
+ * @return The newly created class.
+ */
+
+void ulg_class_register(UlgContext* context, UlgClassDefinition definition);
+
+/**
+ * Get a class using it's definition as a key.
+ *
+ * If the class wasn't registered, the function will return NULL.
  *
  * @param context   A previously created UlgContext.
  * @param definition A class definition callback.
@@ -51,6 +64,17 @@ typedef const UlgClass* (UlgClassDefinition)(UlgClassFactory*);
  */
 
 const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition);
+
+/**
+ * Retrieve a class by it's type name.
+ *
+ * @param context A previously created and initialized UlgContext.
+ * @param name    The class name to get.
+ *
+ * @return The matching class, or NULL if it was not found in the context.
+ */
+
+const UlgClass* ulg_class_get_by_name(UlgContext* context, const char* name);
 
 /**
  * Create a new class object.

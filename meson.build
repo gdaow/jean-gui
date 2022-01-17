@@ -31,6 +31,7 @@ ulg_includes = include_directories('include')
 ulg_lib = static_library(
     'uiligi',
     'src/object.c',
+    'src/template.c',
     'src/utils/hashmap.c',
     'src/value.c',
     dependencies: [wxc, yaml],
@@ -50,6 +51,7 @@ executable(
     'tests/fixtures/user.c',
     'tests/main.c',
     'tests/test_object.c',
+    'tests/test_template.c',
     dependencies: [ulg_dep],
     include_directories: [minunit_includes]
 )

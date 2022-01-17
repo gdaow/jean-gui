@@ -16,6 +16,10 @@
 
 MU_TEST(create_object) {
     UlgContext* context = ulg_context_new();
+    const UlgClass* object_ = ulg_class_get(context, ulg_object);
+    assert(object_);
+    ulg_class_register(context, user);
+    ulg_class_register(context, admin);
     const UlgClass* user_class = ulg_class_get(context, user);
     UlgObject* object = ulg_object_new(user_class);
     ulg_object_free(object);
@@ -36,6 +40,8 @@ void test_set_user_name(const UlgClass* class_) {
 
 MU_TEST(set_property) {
     UlgContext* context = ulg_context_new();
+    ulg_class_register(context, user);
+    ulg_class_register(context, admin);
     const UlgClass* user_class = ulg_class_get(context, user);
     test_set_user_name(user_class);
     ulg_context_free(context);
@@ -43,6 +49,8 @@ MU_TEST(set_property) {
 
 MU_TEST(virtual_methods) {
     UlgContext* context = ulg_context_new();
+    ulg_class_register(context, user);
+    ulg_class_register(context, admin);
     const UlgClass* user_class = ulg_class_get(context, user);
     const UlgClass* admin_class = ulg_class_get(context, admin);
     User* user_ = (User*)ulg_object_new(user_class);
@@ -61,6 +69,8 @@ MU_TEST(virtual_methods) {
 
 MU_TEST(set_parent_property) {
     UlgContext* context = ulg_context_new();
+    ulg_class_register(context, user);
+    ulg_class_register(context, admin);
     const UlgClass* admin_class = ulg_class_get(context, admin);
     test_set_user_name(admin_class);
     ulg_context_free(context);

@@ -1,3 +1,2 @@
- - Use MinUnit.
- - Move properties hashmap directly in the UlgClass structure, do not allocate it on the heap.
+ - Do not register class implicitely when calling ulg_class_get, but rather call a specific register method.
  

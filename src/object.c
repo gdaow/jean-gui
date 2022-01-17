@@ -41,7 +41,7 @@ UlgContext* ulg_context_new() {
     UlgContext* context = malloc(sizeof(UlgContext));
     // Class data is owned by the name index.
     context->name_index = hashmap_new(
-        sizeof(UlgClass),
+        sizeof(_ClassItem),
         0, 0, 0,
         &_hash_class_name,
         &_compare_class_name,
@@ -50,13 +50,15 @@ UlgContext* ulg_context_new() {
     );
 
     context->id_index = hashmap_new(
-        sizeof(UlgClass*),
+        sizeof(_ClassItem),
         0, 0, 0,
         &_hash_class_id,
         &_compare_class_id,
         NULL,
         0
     );
+
+    ulg_class_register(context, ulg_object);
 
     return context;
 }
@@ -67,37 +69,47 @@ void ulg_context_free(UlgContext* context) {
     free(context);
 }
 
+void ulg_class_register(UlgContext* context, UlgClassDefinition definition) {
+    const UlgClass* new_class = definition(
+        &(UlgClassFactory) {
+            .class_id = (uint64_t)definition, // To pass the id down to ulg_class_declare.
+            .context = context
+        }
+    );
+
+    void* replaced_item = NULL;
+    replaced_item = hashmap_set(
+        context->name_index,
+        &(_ClassItem) { .class_ = new_class }
+    );
+    assert(!replaced_item);
+
+    replaced_item = hashmap_set(
+        context->id_index,
+        &(_ClassItem) { .class_ = new_class }
+    );
+    assert(!replaced_item);
+}
+
 const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition) {
     uint64_t class_id = (size_t)definition; // TODO : will be anoying when wrapping to other languages.
-    _ClassItem* existing_class = hashmap_get(
+    _ClassItem* item = hashmap_get(
         context->id_index,
         &(_ClassItem) {
             .class_ = &(UlgClass) { .id = class_id }
         }
     );
+    return item->class_;
+}
 
-    if(existing_class) {
-        return existing_class->class_;
-    }
-
-    const UlgClass* new_class = definition(
-        &(UlgClassFactory) {
-            .class_id = (uint64_t)definition,
-            .context = context
+const UlgClass* ulg_class_get_by_name(UlgContext* context, const char* name) {
+    _ClassItem* item = hashmap_get(
+        context->name_index,
+        &(_ClassItem) {
+            .class_ = &(UlgClass) { .name = name }
         }
     );
-
-    hashmap_set(
-        context->name_index,
-        &(_ClassItem) { .class_ = new_class }
-    );
-
-    hashmap_set(
-        context->id_index,
-        &(_ClassItem) { .class_ = new_class }
-    );
-
-    return new_class;
+    return item->class_;
 }
 
 static UlgClass* _class_new(
