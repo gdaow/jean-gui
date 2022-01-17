@@ -19,7 +19,7 @@ struct _UlgClass {
     size_t data_size;
     struct hashmap* properties;
     const UlgClass* parent;
-    size_t vtable_size;
+    size_t vtable_size; // This is here for checks only, could be removed.
     char vtable[];
 };
 

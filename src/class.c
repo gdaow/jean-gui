@@ -32,7 +32,12 @@ UlgClass* _ulg_class_new(
     size_t vtable_size
 ) {
     // vtable size can not be less than the parent one.
-    assert(!parent || parent->vtable_size <= vtable_size);
+    if(vtable_size == 0 && parent) {
+        vtable_size = parent->vtable_size;
+    }
+    else {
+        assert(!parent || parent->vtable_size <= vtable_size);
+    }
 
     UlgClass* class_ = memcpy(
         malloc(sizeof(UlgClass) + vtable_size),

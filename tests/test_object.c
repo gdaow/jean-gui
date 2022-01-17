@@ -39,6 +39,24 @@ START_TEST (set_property) {
     test_set_user_name(user_class);
     ulg_class_registry_free(registry);
 }
+
+START_TEST (virtual_methods) {
+    UlgClassRegistry* registry = ulg_class_registry_new();
+    const UlgClass* user_class = ulg_class_get(registry, user);
+    const UlgClass* admin_class = ulg_class_get(registry, admin);
+    User* user_ = (User*)ulg_object_new(user_class);
+    User* admin_ = (User*)ulg_object_new(admin_class);
+
+    user_set_default_name(user_);
+    user_set_default_name(admin_);
+
+    assert(strcasecmp(user_->name, "default user name") == 0);
+    assert(strcasecmp(admin_->name, "default admin name") == 0);
+
+    ulg_object_free((UlgObject*)admin_);
+    ulg_object_free((UlgObject*)user_);
+    ulg_class_registry_free(registry);
+}
 END_TEST
 
 START_TEST (set_parent_property) {
@@ -57,6 +75,7 @@ Suite* object_suite(void)
     tcase_add_test(lifetime, create_object);
     tcase_add_test(lifetime, set_property);
     tcase_add_test(lifetime, set_parent_property);
+    tcase_add_test(lifetime, virtual_methods);
 
     suite_add_tcase(suite, lifetime);
     return suite;
