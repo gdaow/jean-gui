@@ -11,6 +11,8 @@ ulg_includes = include_directories('include')
 
 ulg_lib = static_library(
     'uiligi',
+    'src/class.c',
+    'src/class_registry.c',
     'src/context.c',
     'src/object.c',
     'src/template.c',

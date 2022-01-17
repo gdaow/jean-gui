@@ -4,153 +4,42 @@
 
 #include <uiligi/object.h>
 
+#include "class_impl.h"
 #include "utils/hashmap.h"
 
-typedef struct {
-    const char* name;
-    UlgGetter getter;
-    UlgSetter setter;
-} UlgProperty;
-
-
-struct UlgClass {
-    const char* name;
-    size_t size;
-    size_t offset;
-    UlgInitialize initialize;
-    UlgCleanup cleanup;
-    const UlgClass* parent;
-    struct hashmap* properties;
-};
-
-struct UlgObject {
+typedef struct _UlgObjectHeader {
     const UlgClass* class_;
     char data[];
-};
+} UlgObjectHeader;
 
 void _object_initialize(const UlgClass* class_, char* data);
-uint64_t _property_hash(const void* item, uint64_t seed0, uint64_t seed1);
-int _property_compare(const void* a, const void* b, void* udata);
-const UlgProperty* _get_property(const UlgClass* class_, const char* name, const UlgClass** owner);
+static UlgObjectHeader* _get_header(UlgObject* object) { return (UlgObjectHeader*)object - 1; }
+static const UlgObjectHeader* _get_header_const(const UlgObject* object) { return (const UlgObjectHeader*)object - 1; }
 
-UlgClass* ulg_class_create(
-    const char* name,
-    size_t size,
-    UlgInitialize initialize,
-    UlgCleanup cleanup,
-    const UlgClass* parent
-) {
-    struct hashmap* properties = hashmap_new(
-        sizeof(UlgProperty),
-        0, 0, 0,
-        &_property_hash,
-        &_property_compare,
-        NULL,
-        NULL
-    );
 
-    size_t offset = 0;
-    if(parent) {
-        offset = parent->size;
-    }
-
-    return memcpy(
-        malloc(sizeof(UlgClass)),
-        &(UlgClass) {
-            .name = name,
-            .size = size,
-            .offset = offset,
-            .initialize = initialize,
-            .cleanup = cleanup,
-            .parent = parent,
-            .properties = properties
-        },
-        sizeof(UlgClass)
-    );
-}
-
-void ulg_class_destroy(UlgClass* class_) {
-    hashmap_free(class_->properties);
-    free(class_);
-}
-
-void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter, UlgSetter setter) {
-    hashmap_set(
-        class_->properties, &(UlgProperty){
-        .name = name,
-        .getter = getter,
-        .setter = setter
-    });
-}
-
-UlgObject* ulg_object_create(const UlgClass* class_) {
-    UlgObject* result = malloc(sizeof(UlgObject) + class_->size);
-    result->class_ = class_;
+UlgObject* ulg_object_new(const UlgClass* class_) {
+    UlgObjectHeader* object = malloc(sizeof(UlgObjectHeader) + class_->data_size);
+    object->class_ = class_;
     // Recursively initialize hierarchy, parent-first.
-    _object_initialize(class_, result->data);
-    return result;
+    // Return a pointer to the data, we offset the pointer to get the header each time.
+    return (UlgObject*)(object + 1);
 }
 
-void ulg_object_destroy(UlgObject* object) {
-    const UlgClass* class_ = object->class_;
-    char* data = object->data;
-
-    while(class_) {
-        class_->cleanup(data + class_->offset);
-        class_ = class_->parent;
-    }
-    free(object);
-}
-
-void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value) {
-    const UlgClass* class_ = object->class_;
-    const UlgClass* owner;
-    const UlgProperty* property = _get_property(class_, property_name, &owner);
-    property->setter(object, object->data + owner->offset, value);
+void ulg_object_free(UlgObject* object) {
+    UlgObjectHeader* header = _get_header(object);
+    free(header);
 }
 
 UlgValue ulg_object_get(const UlgObject* object, const char* property_name) {
-    const UlgClass* object_class = object->class_;
-    const UlgClass* owner;
-    const UlgProperty* property = _get_property(object_class, property_name, &owner);
-    return property->getter(object, object->data + owner->offset);
+    const UlgObjectHeader* header = _get_header_const(object);
+    const UlgClass* class_ = header->class_;
+    const UlgProperty* property = _ulg_class_get_property(class_, property_name);
+    return property->getter(object);
 }
 
-void _object_initialize(const UlgClass* class_, char* data) {
-    const UlgClass* parent = class_->parent;
-    if(parent) {
-        _object_initialize(parent, data);
-    }
-
-    class_->initialize(data + class_->offset);
-}
-
-uint64_t _property_hash(const void* item, uint64_t seed0, uint64_t seed1) {
-    const UlgProperty* property = item;
-    const char* name = property->name;
-    return hashmap_sip(name, strlen(name), seed0, seed1);
-}
-
-int _property_compare(const void* a, const void* b, void* udata) {
-    const UlgProperty *property_a = a;
-    const UlgProperty *property_b = b;
-    return strcmp(property_a->name, property_b->name);
-}
-
-const UlgProperty* _get_property(const UlgClass* class_, const char* name, const UlgClass** owner) {
-    while(class_) {
-        UlgProperty* result = hashmap_get(
-            class_->properties,
-            &(UlgProperty){ .name=name }
-        );
-
-        if(result) {
-            *owner = class_;
-            return result;
-        }
-
-        class_ = class_->parent;
-    }
-    
-    assert(0); // TODO: Handle error.
+void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value) {
+    UlgObjectHeader* header = _get_header(object);
+    const UlgClass* class_ = header->class_;
+    const UlgProperty* property = _ulg_class_get_property(class_, property_name);
+    property->setter(object, value);
 }

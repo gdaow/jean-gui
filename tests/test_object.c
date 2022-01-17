@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include <uiligi/class_registry.h>
 #include <uiligi/object.h>
 
 #include "test_object.h"
@@ -11,29 +12,17 @@
 /**
  * UlgClass should be able to instanciate object dynamically.
  */
-typedef struct TestObject {
-    int data;
-} TestObject;
-
-void* test_object_constructor() {
-    TestObject* result = malloc(sizeof(TestObject));
-    result->data = 0xB00B00;
-    return result;
-}
-
-void test_object_destructor(void* object) {
-    free(object);
-}
 
 START_TEST (create_object) {
-    UlgClass* user_class = ulg_create_user_class();
-    UlgObject* object = ulg_object_create(user_class);
-    ulg_object_destroy(object);
-    ulg_class_destroy(user_class);
+    UlgClassRegistry* registry = ulg_class_registry_new();
+    const UlgClass* user_class = ulg_class_get(registry, user);
+    UlgObject* object = ulg_object_new(user_class);
+    ulg_object_free(object);
+    ulg_class_registry_free(registry);
 }
 
-void test_set_user_name(UlgClass* class_) {
-    UlgObject* obj = ulg_object_create(class_);
+void test_set_user_name(const UlgClass* class_) {
+    UlgObject* obj = ulg_object_new(class_);
     const char* obj_name = "Henri Krasucki";
     ulg_object_set(obj, "name", ulg_value_from_str(obj_name));
 
@@ -41,20 +30,22 @@ void test_set_user_name(UlgClass* class_) {
     const char* get_name = ulg_value_to_str(property_value);
     int is_same = strcasecmp(get_name, obj_name) == 0;
     assert(is_same);
-    ulg_object_destroy(obj);
+    ulg_object_free(obj);
 }
 
 START_TEST (set_property) {
-    UlgClass* user_class = ulg_create_user_class();
+    UlgClassRegistry* registry = ulg_class_registry_new();
+    const UlgClass* user_class = ulg_class_get(registry, user);
     test_set_user_name(user_class);
-    ulg_class_destroy(user_class);
+    ulg_class_registry_free(registry);
 }
 END_TEST
 
 START_TEST (set_parent_property) {
-    UlgClass* admin_class = ulg_create_admin_class();
+    UlgClassRegistry* registry = ulg_class_registry_new();
+    const UlgClass* admin_class = ulg_class_get(registry, admin);
     test_set_user_name(admin_class);
-    ulg_class_destroy(admin_class);
+    ulg_class_registry_free(registry);
 }
 END_TEST
 

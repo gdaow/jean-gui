@@ -1,7 +1,10 @@
 #pragma once
 
-typedef struct UlgClass UlgClass;
-typedef struct UlgObject UlgObjectc;
+typedef struct _UlgClass UlgClass;
+typedef struct _UlgClassFactory UlgClassFactory;
 
-UlgClass* ulg_create_user_class();
-UlgObject* ulg_create_user();
+typedef struct User {
+    const char* name;
+} User;
+
+const UlgClass* user(UlgClassFactory* factory);

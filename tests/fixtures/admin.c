@@ -1,13 +1,11 @@
 #include <stdlib.h>
 
 #include <uiligi/object.h>
+#include <uiligi/class_registry.h>
+#include <uiligi/class.h>
 
 #include "admin.h"
 #include "user.h"
-
-typedef struct {
-    const char* role;
-} Admin;
 
 void admin_initialize(void* data) {
 
@@ -17,24 +15,26 @@ void admin_cleanup(void* data) {
 
 }
 
-UlgValue admin_get_role(const UlgObject* object, const void* data) {
-    const Admin* admin = data;
+static UlgValue get_role(const UlgObject* object) {
+    const Admin* admin = (void *)object;
     return ulg_value_from_str(admin->role);
 }
 
-void admin_set_role(UlgObject* object, void* data, UlgValue value) {
-    Admin* admin = data;
+static void set_role(UlgObject* object, UlgValue value) {
+    Admin* admin = (void *)object;
     admin->role = ulg_value_to_str(value);
 }
 
-struct UlgClass* ulg_create_admin_class() {
-    UlgClass* admin_class = ulg_class_create(
+const UlgClass* admin(UlgClassFactory* factory) {
+    UlgClass* class_ = ulg_class_declare(
+        factory,
         "Admin",
         sizeof(Admin),
-        &admin_initialize,
-        &admin_cleanup,
-        ulg_create_user_class()
+        user,
+        0
     );
-    ulg_class_add_property(admin_class, "role", &admin_get_role, &admin_set_role);
-    return admin_class;
+
+    ulg_class_add_property(class_, "role", get_role, set_role);
+
+    return class_;
 }

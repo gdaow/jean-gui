@@ -1,35 +1,34 @@
 #include <stdlib.h>
 
-#include <uiligi/object.h>
+#include <uiligi/class_registry.h>
+#include <uiligi/class.h>
 
 #include "user.h"
-
-typedef struct User {
-    const char* name;
-} User;
 
 void user_initialize(void* data) { }
 
 void user_cleanup(void* data) {}
 
-void user_set_name(UlgObject* object, void* data, UlgValue value) {
-    User* user = data;
+static void set_name(UlgObject* object, UlgValue value) {
+    User* user = (void *)object;
     user->name = ulg_value_to_str(value);
 }
 
-UlgValue user_get_name(const UlgObject* object, const void* data) {
-    const User* user = data;
+static UlgValue get_name(const UlgObject* object) {
+    const User* user = (void *)object;
     return ulg_value_from_str(user->name);
 }
 
-struct UlgClass* ulg_create_user_class() {
-    UlgClass* user_class = ulg_class_create(
+const UlgClass* user(UlgClassFactory* factory) {
+    UlgClass* class_ = ulg_class_declare(
+        factory,
         "User",
         sizeof(User),
-        &user_initialize,
-        &user_cleanup,
-        NULL
+        NULL,
+        0
     );
-    ulg_class_add_property(user_class, "name", &user_get_name, &user_set_name);
-    return user_class;
+
+    ulg_class_add_property(class_, "name", get_name, set_name);
+
+    return class_;
 }
