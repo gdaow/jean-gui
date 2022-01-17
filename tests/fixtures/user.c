@@ -23,7 +23,7 @@ const UlgClass* user(UlgClassFactory* factory) {
         factory,
         "User",
         sizeof(User),
-        ulg_object,
+        ulg_object_type,
         sizeof(UserVT)
     );
 

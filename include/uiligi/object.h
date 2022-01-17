@@ -137,7 +137,7 @@ typedef struct _UlgObjectVT {
 /**
  * @brief UlgObject class definition.
  */
-const UlgClass* ulg_object(UlgClassFactory* factory);
+const UlgClass* ulg_object_type(UlgClassFactory* factory);
 
 /**
  * Create an object of the given class.

@@ -58,7 +58,7 @@ UlgContext* ulg_context_new() {
         0
     );
 
-    ulg_class_register(context, ulg_object);
+    ulg_class_register(context, ulg_object_type);
 
     return context;
 }
@@ -159,7 +159,7 @@ void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter
     );
 }
 
-const UlgClass* ulg_object(UlgClassFactory* factory) {
+const UlgClass* ulg_object_type(UlgClassFactory* factory) {
     UlgClass* class_ = ulg_class_declare(
         factory,
         "Object",
