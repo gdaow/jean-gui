@@ -54,6 +54,7 @@ UlgClassRegistry* ulg_class_registry_new() {
 void ulg_class_registry_free(UlgClassRegistry* registry) {
     hashmap_free(registry->id_index);
     hashmap_free(registry->name_index);
+    free(registry);
 }
 
 const UlgClass* ulg_class_get(UlgClassRegistry* registry, UlgClassDefinition definition) {
