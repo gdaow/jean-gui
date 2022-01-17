@@ -13,7 +13,10 @@ struct UlgTemplate {
 };
 
 UlgTemplate* ulg_template_from_string(UlgContext* context, const unsigned char* source) {
-    UlgTemplate* template = malloc(sizeof(UlgTemplate));
+    (void)source;
+    (void)context;
+    return malloc(sizeof(UlgTemplate));
+    /*
     template->context = context;
 
     yaml_parser_t parser;
@@ -63,4 +66,5 @@ void ulg_template_instanciate(UlgTemplate* template) {
 
     const unsigned char* builder_name = key_node->data.scalar.value;
     UlgContext* context = template->context;
+    */
 }

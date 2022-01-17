@@ -115,6 +115,7 @@ static uint64_t _hash_name(const void* item, uint64_t seed0, uint64_t seed1) {
 }
 
 static int _compare_name(const void* a, const void* b, void* udata) {
+    (void)udata;
     const IndexItem* item_a = a;
     const IndexItem* item_b = b;
     return strcmp(item_a->class_->name, item_b->class_->name);
@@ -126,11 +127,14 @@ static void _free_item(void* item) {
 }
 
 static uint64_t _hash_id(const void* item, uint64_t seed0, uint64_t seed1) {
+    (void)seed0;
+    (void)seed1;
     const IndexItem* index_item = item;
     return index_item->class_->id;
 }
 
 static int _compare_id(const void* a, const void* b, void* udata) {
+    (void)udata;
     const IndexItem* item_a = a;
     const IndexItem* item_b = b;
     return item_a->class_->id - item_b->class_->id;

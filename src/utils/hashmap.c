@@ -106,10 +106,10 @@ struct hashmap *hashmap_new_with_allocator(
     _realloc = _realloc ? _realloc : realloc;
     _free = _free ? _free : free;
     int ncap = 16;
-    if (cap < ncap) {
+    if (cap < (size_t)ncap) {
         cap = ncap;
     } else {
-        while (ncap < cap) {
+        while ((size_t)ncap < cap) {
             ncap *= 2;
         }
         cap = ncap;
@@ -446,6 +446,7 @@ bool hashmap_scan(struct hashmap *map,
 static uint64_t SIP64(const uint8_t *in, const size_t inlen, 
                       uint64_t seed0, uint64_t seed1) 
 {
+#define FALLTHROUGH __attribute__ ((fallthrough))
 #define U8TO64_LE(p) \
     {  (((uint64_t)((p)[0])) | ((uint64_t)((p)[1]) << 8) | \
         ((uint64_t)((p)[2]) << 16) | ((uint64_t)((p)[3]) << 24) | \
@@ -486,11 +487,17 @@ static uint64_t SIP64(const uint8_t *in, const size_t inlen,
     uint64_t b = ((uint64_t)inlen) << 56;
     switch (left) {
     case 7: b |= ((uint64_t)in[6]) << 48;
+    FALLTHROUGH;
     case 6: b |= ((uint64_t)in[5]) << 40;
+    FALLTHROUGH;
     case 5: b |= ((uint64_t)in[4]) << 32;
+    FALLTHROUGH;
     case 4: b |= ((uint64_t)in[3]) << 24;
+    FALLTHROUGH;
     case 3: b |= ((uint64_t)in[2]) << 16;
+    FALLTHROUGH;
     case 2: b |= ((uint64_t)in[1]) << 8;
+    FALLTHROUGH;
     case 1: b |= ((uint64_t)in[0]); break;
     case 0: break;
     }
@@ -546,22 +553,36 @@ static void MM86128(const void *key, const int len, uint32_t seed, void *out) {
     uint32_t k4 = 0;
     switch(len & 15) {
     case 15: k4 ^= tail[14] << 16;
+    FALLTHROUGH;
     case 14: k4 ^= tail[13] << 8;
+    FALLTHROUGH;
     case 13: k4 ^= tail[12] << 0;
              k4 *= c4; k4  = ROTL32(k4,18); k4 *= c1; h4 ^= k4;
+    FALLTHROUGH;
     case 12: k3 ^= tail[11] << 24;
+    FALLTHROUGH;
     case 11: k3 ^= tail[10] << 16;
+    FALLTHROUGH;
     case 10: k3 ^= tail[ 9] << 8;
+    FALLTHROUGH;
     case  9: k3 ^= tail[ 8] << 0;
              k3 *= c3; k3  = ROTL32(k3,17); k3 *= c4; h3 ^= k3;
+    FALLTHROUGH;
     case  8: k2 ^= tail[ 7] << 24;
+    FALLTHROUGH;
     case  7: k2 ^= tail[ 6] << 16;
+    FALLTHROUGH;
     case  6: k2 ^= tail[ 5] << 8;
+    FALLTHROUGH;
     case  5: k2 ^= tail[ 4] << 0;
              k2 *= c2; k2  = ROTL32(k2,16); k2 *= c3; h2 ^= k2;
+    FALLTHROUGH;
     case  4: k1 ^= tail[ 3] << 24;
+    FALLTHROUGH;
     case  3: k1 ^= tail[ 2] << 16;
+    FALLTHROUGH;
     case  2: k1 ^= tail[ 1] << 8;
+    FALLTHROUGH;
     case  1: k1 ^= tail[ 0] << 0;
              k1 *= c1; k1  = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
     };
@@ -588,6 +609,7 @@ uint64_t hashmap_sip(const void *data, size_t len,
 uint64_t hashmap_murmur(const void *data, size_t len, 
                         uint64_t seed0, uint64_t seed1)
 {
+    (void)seed1;
     char out[16];
     MM86128(data, len, seed0, &out);
     return *(uint64_t*)out;

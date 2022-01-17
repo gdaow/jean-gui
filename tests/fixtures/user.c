@@ -5,10 +5,6 @@
 
 #include "user.h"
 
-void user_initialize(void* data) { }
-
-void user_cleanup(void* data) {}
-
 static void set_name(UlgObject* object, UlgValue value) {
     User* user = (void *)object;
     user->name = ulg_value_to_str(value);

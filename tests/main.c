@@ -2,6 +2,8 @@
 #include "test_object.h"
 
 int main(int argc, char** argv) {
+    (void)argc;
+    (void)argv;
     int number_failed;
     SRunner* runner = srunner_create(object_suite());
     srunner_run_all(runner, CK_NORMAL);

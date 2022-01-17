@@ -1,10 +1,29 @@
-project('uiligi', 'c')
+project(
+    'uiligi',
+    'c',
+    default_options: [
+        'warning_level=3',
+        'werror=true',
+    ])
 
-wxc = dependency('wxc', required : true)
+wxc = dependency(
+    'wxc',
+    required : true,
+    default_options: [
+        'warning_level=0',
+        'werror=false'
+    ]
+)
 
 cmake = import('cmake')
 
-yaml_project = cmake.subproject('libyaml')
+yaml_project = cmake.subproject(
+    'libyaml',
+    default_options: [
+        'warning_level=0',
+        'werror=false',
+    ]
+)
 yaml = yaml_project.dependency('yaml')
 
 ulg_includes = include_directories('include')
@@ -19,7 +38,8 @@ ulg_lib = static_library(
     'src/utils/hashmap.c',
     'src/value.c',
     dependencies: [wxc, yaml],
-    include_directories: ulg_includes
+    include_directories: ulg_includes,
+    
 )
 
 ulg_dep = declare_dependency(

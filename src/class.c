@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <uiligi/class.h>
 
@@ -81,6 +83,7 @@ static uint64_t _property_hash(const void* item, uint64_t seed0, uint64_t seed1)
 }
 
 static int _property_compare(const void* a, const void* b, void* udata) {
+    (void)udata;
     const UlgProperty *property_a = a;
     const UlgProperty *property_b = b;
     return strcmp(property_a->name, property_b->name);
@@ -91,4 +94,5 @@ static bool _copy_parent_properties(const void* item, void* udata) {
     UlgProperty copy;
     memcpy(&copy, item, sizeof(UlgProperty));
     hashmap_set(child_properties, &copy);
+    return true;
 }

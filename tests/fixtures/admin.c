@@ -7,14 +7,6 @@
 #include "admin.h"
 #include "user.h"
 
-void admin_initialize(void* data) {
-
-}
-
-void admin_cleanup(void* data) {
-
-}
-
 static UlgValue get_role(const UlgObject* object) {
     const Admin* admin = (void *)object;
     return ulg_value_from_str(admin->role);
