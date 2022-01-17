@@ -1,6 +1,8 @@
-#include <check.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <minunit.h>
 
 #include <uiligi/class_registry.h>
 #include <uiligi/object.h>
@@ -13,7 +15,7 @@
  * UlgClass should be able to instanciate object dynamically.
  */
 
-START_TEST (create_object) {
+MU_TEST(create_object) {
     UlgClassRegistry* registry = ulg_class_registry_new();
     const UlgClass* user_class = ulg_class_get(registry, user);
     UlgObject* object = ulg_object_new(user_class);
@@ -29,18 +31,18 @@ void test_set_user_name(const UlgClass* class_) {
     UlgValue property_value = ulg_object_get(obj, "name");
     const char* get_name = ulg_value_to_str(property_value);
     int is_same = strcasecmp(get_name, obj_name) == 0;
-    assert(is_same);
+    mu_check(is_same);
     ulg_object_free(obj);
 }
 
-START_TEST (set_property) {
+MU_TEST(set_property) {
     UlgClassRegistry* registry = ulg_class_registry_new();
     const UlgClass* user_class = ulg_class_get(registry, user);
     test_set_user_name(user_class);
     ulg_class_registry_free(registry);
 }
 
-START_TEST (virtual_methods) {
+MU_TEST(virtual_methods) {
     UlgClassRegistry* registry = ulg_class_registry_new();
     const UlgClass* user_class = ulg_class_get(registry, user);
     const UlgClass* admin_class = ulg_class_get(registry, admin);
@@ -50,33 +52,24 @@ START_TEST (virtual_methods) {
     user_set_default_name(user_);
     user_set_default_name(admin_);
 
-    assert(strcasecmp(user_->name, "default user name") == 0);
-    assert(strcasecmp(admin_->name, "default admin name") == 0);
+    mu_check(strcasecmp(user_->name, "default user name") == 0);
+    mu_check(strcasecmp(admin_->name, "default admin name") == 0);
 
     ulg_object_free((UlgObject*)admin_);
     ulg_object_free((UlgObject*)user_);
     ulg_class_registry_free(registry);
 }
-END_TEST
 
-START_TEST (set_parent_property) {
+MU_TEST(set_parent_property) {
     UlgClassRegistry* registry = ulg_class_registry_new();
     const UlgClass* admin_class = ulg_class_get(registry, admin);
     test_set_user_name(admin_class);
     ulg_class_registry_free(registry);
 }
-END_TEST
 
-Suite* object_suite(void)
-{
-    Suite* suite = suite_create("Objects");
-    TCase* lifetime = tcase_create("Object Lifetime");
-
-    tcase_add_test(lifetime, create_object);
-    tcase_add_test(lifetime, set_property);
-    tcase_add_test(lifetime, set_parent_property);
-    tcase_add_test(lifetime, virtual_methods);
-
-    suite_add_tcase(suite, lifetime);
-    return suite;
+MU_TEST_SUITE(object_suite) {
+    MU_RUN_TEST(create_object);
+    MU_RUN_TEST(set_property);
+    MU_RUN_TEST(set_parent_property);
+    MU_RUN_TEST(virtual_methods);
 }

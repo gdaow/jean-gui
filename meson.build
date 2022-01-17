@@ -47,8 +47,7 @@ ulg_dep = declare_dependency(
     link_with: ulg_lib
 )
 
-check_project = cmake.subproject('check')
-check = check_project.dependency('check')
+minunit_includes = include_directories('subprojects/minunit')
 
 executable(
     'uiligi-tests',
@@ -56,5 +55,6 @@ executable(
     'tests/fixtures/user.c',
     'tests/main.c',
     'tests/test_object.c',
-    dependencies: [ulg_dep, check],
+    dependencies: [ulg_dep],
+    include_directories: [minunit_includes]
 )

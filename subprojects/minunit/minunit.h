@@ -71,17 +71,27 @@
 #define MINUNIT_EPSILON 1E-12
 
 /*  Misc. counters */
-static int minunit_run = 0;
-static int minunit_assert = 0;
-static int minunit_fail = 0;
-static int minunit_status = 0;
+#ifdef MU_MAIN
+	int minunit_status = 0;
+	char minunit_last_message[MINUNIT_MESSAGE_LEN];
+	int minunit_run = 0;
+	int minunit_assert = 0;
+	int minunit_fail = 0;
+	double minunit_real_timer = 0;
+	double minunit_proc_timer = 0;
+#else
+	extern int minunit_run;
+	extern int minunit_assert;
+	extern int minunit_fail;
+	extern int minunit_status;
+	/*  Last message */
+	extern char minunit_last_message[MINUNIT_MESSAGE_LEN];
+	/*  Timers */
+	extern double minunit_real_timer;
+	extern double minunit_proc_timer;
 
-/*  Timers */
-static double minunit_real_timer = 0;
-static double minunit_proc_timer = 0;
+#endif
 
-/*  Last message */
-static char minunit_last_message[MINUNIT_MESSAGE_LEN];
 
 /*  Test setup and teardown function pointers */
 static void (*minunit_setup)(void) = NULL;
@@ -89,7 +99,7 @@ static void (*minunit_teardown)(void) = NULL;
 
 /*  Definitions */
 #define MU_TEST(method_name) static void method_name(void)
-#define MU_TEST_SUITE(suite_name) static void suite_name(void)
+#define MU_TEST_SUITE(suite_name) void suite_name(void)
 
 #define MU__SAFE_BLOCK(block) do {\
 	block\
