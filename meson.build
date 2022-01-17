@@ -30,16 +30,11 @@ ulg_includes = include_directories('include')
 
 ulg_lib = static_library(
     'uiligi',
-    'src/class.c',
-    'src/class_registry.c',
-    'src/context.c',
     'src/object.c',
-    'src/template.c',
     'src/utils/hashmap.c',
     'src/value.c',
     dependencies: [wxc, yaml],
     include_directories: ulg_includes,
-    
 )
 
 ulg_dep = declare_dependency(

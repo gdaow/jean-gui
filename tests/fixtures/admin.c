@@ -1,8 +1,6 @@
 #include <stdlib.h>
 
 #include <uiligi/object.h>
-#include <uiligi/class_registry.h>
-#include <uiligi/class.h>
 
 #include "admin.h"
 #include "user.h"

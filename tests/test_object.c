@@ -4,7 +4,6 @@
 
 #include <minunit.h>
 
-#include <uiligi/class_registry.h>
 #include <uiligi/object.h>
 
 #include "test_object.h"
@@ -16,11 +15,11 @@
  */
 
 MU_TEST(create_object) {
-    UlgClassRegistry* registry = ulg_class_registry_new();
-    const UlgClass* user_class = ulg_class_get(registry, user);
+    UlgContext* context = ulg_context_new();
+    const UlgClass* user_class = ulg_class_get(context, user);
     UlgObject* object = ulg_object_new(user_class);
     ulg_object_free(object);
-    ulg_class_registry_free(registry);
+    ulg_context_free(context);
 }
 
 void test_set_user_name(const UlgClass* class_) {
@@ -36,16 +35,16 @@ void test_set_user_name(const UlgClass* class_) {
 }
 
 MU_TEST(set_property) {
-    UlgClassRegistry* registry = ulg_class_registry_new();
-    const UlgClass* user_class = ulg_class_get(registry, user);
+    UlgContext* context = ulg_context_new();
+    const UlgClass* user_class = ulg_class_get(context, user);
     test_set_user_name(user_class);
-    ulg_class_registry_free(registry);
+    ulg_context_free(context);
 }
 
 MU_TEST(virtual_methods) {
-    UlgClassRegistry* registry = ulg_class_registry_new();
-    const UlgClass* user_class = ulg_class_get(registry, user);
-    const UlgClass* admin_class = ulg_class_get(registry, admin);
+    UlgContext* context = ulg_context_new();
+    const UlgClass* user_class = ulg_class_get(context, user);
+    const UlgClass* admin_class = ulg_class_get(context, admin);
     User* user_ = (User*)ulg_object_new(user_class);
     User* admin_ = (User*)ulg_object_new(admin_class);
 
@@ -57,14 +56,14 @@ MU_TEST(virtual_methods) {
 
     ulg_object_free((UlgObject*)admin_);
     ulg_object_free((UlgObject*)user_);
-    ulg_class_registry_free(registry);
+    ulg_context_free(context);
 }
 
 MU_TEST(set_parent_property) {
-    UlgClassRegistry* registry = ulg_class_registry_new();
-    const UlgClass* admin_class = ulg_class_get(registry, admin);
+    UlgContext* context = ulg_context_new();
+    const UlgClass* admin_class = ulg_class_get(context, admin);
     test_set_user_name(admin_class);
-    ulg_class_registry_free(registry);
+    ulg_context_free(context);
 }
 
 MU_TEST_SUITE(object_suite) {
