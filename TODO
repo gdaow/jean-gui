@@ -1,2 +1,5 @@
  - Do not register class implicitely when calling ulg_class_get, but rather call a specific register method.
  
+ - Ca va etre complique de creer des objets sans avoir le contexte sous la main pour recuperer
+   les classes. Mais c'est la condition pour la réentrance. On pourrait le stocker dans les classes,
+   ou dans les objets, ca parait pas trop con.

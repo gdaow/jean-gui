@@ -1,13 +1,12 @@
 #pragma once
 
-#include <uiligi/object.h>
-
 typedef struct _UlgClass UlgClass;
 typedef struct _UlgClassFactory UlgClassFactory;
+typedef struct _Team Team;
 
-
-typedef struct User {
+typedef struct {
     const char* name;
+    Team* team;
 } User;
 
 typedef struct {
