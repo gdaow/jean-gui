@@ -19,7 +19,7 @@ struct _UlgContext {
 };
 
 struct _UlgClass {
-    uint64_t id;
+    uintptr_t id;
     const char* name;
     size_t data_size;
     struct hashmap* properties;
@@ -34,7 +34,7 @@ typedef struct {
 
 typedef struct _UlgClassFactory {
     UlgContext* context;
-    uint64_t class_id;
+    uintptr_t class_id;
 } UlgClassFactory;
 
 
@@ -79,7 +79,7 @@ void ulg_context_free(UlgContext* context) {
 void ulg_class_register(UlgContext* context, UlgClassDefinition definition) {
     const UlgClass* new_class = definition(
         &(UlgClassFactory) {
-            .class_id = (uint64_t)definition, // To pass the id down to ulg_class_declare.
+            .class_id = (uintptr_t)definition, // To pass the id down to ulg_class_declare.
             .context = context
         }
     );
@@ -99,7 +99,7 @@ void ulg_class_register(UlgContext* context, UlgClassDefinition definition) {
 }
 
 const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition) {
-    uint64_t class_id = (size_t)definition; // TODO : will be anoying when wrapping to other languages.
+    uintptr_t class_id = (uintptr_t)definition; // TODO : will be anoying when wrapping to other languages.
     _ClassItem* item = hashmap_get(
         context->id_index,
         &(_ClassItem) {
