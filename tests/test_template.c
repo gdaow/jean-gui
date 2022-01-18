@@ -10,8 +10,8 @@
 
 MU_TEST(template_instanciate) {
     UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user);
-    ulg_class_register(context, admin);
+    ulg_class_register(context, user_type);
+    ulg_class_register(context, admin_type);
 
     UlgTemplate* template = ulg_template_new(context, "Admin");
 

@@ -8,75 +8,96 @@
 
 #include "test_object.h"
 #include "fixtures/user.h"
+#include "fixtures/common.h"
 #include "fixtures/admin.h"
 
-/**
- * UlgClass should be able to instanciate object dynamically.
- */
+static UlgContext* context = NULL;
+static const UlgClass* user_class = NULL;
+static const UlgClass* admin_class = NULL;
 
-MU_TEST(create_object) {
-    UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user);
-    ulg_class_register(context, admin);
-    const UlgClass* user_class = ulg_class_get(context, user);
-    UlgObject* object = ulg_object_new(user_class);
-    ulg_object_free(object);
-    ulg_context_free(context);
+const UlgClass* _dummy_type(UlgClassFactory* factory) {
+    (void)factory;
+    return NULL;
 }
 
-void test_set_user_name(const UlgClass* class_) {
-    UlgObject* obj = ulg_object_new(class_);
-    const char* obj_name = "Henri Krasucki";
-    ulg_object_set(obj, "name", ulg_value_from_str(obj_name));
+/** ulg_class_get should return the class object given a class name or a class definition, and return
+ *  NULL if the class was not registered in the context. */
+MU_TEST(test_ulg_class_get) {
+    const UlgClass* user_class = ulg_class_get_by_name(context, "User");
+    mu_check(user_class != NULL);
+    mu_check(user_class == ulg_class_get(context, user_type));
 
-    UlgValue property_value = ulg_object_get(obj, "name");
-    const char* get_name = ulg_value_to_str(property_value);
-    int is_same = strcasecmp(get_name, obj_name) == 0;
-    mu_check(is_same);
-    ulg_object_free(obj);
+    const UlgClass* admin_class = ulg_class_get_by_name(context, "Admin");
+    mu_check(admin_class != NULL);
+    mu_check(admin_class == ulg_class_get(context, admin_type));
+
+    mu_check(ulg_class_get(context, _dummy_type) == NULL);
+    mu_check(ulg_class_get_by_name(context, "Dummy") == NULL);
 }
 
-MU_TEST(set_property) {
-    UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user);
-    ulg_class_register(context, admin);
-    const UlgClass* user_class = ulg_class_get(context, user);
-    test_set_user_name(user_class);
-    ulg_context_free(context);
+/** ulg_object_vtable should allow override virtual functions of parent classes. */
+MU_TEST(test_ulg_object_vtable) {
+    User* user = (User*)ulg_object_new(user_class);
+    User* admin = (User*)ulg_object_new(admin_class);
+
+    mu_assert_int_eq(user_get_default_permissions(user), PERM_CAN_LOGIN);
+    mu_assert_int_eq(user_get_default_permissions(admin), PERM_ALL);
+
+    ulg_object_free((UlgObject*)admin);
+    ulg_object_free((UlgObject*)user);
 }
 
-MU_TEST(virtual_methods) {
-    UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user);
-    ulg_class_register(context, admin);
-    const UlgClass* user_class = ulg_class_get(context, user);
-    const UlgClass* admin_class = ulg_class_get(context, admin);
-    User* user_ = (User*)ulg_object_new(user_class);
-    User* admin_ = (User*)ulg_object_new(admin_class);
+/** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
+MU_TEST(test_ulg_object_get) {
+    Admin* admin = (Admin*)ulg_object_new(admin_class);
+    const char* test_string = "Jean-jean mi";
+    *admin = (Admin) {
+        .base.name = test_string,
+        .role = test_string
+    };
 
-    user_set_default_name(user_);
-    user_set_default_name(admin_);
+    UlgValue property;
+    
+    property = ulg_object_get((UlgObject*)admin, "name");
+    mu_assert_string_eq(test_string, ulg_value_to_str(property));
 
-    mu_check(strcasecmp(user_->name, "default user name") == 0);
-    mu_check(strcasecmp(admin_->name, "default admin name") == 0);
+    property = ulg_object_get((UlgObject*)admin, "role");
+    mu_assert_string_eq(test_string, ulg_value_to_str(property));
 
-    ulg_object_free((UlgObject*)admin_);
-    ulg_object_free((UlgObject*)user_);
-    ulg_context_free(context);
+    ulg_object_free((UlgObject*)admin);
 }
 
-MU_TEST(set_parent_property) {
-    UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user);
-    ulg_class_register(context, admin);
-    const UlgClass* admin_class = ulg_class_get(context, admin);
-    test_set_user_name(admin_class);
+/** ulg_object_set should correctly set a property, be it declared on the type or on a parent. */
+MU_TEST(test_ulg_object_set) {
+    Admin* admin = (Admin*)ulg_object_new(admin_class);
+    const char* test_string = "Jean-jean mi";
+    UlgValue test_value = ulg_value_from_str(test_string);
+
+    ulg_object_set((UlgObject*)admin, "name", test_value);
+    ulg_object_set((UlgObject*)admin, "role", test_value);
+    mu_assert_string_eq(test_string, admin->base.name);
+    mu_assert_string_eq(test_string, admin->role);
+
+    ulg_object_free((UlgObject*)admin);
+}
+
+static void _setup() {
+    context = fixture_context_new();
+    user_class = ulg_class_get(context, user_type);
+    admin_class = ulg_class_get(context, admin_type);
+}
+
+static void _teardown() {
+    admin_class = NULL;
+    user_class = NULL;
     ulg_context_free(context);
+    context = NULL;
 }
 
 MU_TEST_SUITE(object_suite) {
-    MU_RUN_TEST(create_object);
-    MU_RUN_TEST(set_property);
-    MU_RUN_TEST(set_parent_property);
-    MU_RUN_TEST(virtual_methods);
+    MU_SUITE_CONFIGURE(_setup, _teardown);
+    MU_RUN_TEST(test_ulg_class_get);
+    MU_RUN_TEST(test_ulg_object_vtable);
+    MU_RUN_TEST(test_ulg_object_get);
+    MU_RUN_TEST(test_ulg_object_set);
 }

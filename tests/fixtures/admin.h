@@ -10,4 +10,4 @@ typedef struct {
     const char* role;
 } Admin;
 
-const UlgClass* admin(UlgClassFactory* factory);
+const UlgClass* admin_type(UlgClassFactory* factory);

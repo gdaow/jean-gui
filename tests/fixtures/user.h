@@ -4,6 +4,14 @@ typedef struct _UlgClass UlgClass;
 typedef struct _UlgClassFactory UlgClassFactory;
 typedef struct _Team Team;
 
+typedef enum {
+    PERM_CAN_LOGIN = 1,
+    PERM_CAN_CHANGE_PASSWORD = 0x2,
+    PERM_CAN_CREATE_USER = 0x4,
+    PERM_CAN_DELETE_USER = 0x8,
+    PERM_ALL = PERM_CAN_LOGIN | PERM_CAN_CHANGE_PASSWORD | PERM_CAN_CREATE_USER | PERM_CAN_DELETE_USER
+} PermissionFlags;
+
 typedef struct {
     const char* name;
     Team* team;
@@ -11,9 +19,9 @@ typedef struct {
 
 typedef struct {
     UlgObjectVT base;
-    void (*set_default_name)(User*);
+    PermissionFlags (*get_default_permissions)();
 } UserVT;
 
-const UlgClass* user(UlgClassFactory* factory);
+const UlgClass* user_type(UlgClassFactory* factory);
 
-void user_set_default_name(User* user);
+PermissionFlags user_get_default_permissions(User* user);

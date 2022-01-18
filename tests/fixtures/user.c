@@ -4,8 +4,8 @@
 
 #include "user.h"
 
-static void _set_default_name(User* user) {
-    user->name = "default user name";
+static PermissionFlags _get_default_permissions() {
+    return PERM_CAN_LOGIN;
 }
 
 static UlgValue _get_name(const UlgObject* object) {
@@ -29,7 +29,7 @@ static void _set_team(UlgObject* object, UlgValue value) {
     user->name = ulg_value_to_str(value);
 }
 
-const UlgClass* user(UlgClassFactory* factory) {
+const UlgClass* user_type(UlgClassFactory* factory) {
     UlgClass* class_ = ulg_class_declare(
         factory,
         "User",
@@ -42,11 +42,10 @@ const UlgClass* user(UlgClassFactory* factory) {
     ulg_class_add_property(class_, "team", _get_team, _set_team);
 
     UserVT* vtable = ulg_class_edit_vtable(class_);
-    vtable->set_default_name = _set_default_name;
+    vtable->get_default_permissions = _get_default_permissions;
     return class_;
 }
 
-void user_set_default_name(User* user) {
-    const UserVT* vt = ulg_object_vtable((UlgObject*)user);
-    vt->set_default_name(user);
+PermissionFlags user_get_default_permissions(User* user) {
+    return ((const UserVT*)ulg_object_vtable((UlgObject*)user))->get_default_permissions();
 }

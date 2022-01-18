@@ -99,6 +99,9 @@ const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition
             .class_ = &(UlgClass) { .id = class_id }
         }
     );
+
+    if(!item) return NULL;
+
     return item->class_;
 }
 
@@ -109,6 +112,7 @@ const UlgClass* ulg_class_get_by_name(UlgContext* context, const char* name) {
             .class_ = &(UlgClass) { .name = name }
         }
     );
+    if(!item) return NULL;
     return item->class_;
 }
 

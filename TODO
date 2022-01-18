@@ -3,3 +3,14 @@
  - Ca va etre complique de creer des objets sans avoir le contexte sous la main pour recuperer
    les classes. Mais c'est la condition pour la réentrance. On pourrait le stocker dans les classes,
    ou dans les objets, ca parait pas trop con.
+
+ - Peut etre zaper le UlgObject* pour mettre du void a la place. Dans les faits on utilise quasi 
+   pas les objets non-types.
+ 
+ - Ameliorer le rapport d'erreurs, tester les erreurs aussi.
+
+ - Supporter le coverage.
+
+ - Ajouter ca a la CI dans github.
+
+ - Bien reflechir a la pertinence d'avoir des methodes virtuelles.
