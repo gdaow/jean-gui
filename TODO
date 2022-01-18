@@ -6,3 +6,8 @@
  * Support code coverage.
  * Setup CI on github.
  * Think (a lot) about virtual methods pertinence here.
+ * Add a magic number and an assert to raise early on UlgObjects pointer errors in debug.
+ * Check for parent virtual table size only in Debug.
+ * UlgClassFactory / id is not clear, we should make it more straightforward, event if it cost a
+   const cast
+   

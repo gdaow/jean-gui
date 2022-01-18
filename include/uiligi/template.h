@@ -43,4 +43,4 @@ void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, c
  * @param template The template to instanciate.
  * @return The created object.
  */
-UlgObject* ulg_template_instanciate(UlgTemplate* template);
+void* ulg_template_instanciate(UlgTemplate* template);

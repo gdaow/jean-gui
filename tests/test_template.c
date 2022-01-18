@@ -26,7 +26,7 @@ MU_TEST(template_instanciate) {
     Admin* admin = (Admin*)ulg_template_instanciate(template);
     mu_assert_string_eq(user_get_name((User *)admin), name);
     mu_assert_string_eq(admin_get_role(admin), role);
-    ulg_object_free((UlgObject*)admin);
+    ulg_object_free(admin);
     ulg_template_free(template);
     ulg_context_free(context);
 }

@@ -65,11 +65,11 @@ void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, c
     template->properties = new_property;
 }
 
-UlgObject* ulg_template_instanciate(UlgTemplate* template) {
-    UlgObject* object = ulg_object_new(template->class_);
+void* ulg_template_instanciate(UlgTemplate* template) {
+    void* object = ulg_object_new(template->class_);
     UlgPropertyTemplate* property = template->properties;
     while(property) {
-        ulg_object_set(object, property->name, ulg_value_from_str(property->value));
+        ulg_object_set(object, property->name, ulg_string(property->value));
         property = property->next;
     }
 

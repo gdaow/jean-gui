@@ -7,32 +7,54 @@
  * 
  * Generic value wrapper, used to get / set properties.
  *
- * TODO : Finish documentation here.
+ * Why it only contains int and double values, and no uint... ?
+ * As uiligi main purpose is to bind a graphical ui to an underlying view model, and the combinatory
+ * of needed conversion exploses when adding literal types, I made the choice of providing only support
+ * for those two types, leaving to the programmer the burden of representing the model data with only
+ * those two types. This simplifies the UI interface, as well as value conversion during binding.
  *
  */
 #pragma once
+#include <stdbool.h>
 
 typedef enum {
-    ULG_STRING
+    ULG_BOOLEAN,
+    ULG_INTEGER,
+    ULG_NUMBER,
+    ULG_STRING,
+    ULG_RAW,
+    ULG_OBJECT
 } UlgValueType;
 
-typedef struct UlgValue {
+typedef struct {
     UlgValueType type;
     union {
-        char* str_value;
+        bool bool_;
+        char* string_;
+	int int_;
+        double double_;
+        void* raw_;
+        void* object_;
     } data;
 } UlgValue;
 
-/**
- * Constuct a generic value containing a string.
- * @param value The string value to assign to this value container.
- * @return The created value.
- */
-UlgValue ulg_value_from_str(const char* value);
+UlgValue ulg_bool(bool value);
+UlgValue ulg_int(int value);
+UlgValue ulg_double(double value);
+UlgValue ulg_string(const char* value);
+UlgValue ulg_raw(void* value);
+UlgValue ulg_object(void* value);
 
-/**
- * Get a string form a generic value. Will assert if the given value is of the wrong type.
- * @param value The generic value to convert to string.
- * @return The string contained in the generic value.
- */
-const char* ulg_value_to_str(UlgValue value);
+bool ulg_is_bool(UlgValue value);
+bool ulg_is_int(UlgValue value);
+bool ulg_is_double(UlgValue value);
+bool ulg_is_string(UlgValue value);
+bool ulg_is_raw(UlgValue value);
+bool ulg_is_object(UlgValue value);
+
+bool ulg_to_bool(UlgValue value);
+long ulg_to_int(UlgValue value);
+double ulg_to_double(UlgValue value);
+const char* ulg_to_string(UlgValue value);
+const void* ulg_to_raw(UlgValue value);
+void* ulg_to_object(UlgValue value);

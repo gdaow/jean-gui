@@ -51,6 +51,7 @@ executable(
     'tests/main.c',
     'tests/test_object.c',
     'tests/test_template.c',
+    'tests/test_value.c',
     dependencies: [ulg_dep],
     include_directories: [minunit_includes]
 )

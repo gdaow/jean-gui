@@ -41,46 +41,46 @@ MU_TEST(test_ulg_class_get) {
 
 /** ulg_object_vtable should allow override virtual functions of parent classes. */
 MU_TEST(test_ulg_object_vtable) {
-    User* user = (User*)ulg_object_new(user_class);
-    User* admin = (User*)ulg_object_new(admin_class);
+    User* user = ulg_object_new(user_class);
+    User* admin = ulg_object_new(admin_class);
 
     mu_assert_int_eq(user_get_default_permissions(user), PERM_CAN_LOGIN);
     mu_assert_int_eq(user_get_default_permissions(admin), PERM_ALL);
 
-    ulg_object_free((UlgObject*)admin);
-    ulg_object_free((UlgObject*)user);
+    ulg_object_free(admin);
+    ulg_object_free(user);
 }
 
 /** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
 MU_TEST(test_ulg_object_get) {
-    Admin* admin = (Admin*)ulg_object_new(admin_class);
+    Admin* admin = ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
     user_set_name((User*)admin, test_string);
     admin_set_role(admin, test_string);
 
     UlgValue property;
     
-    property = ulg_object_get((UlgObject*)admin, "name");
-    mu_assert_string_eq(test_string, ulg_value_to_str(property));
+    property = ulg_object_get(admin, "name");
+    mu_assert_string_eq(test_string, ulg_to_string(property));
 
-    property = ulg_object_get((UlgObject*)admin, "role");
-    mu_assert_string_eq(test_string, ulg_value_to_str(property));
+    property = ulg_object_get(admin, "role");
+    mu_assert_string_eq(test_string, ulg_to_string(property));
 
-    ulg_object_free((UlgObject*)admin);
+    ulg_object_free(admin);
 }
 
 /** ulg_object_set should correctly set a property, be it declared on the type or on a parent. */
 MU_TEST(test_ulg_object_set) {
-    Admin* admin = (Admin*)ulg_object_new(admin_class);
+    Admin* admin = ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
-    UlgValue test_value = ulg_value_from_str(test_string);
+    UlgValue test_value = ulg_string(test_string);
 
-    ulg_object_set((UlgObject*)admin, "name", test_value);
-    ulg_object_set((UlgObject*)admin, "role", test_value);
+    ulg_object_set(admin, "name", test_value);
+    ulg_object_set(admin, "role", test_value);
     mu_assert_string_eq(test_string, user_get_name((User*)admin));
     mu_assert_string_eq(test_string, admin_get_role(admin));
 
-    ulg_object_free((UlgObject*)admin);
+    ulg_object_free(admin);
 }
 
 static void _setup() {

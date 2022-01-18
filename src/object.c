@@ -189,23 +189,21 @@ typedef struct _UlgObjectHeader {
     char data[];
 } UlgObjectHeader;
 
-static UlgObjectHeader* _get_header(UlgObject* object);
-static const UlgObjectHeader* _get_header_const(const UlgObject* object);
+static UlgObjectHeader* _get_header(void* object);
+static const UlgObjectHeader* _get_header_const(const void* object);
 
-UlgObject* ulg_object_new(const UlgClass* class_) {
-    UlgObjectHeader* header = malloc(sizeof(UlgObjectHeader) + class_->data_size);
+void* ulg_object_new(const UlgClass* class_) {
+    size_t total_size = sizeof(UlgObjectHeader) + class_->data_size;
+    UlgObjectHeader* header = calloc(1, total_size);
     header->class_ = class_;
-    // Recursively initialize hierarchy, parent-first.
-    // Return a pointer to the data, we offset the pointer to get the header each time.
-    UlgObject* object = (UlgObject*)(header + 1);
-    const UlgObjectVT* vtable = ulg_object_vtable(object);
+    const UlgObjectVT* vtable = ulg_object_vtable(header->data);
     if(vtable->init) {
-        vtable->init(object);
+        vtable->init(header->data);
     }
-    return object;
+    return header->data;
 }
 
-void ulg_object_free(UlgObject* object) {
+void ulg_object_free(void* object) {
     UlgObjectHeader* header = _get_header(object);
     const UlgObjectVT* vtable = ulg_object_vtable(object);
     if(vtable->cleanup) {
@@ -215,21 +213,21 @@ void ulg_object_free(UlgObject* object) {
     free(header);
 }
 
-const void* ulg_object_vtable(const UlgObject* object) {
+const void* ulg_object_vtable(const void* object) {
     const UlgObjectHeader* header = _get_header_const(object);
     return header->class_->vtable;
 }
 
 static const _UlgProperty* _get_property(const UlgClass* class_, const char* name);
 
-UlgValue ulg_object_get(const UlgObject* object, const char* property_name) {
+UlgValue ulg_object_get(const void* object, const char* property_name) {
     const UlgObjectHeader* header = _get_header_const(object);
     const UlgClass* class_ = header->class_;
     const _UlgProperty* property = _get_property(class_, property_name);
     return property->getter(object);
 }
 
-void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value) {
+void ulg_object_set(void* object, const char* property_name, const UlgValue value) {
     UlgObjectHeader* header = _get_header(object);
     const UlgClass* class_ = header->class_;
     const _UlgProperty* property = _get_property(class_, property_name);
@@ -342,10 +340,10 @@ static UlgClass* _class_new(
     return class_;
 }
 
-static UlgObjectHeader* _get_header(UlgObject* object) {
+static UlgObjectHeader* _get_header(void* object) {
     return (UlgObjectHeader*)object - 1;
 }
 
-static const UlgObjectHeader* _get_header_const(const UlgObject* object) {
+static const UlgObjectHeader* _get_header_const(const void* object) {
     return (const UlgObjectHeader*)object - 1;
 }

@@ -26,25 +26,25 @@ static PermissionFlags _user_get_default_permissions() {
     return PERM_CAN_LOGIN;
 }
 
-static UlgValue _user_get_name(const UlgObject* object) {
+static UlgValue _user_get_name(const void* object) {
     const User* user = (void *)object;
-    return ulg_value_from_str(user->name);
+    return ulg_string(user->name);
 }
 
-static void _user_set_name(UlgObject* object, UlgValue value) {
+static void _user_set_name(void* object, UlgValue value) {
     User* user = (void *)object;
-    user->name = ulg_value_to_str(value);
+    user->name = ulg_to_string(value);
 }
 
-static UlgValue _user_get_team(const UlgObject* object) {
+static UlgValue _user_get_team(const void* object) {
     const User* user = (void *)object;
     // TODO : Implement this.
-    return ulg_value_from_str(user->name);
+    return ulg_string(user->name);
 }
 
-static void _user_set_team(UlgObject* object, UlgValue value) {
+static void _user_set_team(void* object, UlgValue value) {
     User* user = (void *)object;
-    user->name = ulg_value_to_str(value);
+    user->name = ulg_to_string(value);
 }
 
 typedef struct {
@@ -70,7 +70,7 @@ const UlgClass* user_type(UlgClassFactory* factory) {
 }
 
 PermissionFlags user_get_default_permissions(User* user) {
-    return ((const UserVT*)ulg_object_vtable((UlgObject*)user))->get_default_permissions();
+    return ((const UserVT*)ulg_object_vtable((void*)user))->get_default_permissions();
 }
 
 const char* user_get_name(const User* user) {
@@ -90,14 +90,14 @@ static PermissionFlags _admin_get_default_permissions() {
     return PERM_ALL;
 }
 
-static UlgValue _admin_get_role(const UlgObject* object) {
+static UlgValue _admin_get_role(const void* object) {
     const Admin* admin = (void *)object;
-    return ulg_value_from_str(admin->role);
+    return ulg_string(admin->role);
 }
 
-static void _admin_set_role(UlgObject* object, UlgValue value) {
+static void _admin_set_role(void* object, UlgValue value) {
     Admin* admin = (void *)object;
-    admin->role = ulg_value_to_str(value);
+    admin->role = ulg_to_string(value);
 }
 
 const UlgClass* admin_type(UlgClassFactory* factory) {
@@ -128,14 +128,14 @@ struct _Team {
     const char* name;
 };
 
-static void _team_set_name(UlgObject* object, UlgValue value) {
+static void _team_set_name(void* object, UlgValue value) {
     Team* team = (void *)object;
-    team->name = ulg_value_to_str(value);
+    team->name = ulg_to_string(value);
 }
 
-static UlgValue _team_get_name(const UlgObject* object) {
+static UlgValue _team_get_name(const void* object) {
     const Team* team = (void *)object;
-    return ulg_value_from_str(team->name);
+    return ulg_string(team->name);
 }
 
 const UlgClass* team_type(UlgClassFactory* factory) {

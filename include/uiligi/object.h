@@ -5,7 +5,7 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Implementation of the UlgObject model.
+ * Implementation of the void model.
  * 
  * TODO : Finish documentation here.
  *
@@ -19,7 +19,6 @@
 typedef struct _UlgContext UlgContext;
 typedef struct _UlgClass UlgClass;
 typedef struct _UlgClassFactory UlgClassFactory;
-typedef struct _UlgObject UlgObject;
 
 /**
  * Create a new class context, usable to retrieve classes by name.
@@ -106,11 +105,11 @@ UlgClass* ulg_class_declare(
  */
 void* ulg_class_edit_vtable(UlgClass* class_);
 
-/** Callback for UlgObjects property getter.*/
-typedef UlgValue (*UlgGetter)(const UlgObject*);
+/** Callback for voids property getter.*/
+typedef UlgValue (*UlgGetter)(const void*);
 
-/** Callback for UlgObjects property setter.*/
-typedef void (*UlgSetter)(UlgObject*, UlgValue);
+/** Callback for voids property setter.*/
+typedef void (*UlgSetter)(void*, const UlgValue);
 
 /**
  * Add a property to this class.
@@ -122,31 +121,31 @@ typedef void (*UlgSetter)(UlgObject*, UlgValue);
 void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter, UlgSetter setter);
 
 /**
- * UlgObject virtual table structure. See ulg_class_edit_vtable to implement methods on
- * class inheriting from UlgObject.
+ * void virtual table structure. See ulg_class_edit_vtable to implement methods on
+ * class inheriting from void.
  */
 typedef struct _UlgObjectVT {
     /** Called after the given object is allocated and initialized. */
-    void (*init)(UlgObject*);
+    void (*init)(void*);
 
     /** Called after the given object is allocated and initialized. */
-    void (*cleanup)(UlgObject*);
+    void (*cleanup)(void*);
 } UlgObjectVT;
 
 /**
- * @brief UlgObject class definition.
+ * @brief void class definition.
  */
 const UlgClass* ulg_object_type(UlgClassFactory* factory);
 
 /**
  * Create an object of the given class.
  */
-UlgObject* ulg_object_new(const UlgClass* class_);
+void* ulg_object_new(const UlgClass* class_);
 
 /**
- * Release the given UlgObject.
+ * Release the given void.
  */
-void ulg_object_free(UlgObject* object);
+void ulg_object_free(void* object);
 
 /**
  * @brief Return the virtual table of this object.
@@ -155,7 +154,7 @@ void ulg_object_free(UlgObject* object);
  * 
  * @return A pointer to the object's virtual table.
  */
-const void* ulg_object_vtable(const UlgObject* object);
+const void* ulg_object_vtable(const void* object);
 
 /**
  * Get a property from an object.
@@ -164,7 +163,7 @@ const void* ulg_object_vtable(const UlgObject* object);
  * @param property_name Name of the property to set.
  * @return              The property value.
  */
-UlgValue ulg_object_get(const UlgObject* object, const char* property_name);
+UlgValue ulg_object_get(const void* object, const char* property_name);
 
 /**
  * Set a property on an object.
@@ -173,4 +172,4 @@ UlgValue ulg_object_get(const UlgObject* object, const char* property_name);
  * @param property_name Name of the property to set.
  * @param value         Value to set the property to.
  */
-void ulg_object_set(UlgObject* object, const char* property_name, UlgValue value);
+void ulg_object_set(void* object, const char* property_name, UlgValue value);
