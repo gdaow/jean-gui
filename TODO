@@ -1,16 +1,8 @@
- - Do not register class implicitely when calling ulg_class_get, but rather call a specific register method.
- 
- - Ca va etre complique de creer des objets sans avoir le contexte sous la main pour recuperer
-   les classes. Mais c'est la condition pour la réentrance. On pourrait le stocker dans les classes,
-   ou dans les objets, ca parait pas trop con.
-
- - Peut etre zaper le UlgObject* pour mettre du void a la place. Dans les faits on utilise quasi 
-   pas les objets non-types.
- 
- - Ameliorer le rapport d'erreurs, tester les erreurs aussi.
-
- - Supporter le coverage.
-
- - Ajouter ca a la CI dans github.
-
- - Bien reflechir a la pertinence d'avoir des methodes virtuelles.
+ * It'll be complicated to create objects around without having a context available, but I'm not fond
+   of creating static variables, for sake of testability and reentrance. We may should store the
+   context in classes.
+ * We could remove UlgObject, pass void* instead, would be less verbose when casting.
+ * Add an error hooking mecanism, test for errors too in unit tests.
+ * Support code coverage.
+ * Setup CI on github.
+ * Think (a lot) about virtual methods pertinence here.

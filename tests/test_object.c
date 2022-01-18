@@ -1,3 +1,10 @@
+/**
+ * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
+ * 
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file for more details.
+ */
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,10 +13,7 @@
 
 #include <uiligi/object.h>
 
-#include "test_object.h"
-#include "fixtures/user.h"
-#include "fixtures/common.h"
-#include "fixtures/admin.h"
+#include "fixtures/user_model.h"
 
 static UlgContext* context = NULL;
 static const UlgClass* user_class = NULL;
@@ -51,10 +55,8 @@ MU_TEST(test_ulg_object_vtable) {
 MU_TEST(test_ulg_object_get) {
     Admin* admin = (Admin*)ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
-    *admin = (Admin) {
-        .base.name = test_string,
-        .role = test_string
-    };
+    user_set_name((User*)admin, test_string);
+    admin_set_role(admin, test_string);
 
     UlgValue property;
     
@@ -75,14 +77,14 @@ MU_TEST(test_ulg_object_set) {
 
     ulg_object_set((UlgObject*)admin, "name", test_value);
     ulg_object_set((UlgObject*)admin, "role", test_value);
-    mu_assert_string_eq(test_string, admin->base.name);
-    mu_assert_string_eq(test_string, admin->role);
+    mu_assert_string_eq(test_string, user_get_name((User*)admin));
+    mu_assert_string_eq(test_string, admin_get_role(admin));
 
     ulg_object_free((UlgObject*)admin);
 }
 
 static void _setup() {
-    context = fixture_context_new();
+    context = user_model_context_new();
     user_class = ulg_class_get(context, user_type);
     admin_class = ulg_class_get(context, admin_type);
 }

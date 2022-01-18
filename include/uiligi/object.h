@@ -1,15 +1,14 @@
 /**
- * @brief Contains function to declare UlgObject classes, instanciate objects & set properties.
- * @date 2022-01-17
- * 
- * TODO : Explanations on all this.
- *
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
  * 
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
+ * Implementation of the UlgObject model.
+ * 
+ * TODO : Finish documentation here.
+ *
  */
 #pragma once
 

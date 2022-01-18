@@ -1,15 +1,14 @@
 /**
- * @brief A template is a tree representing a hierarchy of object, not already instanciated.
- * @date 2022-01-17
- * 
- * TODO : Explanations on all this.
- *
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
  * 
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
+ * Templating allows to create a schema for a hierarchy of objects.
+ *
+ * TODO : Finish documentation here.
+ *
  */
 
 typedef struct _UlgContext UlgContext;

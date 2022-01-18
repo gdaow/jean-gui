@@ -47,10 +47,7 @@ minunit_includes = include_directories('subprojects/minunit')
 
 executable(
     'uiligi-tests',
-    'tests/fixtures/admin.c',
-    'tests/fixtures/common.c',
-    'tests/fixtures/team.c',
-    'tests/fixtures/user.c',
+    'tests/fixtures/user_model.c',
     'tests/main.c',
     'tests/test_object.c',
     'tests/test_template.c',
