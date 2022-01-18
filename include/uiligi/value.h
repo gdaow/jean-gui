@@ -5,29 +5,21 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Generic value wrapper, used to get / set properties.
+ * Generic literal values wrapper.
+ * TODO: Detail.
  *
- * Why it only contains int and double values, and no uint... ?
- * As uiligi main purpose is to bind a graphical ui to an underlying view model, and the combinatory
- * of needed conversion exploses when adding literal types, I made the choice of providing only support
- * for those two types, leaving to the programmer the burden of representing the model _value with only
- * those two types. This simplifies the UI interface, as well as value conversion during binding.
+ * ui-ligi value wrapper only support int and double, and no ulong, float... because the combinatorial
+ * of default conversion between supported types rapidly exploses, and with it the complexity.
+ * TODO: detail this and the choice I made.
  *
  */
 #pragma once
 #include <stdbool.h>
 
-typedef enum {
-    _ULG_BOOLEAN,
-    _ULG_INTEGER,
-    _ULG_DOUBLE,
-    _ULG_STRING,
-    _ULG_RAW,
-    _ULG_OBJECT
-} _UlgValueType;
-
+/* This struct member's are not meant to be used directly, and are not guaranteed to stay stable.
+ * To handle UlgValues, use the access function defined below. */
 typedef struct {
-    _UlgValueType _type;
+    int _type;
     union {
         bool _bool;
         const char* _string;
