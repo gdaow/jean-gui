@@ -10,7 +10,7 @@
  * Why it only contains int and double values, and no uint... ?
  * As uiligi main purpose is to bind a graphical ui to an underlying view model, and the combinatory
  * of needed conversion exploses when adding literal types, I made the choice of providing only support
- * for those two types, leaving to the programmer the burden of representing the model data with only
+ * for those two types, leaving to the programmer the burden of representing the model _value with only
  * those two types. This simplifies the UI interface, as well as value conversion during binding.
  *
  */
@@ -18,24 +18,24 @@
 #include <stdbool.h>
 
 typedef enum {
-    ULG_BOOLEAN,
-    ULG_INTEGER,
-    ULG_NUMBER,
-    ULG_STRING,
-    ULG_RAW,
-    ULG_OBJECT
-} UlgValueType;
+    _ULG_BOOLEAN,
+    _ULG_INTEGER,
+    _ULG_DOUBLE,
+    _ULG_STRING,
+    _ULG_RAW,
+    _ULG_OBJECT
+} _UlgValueType;
 
 typedef struct {
-    UlgValueType type;
+    _UlgValueType _type;
     union {
-        bool bool_;
-        char* string_;
-	int int_;
-        double double_;
-        void* raw_;
-        void* object_;
-    } data;
+        bool _bool;
+        const char* _string;
+	    int _int;
+        double _double;
+        void* _raw;
+        void* _object;
+    } _value;
 } UlgValue;
 
 UlgValue ulg_bool(bool value);

@@ -100,6 +100,9 @@ MU_TEST(test_ulg_value_object) {
     _test_false_checks(value, ulg_is_object);
     mu_check(ulg_is_object(value));
     mu_check(ulg_to_object(value) == test_object);
+
+    ulg_object_free(test_object);
+    ulg_context_free(context);
 }
 
 MU_TEST_SUITE(value_suite) {
