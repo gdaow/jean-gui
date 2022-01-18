@@ -140,7 +140,7 @@ const UlgClass* ulg_object_type(UlgClassFactory* factory);
 /**
  * Create an object of the given class.
  */
-void* ulg_object_new(const UlgClass* class_);
+[[nodiscard]] void* ulg_object_new(const UlgClass* class_);
 
 /**
  * Release the given void.
