@@ -99,7 +99,7 @@ void ulg_class_register(UlgContext* context, UlgClassDefinition definition) {
 }
 
 const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition) {
-    uintptr_t class_id = (uintptr_t)definition; // TODO : will be anoying when wrapping to other languages.
+    uintptr_t class_id = (uintptr_t)definition; // TODO: will be anoying when wrapping to other languages.
     _ClassItem* item = hashmap_get(
         context->id_index,
         &(_ClassItem) {

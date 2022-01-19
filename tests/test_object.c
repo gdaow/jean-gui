@@ -55,8 +55,8 @@ MU_TEST(test_ulg_object_vtable) {
 MU_TEST(test_ulg_object_get) {
     Admin* admin = ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
-    user_set_name((User*)admin, test_string);
-    admin_set_role(admin, test_string);
+    admin->base.name = test_string;
+    admin->role = test_string;
 
     UlgValue property;
     
@@ -77,8 +77,8 @@ MU_TEST(test_ulg_object_set) {
 
     ulg_object_set(admin, "name", test_value);
     ulg_object_set(admin, "role", test_value);
-    mu_assert_string_eq(test_string, user_get_name((User*)admin));
-    mu_assert_string_eq(test_string, admin_get_role(admin));
+    mu_assert_string_eq(test_string, admin->base.name);
+    mu_assert_string_eq(test_string, admin->role);
 
     ulg_object_free(admin);
 }

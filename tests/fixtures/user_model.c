@@ -17,34 +17,28 @@ UlgContext* user_model_context_new() {
     return context;
 }
 
-struct _User {
-    const char* name;
-    Team* team;
-};
-
 static PermissionFlags _user_get_default_permissions() {
     return PERM_CAN_LOGIN;
 }
 
 static UlgValue _user_get_name(const void* object) {
-    const User* user = (void *)object;
+    const User* user = object;
     return ulg_string(user->name);
 }
 
 static void _user_set_name(void* object, UlgValue value) {
-    User* user = (void *)object;
+    User* user = object;
     user->name = ulg_to_string(value);
 }
 
 static UlgValue _user_get_team(const void* object) {
-    const User* user = (void *)object;
-    // TODO : Implement this.
-    return ulg_string(user->name);
+    const User* user = object;
+    return ulg_object(user->team);
 }
 
 static void _user_set_team(void* object, UlgValue value) {
-    User* user = (void *)object;
-    user->name = ulg_to_string(value);
+    User* user = object;
+    user->team = ulg_to_object(value);
 }
 
 typedef struct {
@@ -72,19 +66,6 @@ const UlgClass* user_type(UlgClassFactory* factory) {
 PermissionFlags user_get_default_permissions(User* user) {
     return ((const UserVT*)ulg_object_vtable((void*)user))->get_default_permissions();
 }
-
-const char* user_get_name(const User* user) {
-    return user->name;
-}
-
-void user_set_name(User* user, const char* name) {
-    user->name = name;
-}
-
-struct _Admin {
-    User base;
-    const char* role;
-};
 
 static PermissionFlags _admin_get_default_permissions() {
     return PERM_ALL;
@@ -115,18 +96,6 @@ const UlgClass* admin_type(UlgClassFactory* factory) {
 
     return class_;
 }
-
-const char* admin_get_role(const Admin* admin) {
-    return admin->role;
-}
-
-void admin_set_role(Admin* admin, const char* role) {
-    admin->role = role;
-}
-
-struct _Team {
-    const char* name;
-};
 
 static void _team_set_name(void* object, UlgValue value) {
     Team* team = (void *)object;

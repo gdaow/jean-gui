@@ -1,13 +1,15 @@
  * It'll be complicated to create objects around without having a context available, but I'm not fond
    of creating static variables, for sake of testability and reentrance. We may should store the
    context in classes.
- * We could remove UlgObject, pass void* instead, would be less verbose when casting.
  * Add an error hooking mecanism, test for errors too in unit tests.
  * Support code coverage.
  * Setup CI on github.
- * Think (a lot) about virtual methods pertinence here.
  * Add a magic number and an assert to raise early on UlgObjects pointer errors in debug.
  * Check for parent virtual table size only in Debug.
  * UlgClassFactory / id is not clear, we should make it more straightforward, event if it cost a
    const cast
-   
+ * Handle other values than string in templates.
+ * It's maybe not a good idea to have shortcuts like ulg_object... in ulg_value, as anyway, we should
+   very rarely depend upon direct property accessing in client code : either we access a base class,
+   and we know it's native type, either all is set through the binding system.
+ * Expose UlgProperty publicly.

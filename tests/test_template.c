@@ -13,24 +13,33 @@
 
 #include "fixtures/user_model.h"
 
-MU_TEST(template_instanciate) {
+MU_TEST(test_ulg_template_instanciate) {
     UlgContext* context = user_model_context_new();
 
-    UlgTemplate* template = ulg_template_new(context, "Admin");
+    const char* name = "Dr. Meeseeks";
+    const char* role = "Manager of all the Mr Meeseeks";
+    const char* team_name = "Team Meeseeks";
 
-    const char* name = "uber jean-mi";
-    const char* role = "manager of all the jean-mi's";
-    ulg_template_set_scalar(template, "name", name);
-    ulg_template_set_scalar(template, "role", role);
+    UlgTemplate* admin_template = ulg_template_new_by_name(context, "Admin");
 
-    Admin* admin = (Admin*)ulg_template_instanciate(template);
-    mu_assert_string_eq(user_get_name((User *)admin), name);
-    mu_assert_string_eq(admin_get_role(admin), role);
+    ulg_template_set_scalar(admin_template, "name", name);
+    ulg_template_set_scalar(admin_template, "role", role);
+
+    //TODO: Handle default type for children here.
+    UlgTemplate* team_template = ulg_template_set_child(admin_template, "team", "Team");
+    ulg_template_set_scalar(team_template, "name", team_name);
+
+    Admin* admin = (Admin*)ulg_template_instanciate(admin_template);
+    mu_assert_string_eq(admin->base.name, name);
+    mu_assert_string_eq(admin->role, role);
+    mu_assert_string_eq(admin->base.team->name, team_name);
+
+    ulg_object_free(admin->base.team); //TODO: We should handle this either in Admin, either automatically.
     ulg_object_free(admin);
-    ulg_template_free(template);
+    ulg_template_free(admin_template); // team_template will be freed by i's parent
     ulg_context_free(context);
 }
 
 MU_TEST_SUITE(template_suite) {
-    MU_RUN_TEST(template_instanciate);
+    MU_RUN_TEST(test_ulg_template_instanciate);
 }

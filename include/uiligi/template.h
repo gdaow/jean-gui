@@ -7,10 +7,11 @@
  * 
  * Templating allows to create a schema for a hierarchy of objects.
  *
- * TODO : Finish documentation here.
+ * TODO: Finish documentation here.
  *
  */
 
+typedef struct _UlgClass UlgClass;
 typedef struct _UlgContext UlgContext;
 typedef struct _UlgTemplate UlgTemplate;
 
@@ -19,7 +20,16 @@ typedef struct _UlgTemplate UlgTemplate;
  * 
  * @return UlgTemplate* 
  */
-UlgTemplate* ulg_template_new(UlgContext* context, const char* class_name);
+UlgTemplate* ulg_template_new(UlgContext* context, const UlgClass* class_name);
+
+/**
+ * Return a new template node, with the class registered under the given name.
+ * 
+ * @param context 
+ * @param class_name 
+ * @return UlgTemplate* 
+ */
+UlgTemplate* ulg_template_new_by_name(UlgContext* context, const char* class_name);
 
 /**
  * @brief Destroy the given template node, and all of it's children.
@@ -38,9 +48,18 @@ void ulg_template_free(UlgTemplate* template);
 void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, const char* value);
 
 /**
+ * @brief Adds a child object as a property.
+ * 
+ * @param template The template to add a property to.
+ * @param name     The name of the property to assign the object to.
+ * @param class    Class of the child object to create.
+ */
+UlgTemplate* ulg_template_set_child(UlgTemplate* template, const char* property_name, const char* class_name);
+
+/**
  * @brief Create an object based on the specified template.
  * 
  * @param template The template to instanciate.
  * @return The created object.
  */
-void* ulg_template_instanciate(UlgTemplate* template);
+void* ulg_template_instanciate(const UlgTemplate* template);

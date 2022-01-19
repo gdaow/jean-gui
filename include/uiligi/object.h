@@ -7,7 +7,7 @@
  * 
  * Implementation of the void model.
  * 
- * TODO : Finish documentation here.
+ * TODO: Finish documentation here.
  *
  */
 #pragma once
@@ -164,6 +164,24 @@ const void* ulg_object_vtable(const void* object);
  * @return              The property value.
  */
 UlgValue ulg_object_get(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_bool(ulg_object_get(object, property_name)) */
+bool ulg_object_get_bool(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_int(ulg_object_get(object, property_name)) */
+int ulg_object_get_int(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_float(ulg_object_get(object, property_name)) */
+float ulg_object_get_float(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_string(ulg_object_get(object, property_name)) */
+const char* ulg_object_get_string(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_raw(ulg_object_get(object, property_name)) */
+const void* ulg_object_get_raw(const void* object, const char* property_name);
+
+/** Equivalent to ulg_to_object(ulg_object_get(object, property_name)) */
+const void* ulg_object_get_object(const void* object, const char* property_name);
 
 /**
  * Set a property on an object.

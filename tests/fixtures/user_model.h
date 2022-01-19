@@ -25,18 +25,25 @@ typedef enum {
     PERM_ALL = PERM_CAN_LOGIN | PERM_CAN_CHANGE_PASSWORD | PERM_CAN_CREATE_USER | PERM_CAN_DELETE_USER
 } PermissionFlags;
 
+struct _User {
+    const char* name;
+    Team* team;
+};
+
+struct _Admin {
+    User base;
+    const char* role;
+};
+
+struct _Team {
+    const char* name;
+};
+
+
 UlgContext* user_model_context_new();
 
 const UlgClass* user_type(UlgClassFactory* factory);
-
-const char* user_get_name(const User* user);
-void user_set_name(User* user, const char* name);
-
 PermissionFlags user_get_default_permissions(User* user);
 
 const UlgClass* admin_type(UlgClassFactory* factory);
-
-const char* admin_get_role(const Admin* admin);
-void admin_set_role(Admin* admin, const char* role);
-
 const UlgClass* team_type(UlgClassFactory* factory);
