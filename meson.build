@@ -37,6 +37,7 @@ ulg_lib = static_library(
     'src/value.c',
     dependencies: [wxc, yaml],
     include_directories: ulg_includes,
+    c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion']
 )
 
 ulg_dep = declare_dependency(

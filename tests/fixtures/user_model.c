@@ -5,6 +5,7 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include <assert.h>
 #include <uiligi/object.h>
 
 #include "user_model.h"
@@ -33,6 +34,8 @@ static void _user_set_name(void* object, UlgValue value) {
 
 static UlgValue _user_get_team(const void* object) {
     const User* user = object;
+    Team* team = user->team;
+    assert(team);
     return ulg_object(user->team);
 }
 
@@ -77,7 +80,7 @@ static UlgValue _admin_get_role(const void* object) {
 }
 
 static void _admin_set_role(void* object, UlgValue value) {
-    Admin* admin = (void *)object;
+    Admin* admin = object;
     admin->role = ulg_to_string(value);
 }
 

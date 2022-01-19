@@ -249,7 +249,7 @@ static int _compare_class_name(const void* a, const void* b, void* udata) {
 
 static void _free_class_item(void* item) {
     _ClassItem* class_item = item;
-    UlgClass* class_ = (UlgClass*)class_item->class_;
+    UlgClass* class_ = class_item->class_;
     hashmap_free(class_->properties);
     free(class_);
 }

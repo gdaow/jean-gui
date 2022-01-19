@@ -9,7 +9,8 @@
  * UlgClassFactory / id is not clear, we should make it more straightforward, event if it cost a
    const cast
  * Handle other values than string in templates.
- * It's maybe not a good idea to have shortcuts like ulg_object... in ulg_value, as anyway, we should
-   very rarely depend upon direct property accessing in client code : either we access a base class,
-   and we know it's native type, either all is set through the binding system.
- * Expose UlgProperty publicly.
+ * Expose UlgProperty publicly : Maybe not. Actually, it may be a good idea to not even Expose
+ * ulg_object_get and ulg_object_set publicly : all data modification may be done 'the native way',
+   and data binding updates trigerred by calling event handlers. Only the binding system could access
+   property getter / setters.
+ * We have a problem : binding will eventually get a const* object 
