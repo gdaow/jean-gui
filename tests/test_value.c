@@ -91,8 +91,8 @@ MU_TEST(test_ulg_value_raw) {
 
 /** ulg_object, ulg_is_object and ulg_to_object should correctly handle boolean values. */
 MU_TEST(test_ulg_value_object) {
-    UlgContext* context = user_model_context_new();
-    const UlgClass* admin_class = ulg_class_get(context, admin_type);
+    UlgModule* module = user_model_module_new();
+    const UlgClass* admin_class = ulg_class_get(module, admin_type);
     void* test_object = ulg_object_new(admin_class); 
 
     UlgValue value = ulg_object(test_object);
@@ -102,7 +102,7 @@ MU_TEST(test_ulg_value_object) {
     mu_check(ulg_to_object(value) == test_object);
 
     ulg_object_free(test_object);
-    ulg_context_free(context);
+    ulg_module_free(module);
 }
 
 MU_TEST_SUITE(value_suite) {

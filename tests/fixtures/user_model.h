@@ -40,10 +40,10 @@ struct _Team {
 };
 
 
-UlgContext* user_model_context_new();
+UlgModule* user_model_module_new();
 
-const UlgClass* user_type(UlgClassFactory* factory);
+void user_type(UlgClassFactory* factory);
 PermissionFlags user_get_default_permissions(User* user);
 
-const UlgClass* admin_type(UlgClassFactory* factory);
-const UlgClass* team_type(UlgClassFactory* factory);
+void admin_type(UlgClassFactory* factory);
+void team_type(UlgClassFactory* factory);

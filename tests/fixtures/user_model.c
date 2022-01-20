@@ -6,16 +6,18 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 #include <assert.h>
+#include <stdalign.h>
+
 #include <uiligi/object.h>
 
 #include "user_model.h"
 
-UlgContext* user_model_context_new() {
-    UlgContext* context = ulg_context_new();
-    ulg_class_register(context, user_type);
-    ulg_class_register(context, admin_type);
-    ulg_class_register(context, team_type);
-    return context;
+UlgModule* user_model_module_new() {
+    UlgModule* module = ulg_module_new();
+    ulg_class_register(module, user_type);
+    ulg_class_register(module, admin_type);
+    ulg_class_register(module, team_type);
+    return module;
 }
 
 static PermissionFlags _user_get_default_permissions() {
@@ -49,21 +51,14 @@ typedef struct {
     PermissionFlags (*get_default_permissions)();
 } UserVT;
 
-const UlgClass* user_type(UlgClassFactory* factory) {
-    UlgClass* class_ = ulg_class_declare(
-        factory,
-        "User",
-        sizeof(User),
-        ulg_object_type,
-        sizeof(UserVT)
-    );
+void user_type(UlgClassFactory* factory) {
+    ulg_class_declare(factory, "User", ulg_object_type);
 
-    ulg_class_add_property(class_, "name", _user_get_name, _user_set_name);
-    ulg_class_add_property(class_, "team", _user_get_team, _user_set_team);
+    ulg_class_add_property(factory, "name", _user_get_name, _user_set_name);
+    ulg_class_add_property(factory, "team", _user_get_team, _user_set_team);
 
-    UserVT* vtable = ulg_class_edit_vtable(class_);
+    UserVT* vtable = ulg_class_create_vtable(factory, sizeof(UserVT), alignof(UserVT));
     vtable->get_default_permissions = _user_get_default_permissions;
-    return class_;
 }
 
 PermissionFlags user_get_default_permissions(User* user) {
@@ -84,42 +79,25 @@ static void _admin_set_role(void* object, UlgValue value) {
     admin->role = ulg_to_string(value);
 }
 
-const UlgClass* admin_type(UlgClassFactory* factory) {
-    UlgClass* class_ = ulg_class_declare(
-        factory,
-        "Admin",
-        sizeof(Admin),
-        user_type,
-        0
-    );
+void admin_type(UlgClassFactory* factory) {
+    ulg_class_declare(factory, "Admin", user_type);
+    ulg_class_add_property(factory, "role", _admin_get_role, _admin_set_role);
 
-    ulg_class_add_property(class_, "role", _admin_get_role, _admin_set_role);
-    UserVT* vtable = ulg_class_edit_vtable(class_);
+    UserVT* vtable = ulg_class_create_vtable(factory, sizeof(UserVT), alignof(UserVT));
     vtable->get_default_permissions = _admin_get_default_permissions;
-
-    return class_;
 }
 
 static void _team_set_name(void* object, UlgValue value) {
-    Team* team = (void *)object;
+    Team* team = object;
     team->name = ulg_to_string(value);
 }
 
 static UlgValue _team_get_name(const void* object) {
-    const Team* team = (void *)object;
+    const Team* team = object;
     return ulg_string(team->name);
 }
 
-const UlgClass* team_type(UlgClassFactory* factory) {
-    UlgClass* class_ = ulg_class_declare(
-        factory,
-        "Team",
-        sizeof(Team),
-        ulg_object_type,
-        0
-    );
-
-    ulg_class_add_property(class_, "name", _team_get_name, _team_set_name);
-
-    return class_;
+void team_type(UlgClassFactory* factory) {
+    ulg_class_declare(factory, "Team", ulg_object_type);
+    ulg_class_add_property(factory, "name", _team_get_name, _team_set_name);
 }

@@ -15,28 +15,27 @@
 
 #include "fixtures/user_model.h"
 
-static UlgContext* context = NULL;
+static UlgModule* module = NULL;
 static const UlgClass* user_class = NULL;
 static const UlgClass* admin_class = NULL;
 
-const UlgClass* _dummy_type(UlgClassFactory* factory) {
+void _dummy_type(UlgClassFactory* factory) {
     (void)factory;
-    return NULL;
 }
 
 /** ulg_class_get should return the class object given a class name or a class definition, and return
- *  NULL if the class was not registered in the context. */
+ *  NULL if the class was not registered in the module. */
 MU_TEST(test_ulg_class_get) {
-    const UlgClass* user_class = ulg_class_get_by_name(context, "User");
+    const UlgClass* user_class = ulg_class_get_by_name(module, "User");
     mu_check(user_class != NULL);
-    mu_check(user_class == ulg_class_get(context, user_type));
+    mu_check(user_class == ulg_class_get(module, user_type));
 
-    const UlgClass* admin_class = ulg_class_get_by_name(context, "Admin");
+    const UlgClass* admin_class = ulg_class_get_by_name(module, "Admin");
     mu_check(admin_class != NULL);
-    mu_check(admin_class == ulg_class_get(context, admin_type));
+    mu_check(admin_class == ulg_class_get(module, admin_type));
 
-    mu_check(ulg_class_get(context, _dummy_type) == NULL);
-    mu_check(ulg_class_get_by_name(context, "Dummy") == NULL);
+    mu_check(ulg_class_get(module, _dummy_type) == NULL);
+    mu_check(ulg_class_get_by_name(module, "Dummy") == NULL);
 }
 
 /** ulg_object_vtable should allow override virtual functions of parent classes. */
@@ -84,16 +83,16 @@ MU_TEST(test_ulg_object_set) {
 }
 
 static void _setup() {
-    context = user_model_context_new();
-    user_class = ulg_class_get(context, user_type);
-    admin_class = ulg_class_get(context, admin_type);
+    module = user_model_module_new();
+    user_class = ulg_class_get(module, user_type);
+    admin_class = ulg_class_get(module, admin_type);
 }
 
 static void _teardown() {
     admin_class = NULL;
     user_class = NULL;
-    ulg_context_free(context);
-    context = NULL;
+    ulg_module_free(module);
+    module = NULL;
 }
 
 MU_TEST_SUITE(object_suite) {

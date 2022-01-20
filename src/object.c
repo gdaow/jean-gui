@@ -6,16 +6,15 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 #include <assert.h>
+#include <stdalign.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <uiligi/object.h>
 
-#include "utils/hashmap.h"
-
-struct _UlgContext {
-    struct hashmap* name_index;
-    struct hashmap* id_index;
+struct _UlgModule {
+    int dummy;
 };
 
 struct _UlgClass {
@@ -33,124 +32,76 @@ typedef struct {
 } _ClassItem;
 
 typedef struct _UlgClassFactory {
-    UlgContext* context;
+    UlgModule* module;
     uintptr_t class_id;
 } UlgClassFactory;
 
 
-static uint64_t _hash_class_name(const void* item, uint64_t seed0, uint64_t seed1);
-static int _compare_class_name(const void* a, const void* b, void* udata);
-static void _free_class_item(void* item);
-static uint64_t _hash_class_id(const void* item, uint64_t seed0, uint64_t seed1);
-static int _compare_class_id(const void* a, const void* b, void* udata);
-
-UlgContext* ulg_context_new() {
-    UlgContext* context = malloc(sizeof(UlgContext));
+UlgModule* ulg_module_new() {
+    UlgModule* module = malloc(sizeof(UlgModule));
     // Class data is owned by the name index.
-    context->name_index = hashmap_new(
-        sizeof(_ClassItem),
-        0, 0, 0,
-        &_hash_class_name,
-        &_compare_class_name,
-        _free_class_item,
-        NULL
-    );
+    ulg_class_register(module, ulg_object_type);
 
-    context->id_index = hashmap_new(
-        sizeof(_ClassItem),
-        0, 0, 0,
-        &_hash_class_id,
-        &_compare_class_id,
-        NULL,
-        0
-    );
-
-    ulg_class_register(context, ulg_object_type);
-
-    return context;
+    return module;
 }
 
-void ulg_context_free(UlgContext* context) {
-    hashmap_free(context->id_index);
-    hashmap_free(context->name_index);
-    free(context);
+void ulg_module_free(UlgModule* module) {
+    free(module);
 }
 
-void ulg_class_register(UlgContext* context, UlgClassDefinition definition) {
+void ulg_class_register(UlgModule* module, UlgClassDefinition definition) {
+    (void)module;
+    (void)definition;
+    /*
     const UlgClass* new_class = definition(
         &(UlgClassFactory) {
             .class_id = (uintptr_t)definition, // To pass the id down to ulg_class_declare.
-            .context = context
+            .module = module
         }
     );
 
     void* replaced_item = NULL;
     replaced_item = hashmap_set(
-        context->name_index,
+        module->name_index,
         &(_ClassItem) { .class_ = new_class }
     );
     assert(!replaced_item);
 
     replaced_item = hashmap_set(
-        context->id_index,
+        module->id_index,
         &(_ClassItem) { .class_ = new_class }
     );
     assert(!replaced_item);
+    */
 }
 
-const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition) {
-    uintptr_t class_id = (uintptr_t)definition; // TODO: will be anoying when wrapping to other languages.
-    _ClassItem* item = hashmap_get(
-        context->id_index,
-        &(_ClassItem) {
-            .class_ = &(UlgClass) { .id = class_id }
-        }
-    );
-
-    if(!item) return NULL;
-
-    return item->class_;
-}
-
-const UlgClass* ulg_class_get_by_name(UlgContext* context, const char* name) {
-    _ClassItem* item = hashmap_get(
-        context->name_index,
-        &(_ClassItem) {
-            .class_ = &(UlgClass) { .name = name }
-        }
-    );
-    if(!item) return NULL;
-    return item->class_;
-}
-
-static UlgClass* _class_new(
-    const char* name,
-    size_t data_size,
-    const UlgClass* parent,
-    size_t vtable_size
-);
-
-UlgClass* ulg_class_declare(
+void ulg_class_declare(
     UlgClassFactory* factory,
     const char* name,
-    size_t data_size,
-    UlgClassDefinition parent_definition,
-    size_t vtable_size
+    UlgClassDefinition parent_definition
 ) {
+    (void)factory;
+    (void)name;
+    (void)parent_definition;
+    /*
     const UlgClass* parent = NULL;
     // We juste use an obfuscated type to prevent direct calls to ulg_class_declare
     // but allow them only in UlgClassDefinition callbacks.
-    UlgContext* context = factory->context;
+    UlgModule* module = factory->module;
     if(parent_definition) {
-        parent = ulg_class_get(context, parent_definition);
+        parent = ulg_class_get(module, parent_definition);
     }
     UlgClass* class_ =  _class_new(name, data_size, parent, vtable_size);
     class_->id = factory->class_id;
     return class_;
+    */
 }
 
-void* ulg_class_edit_vtable(UlgClass* class_) {
-    return class_->vtable;
+void* ulg_class_create_vtable(UlgClassFactory* factory, size_t vtable_size, size_t vtable_align) {
+    (void)factory;
+    (void)vtable_size;
+    (void)vtable_align;
+    return NULL;
 }
 
 typedef struct {
@@ -159,29 +110,55 @@ typedef struct {
     UlgSetter setter;
 } _UlgProperty;
 
-void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter, UlgSetter setter) {
-    hashmap_set(
-        class_->properties,
-        &(_UlgProperty){
-            .name = name,
-            .getter = getter,
-            .setter = setter
-        }
-    );
+void ulg_class_add_property(UlgClassFactory* factory, const char* name, UlgGetter getter, UlgSetter setter) {
+    (void)factory;
+    (void)name;
+    (void)getter;
+    (void)setter;
 }
 
-const UlgClass* ulg_object_type(UlgClassFactory* factory) {
-    UlgClass* class_ = ulg_class_declare(
-        factory,
-        "Object",
-        0,
-        NULL,
-        sizeof(UlgObjectVT)
+const UlgClass* ulg_class_get(UlgModule* module, UlgClassDefinition definition) {
+    (void)module;
+    (void)definition;
+    /*
+    uintptr_t class_id = (uintptr_t)definition; // TODO: will be anoying when wrapping to other languages.
+    _ClassItem* item = hashmap_get(
+        module->id_index,
+        &(_ClassItem) {
+            .class_ = &(UlgClass) { .id = class_id }
+        }
     );
 
-    memset(ulg_class_edit_vtable(class_), 0, sizeof(UlgObjectVT));
+    if(!item) return NULL;
 
-    return class_;
+    return item->class_;
+    */
+   return NULL;
+}
+
+const UlgClass* ulg_class_get_by_name(UlgModule* module, const char* name) {
+    (void)module;
+    (void)name;
+    return NULL;
+    /*
+    _ClassItem* item = hashmap_get(
+        module->name_index,
+        &(_ClassItem) {
+            .class_ = &(UlgClass) { .name = name }
+        }
+    );
+    if(!item) return NULL;
+    return item->class_;
+    */
+}
+
+void ulg_object_type(UlgClassFactory* factory) {
+    ulg_class_declare(factory, "Object", 0);
+    memset(
+        ulg_class_create_vtable(factory, sizeof(UlgObjectVT), alignof(UlgObjectVT)),
+        0,
+        sizeof(UlgObjectVT)
+    );
 }
 
 typedef struct _UlgObjectHeader {
@@ -234,76 +211,31 @@ void ulg_object_set(void* object, const char* property_name, const UlgValue valu
     property->setter(object, value);
 }
 
-static uint64_t _hash_class_name(const void* item, uint64_t seed0, uint64_t seed1) {
-    const _ClassItem* index_item = item;
-    const char* name = index_item->class_->name;
-    return hashmap_sip(name, strlen(name), seed0, seed1);
-}
-
-static int _compare_class_name(const void* a, const void* b, void* udata) {
-    (void)udata;
-    const _ClassItem* item_a = a;
-    const _ClassItem* item_b = b;
-    return strcmp(item_a->class_->name, item_b->class_->name);
-}
-
-static void _free_class_item(void* item) {
-    _ClassItem* class_item = item;
-    UlgClass* class_ = class_item->class_;
-    hashmap_free(class_->properties);
-    free(class_);
-}
-
-static uint64_t _hash_class_id(const void* item, uint64_t seed0, uint64_t seed1) {
-    (void)seed0;
-    (void)seed1;
-    const _ClassItem* index_item = item;
-    return index_item->class_->id;
-}
-
-static int _compare_class_id(const void* a, const void* b, void* udata) {
-    (void)udata;
-    const _ClassItem* item_a = a;
-    const _ClassItem* item_b = b;
-    return item_a->class_->id - item_b->class_->id;
-}
-
 static const _UlgProperty* _get_property(const UlgClass* class_, const char* name) {
+    (void)class_;
+    (void)name;
+    /*
     _UlgProperty* result = hashmap_get(
         class_->properties,
         &(_UlgProperty){ .name = name }
     );
     assert(result); // TODO: Handle error.
     return result;
+    */
+   return NULL;
 }
 
-static uint64_t _property_hash(const void* item, uint64_t seed0, uint64_t seed1) {
-    const _UlgProperty* property = item;
-    const char* name = property->name;
-    return hashmap_sip(name, strlen(name), seed0, seed1);
-}
-
-static int _property_compare(const void* a, const void* b, void* udata) {
-    (void)udata;
-    const _UlgProperty *property_a = a;
-    const _UlgProperty *property_b = b;
-    return strcmp(property_a->name, property_b->name);
-}
-
-static bool _copy_parent_properties(const void* item, void* udata) {
-    struct hashmap* child_properties = udata;
-    _UlgProperty copy;
-    memcpy(&copy, item, sizeof(_UlgProperty));
-    hashmap_set(child_properties, &copy);
-    return true;
-}
-
+/*
 static UlgClass* _class_new(
     const char* name,
     size_t data_size,
     const UlgClass* parent,
     size_t vtable_size
 ) {
+    (void)name;
+    (void)data_size;
+    (void)parent;
+    (void)vtable_size;
     // vtable size can not be less than the parent one.
     if(vtable_size == 0 && parent) {
         vtable_size = parent->vtable_size;
@@ -338,7 +270,9 @@ static UlgClass* _class_new(
     }
 
     return class_;
+   return NULL;
 }
+*/
 
 static UlgObjectHeader* _get_header(void* object) {
     return (UlgObjectHeader*)object - 1;

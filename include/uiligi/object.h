@@ -16,82 +16,56 @@
 
 #include <uiligi/value.h>
 
-typedef struct _UlgContext UlgContext;
+typedef struct _UlgModule UlgModule;
 typedef struct _UlgClass UlgClass;
 typedef struct _UlgClassFactory UlgClassFactory;
 
 /**
- * Create a new class context, usable to retrieve classes by name.
+ * Create a new class module, usable to retrieve classes by name.
  *
- * @return The newly created class context.
+ * @return The newly created class module.
  */
-UlgContext* ulg_context_new();
+UlgModule* ulg_module_new();
 
 /**
- * Destroy a UlgContext, and all it's registered classes.
+ * Destroy a UlgModule, and all it's registered classes.
  *
- * @param context The context to destroy.
+ * @param module The module to destroy.
  */
-void ulg_context_free(UlgContext* context);
+void ulg_module_free(UlgModule* module);
 
 /** Callback defining a type. The adress of the callback will be used as type id. */
-typedef const UlgClass* (UlgClassDefinition)(UlgClassFactory*);
+typedef void (UlgClassDefinition)(UlgClassFactory*);
 
 /**
- * Register a class in the class context, using the given definition.
+ * Register a class in the class module, using the given definition.
  *
- * It will assert if the class is already registered in the context.
+ * It will assert if the class is already registered in the module.
  *
- * @param context    A previously created UlgContext.
+ * @param module    A previously created UlgModule.
  * @param definition A class definition callback.
  *
  * @return The newly created class.
  */
 
-void ulg_class_register(UlgContext* context, UlgClassDefinition definition);
-
-/**
- * Get a class using it's definition as a key.
- *
- * If the class wasn't registered, the function will return NULL.
- *
- * @param context   A previously created UlgContext.
- * @param definition A class definition callback.
- *
- * @return The newly created class.
- */
-
-const UlgClass* ulg_class_get(UlgContext* context, UlgClassDefinition definition);
-
-/**
- * Retrieve a class by it's type name.
- *
- * @param context A previously created and initialized UlgContext.
- * @param name    The class name to get.
- *
- * @return The matching class, or NULL if it was not found in the context.
- */
-
-const UlgClass* ulg_class_get_by_name(UlgContext* context, const char* name);
+void ulg_class_register(UlgModule* module, UlgClassDefinition definition);
 
 /**
  * Create a new class object.
  *
  * This method is meant to be called in a UlgClassDefinition callback only.
  *
- * @param factory           Opaque type passed to type definitions functions by the type context.
+ * @param factory           Opaque type passed to type definitions functions by the type module.
  * @param name              Name of the new class.
  * @param data_size         Size of the class data.
  * @param parent_definition Parent class definition function.
  * @param vtable_size       Size of the class virtual table. If 0 is given, the vtable of the parent
  *                          will be copied.
  */
-UlgClass* ulg_class_declare(
+void ulg_class_declare(
     UlgClassFactory* factory,
     const char* name,
-    size_t data_size,
-    UlgClassDefinition parent_definition,
-    size_t vtable_size
+    UlgClassDefinition parent_definition
 );
 
 /**
@@ -103,7 +77,7 @@ UlgClass* ulg_class_declare(
  *
  * @param class_ The class for which to get the vtable.
  */
-void* ulg_class_edit_vtable(UlgClass* class_);
+void* ulg_class_create_vtable(UlgClassFactory* factory, size_t vtable_size, size_t vtable_alignment);
 
 /** Callback for voids property getter.*/
 typedef UlgValue (*UlgGetter)(const void*);
@@ -118,7 +92,31 @@ typedef void (*UlgSetter)(void*, const UlgValue);
  * @param setter  Callback that get the property value.
  * @param getter  Callback that set the property value.
  */
-void ulg_class_add_property(UlgClass* class_, const char* name, UlgGetter getter, UlgSetter setter);
+void ulg_class_add_property(UlgClassFactory* factory, const char* name, UlgGetter getter, UlgSetter setter);
+
+/**
+ * Get a class using it's definition as a key.
+ *
+ * If the class wasn't registered, the function will return NULL.
+ *
+ * @param module   A previously created UlgModule.
+ * @param definition A class definition callback.
+ *
+ * @return The newly created class.
+ */
+
+const UlgClass* ulg_class_get(UlgModule* module, UlgClassDefinition definition);
+
+/**
+ * Retrieve a class by it's type name.
+ *
+ * @param module A previously created and initialized UlgModule.
+ * @param name    The class name to get.
+ *
+ * @return The matching class, or NULL if it was not found in the module.
+ */
+
+const UlgClass* ulg_class_get_by_name(UlgModule* module, const char* name);
 
 /**
  * void virtual table structure. See ulg_class_edit_vtable to implement methods on
@@ -135,7 +133,7 @@ typedef struct _UlgObjectVT {
 /**
  * @brief void class definition.
  */
-const UlgClass* ulg_object_type(UlgClassFactory* factory);
+void ulg_object_type(UlgClassFactory* factory);
 
 /**
  * Create an object of the given class.

@@ -33,11 +33,10 @@ ulg_lib = static_library(
     'uiligi',
     'src/object.c',
     'src/template.c',
-    'src/utils/hashmap.c',
     'src/value.c',
     dependencies: [wxc, yaml],
     include_directories: ulg_includes,
-    c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion']
+    c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing']
 )
 
 ulg_dep = declare_dependency(

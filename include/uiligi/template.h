@@ -12,7 +12,7 @@
  */
 
 typedef struct _UlgClass UlgClass;
-typedef struct _UlgContext UlgContext;
+typedef struct _UlgModule UlgModule;
 typedef struct _UlgTemplate UlgTemplate;
 
 /**
@@ -20,16 +20,16 @@ typedef struct _UlgTemplate UlgTemplate;
  * 
  * @return UlgTemplate* 
  */
-UlgTemplate* ulg_template_new(UlgContext* context, const UlgClass* class_name);
+UlgTemplate* ulg_template_new(UlgModule* module, const UlgClass* class_name);
 
 /**
  * Return a new template node, with the class registered under the given name.
  * 
- * @param context 
+ * @param module 
  * @param class_name 
  * @return UlgTemplate* 
  */
-UlgTemplate* ulg_template_new_by_name(UlgContext* context, const char* class_name);
+UlgTemplate* ulg_template_new_by_name(UlgModule* module, const char* class_name);
 
 /**
  * @brief Destroy the given template node, and all of it's children.

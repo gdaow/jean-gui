@@ -14,13 +14,13 @@
 #include "fixtures/user_model.h"
 
 MU_TEST(test_ulg_template_instanciate) {
-    UlgContext* context = user_model_context_new();
+    UlgModule* module = user_model_module_new();
 
     const char* name = "Dr. Meeseeks";
     const char* role = "Manager of all the Mr Meeseeks";
     const char* team_name = "Team Meeseeks";
 
-    UlgTemplate* admin_template = ulg_template_new_by_name(context, "Admin");
+    UlgTemplate* admin_template = ulg_template_new_by_name(module, "Admin");
 
     ulg_template_set_scalar(admin_template, "name", name);
     ulg_template_set_scalar(admin_template, "role", role);
@@ -37,7 +37,7 @@ MU_TEST(test_ulg_template_instanciate) {
     ulg_object_free(admin->base.team); //TODO: We should handle this either in Admin, either automatically.
     ulg_object_free(admin);
     ulg_template_free(admin_template); // team_template will be freed by i's parent
-    ulg_context_free(context);
+    ulg_module_free(module);
 }
 
 MU_TEST_SUITE(template_suite) {

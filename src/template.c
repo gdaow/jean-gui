@@ -31,16 +31,16 @@ struct _UlgPropertyTemplate {
 };
 
 struct _UlgTemplate {
-    UlgContext* context; // Could be nice to remove that
+    UlgModule* module; // Could be nice to remove that
     const UlgClass* class_;
     UlgPropertyTemplate* properties;
 };
 
-UlgTemplate* ulg_template_new(UlgContext* context, const UlgClass* class_) {
+UlgTemplate* ulg_template_new(UlgModule* module, const UlgClass* class_) {
     return memcpy(
         malloc(sizeof(UlgTemplate)),
         &(UlgTemplate) {
-            .context = context,
+            .module = module,
             .class_ = class_,
             .properties = NULL
         },
@@ -48,10 +48,10 @@ UlgTemplate* ulg_template_new(UlgContext* context, const UlgClass* class_) {
     );
 }
 
-UlgTemplate* ulg_template_new_by_name(UlgContext* context, const char* class_name) {
-    const UlgClass* class_ = ulg_class_get_by_name(context, class_name);
+UlgTemplate* ulg_template_new_by_name(UlgModule* module, const char* class_name) {
+    const UlgClass* class_ = ulg_class_get_by_name(module, class_name);
     assert(class_);
-    return ulg_template_new(context, class_);
+    return ulg_template_new(module, class_);
 }
 
 void ulg_template_free(UlgTemplate* template) {
@@ -90,12 +90,12 @@ void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, c
 }
 
 UlgTemplate* ulg_template_set_child(UlgTemplate* template, const char* property_name, const char* class_name) {
-    UlgContext* context = template->context;
+    UlgModule* module = template->module;
 
-    const UlgClass* child_class = ulg_class_get_by_name(context, class_name);
+    const UlgClass* child_class = ulg_class_get_by_name(module, class_name);
     assert(child_class); // TODO: Handle errors.
 
-    UlgTemplate* child_template = ulg_template_new(context, child_class);
+    UlgTemplate* child_template = ulg_template_new(module, child_class);
 
     UlgPropertyTemplate* new_property = memcpy(
         malloc(sizeof(UlgPropertyTemplate)),
