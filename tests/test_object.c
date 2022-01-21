@@ -11,6 +11,7 @@
 
 #include <minunit.h>
 
+#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "fixtures/user_model.h"
@@ -19,8 +20,8 @@ static UlgModule* module = NULL;
 static const UlgClass* user_class = NULL;
 static const UlgClass* admin_class = NULL;
 
-void _dummy_type(UlgClassFactory* factory) {
-    (void)factory;
+void _dummy_type(UlgClassDefinition* class_) {
+    (void)class_;
 }
 
 /** ulg_class_get should return the class object given a class name or a class definition, and return
@@ -36,18 +37,6 @@ MU_TEST(test_ulg_class_get) {
 
     mu_check(ulg_class_get(module, _dummy_type) == NULL);
     mu_check(ulg_class_get_by_name(module, "Dummy") == NULL);
-}
-
-/** ulg_object_vtable should allow override virtual functions of parent classes. */
-MU_TEST(test_ulg_object_vtable) {
-    User* user = ulg_object_new(user_class);
-    User* admin = ulg_object_new(admin_class);
-
-    mu_assert_int_eq(user_get_default_permissions(user), PERM_CAN_LOGIN);
-    mu_assert_int_eq(user_get_default_permissions(admin), PERM_ALL);
-
-    ulg_object_free(admin);
-    ulg_object_free(user);
 }
 
 /** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
@@ -98,7 +87,6 @@ static void _teardown() {
 MU_TEST_SUITE(object_suite) {
     MU_SUITE_CONFIGURE(_setup, _teardown);
     MU_RUN_TEST(test_ulg_class_get);
-    MU_RUN_TEST(test_ulg_object_vtable);
     MU_RUN_TEST(test_ulg_object_get);
     MU_RUN_TEST(test_ulg_object_set);
 }

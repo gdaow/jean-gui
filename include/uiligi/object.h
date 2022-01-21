@@ -18,94 +18,9 @@
 
 typedef struct _UlgModule UlgModule;
 typedef struct _UlgClass UlgClass;
-typedef struct _UlgClassFactory UlgClassFactory;
-
-/**
- * Create a new class module, usable to retrieve classes by name.
- *
- * @return The newly created class module.
- */
-UlgModule* ulg_module_new();
-
-/**
- * Destroy a UlgModule, and all it's registered classes.
- *
- * @param module The module to destroy.
- */
-void ulg_module_free(UlgModule* module);
-
-/** Callback defining a type. The adress of the callback will be used as type id. */
-typedef void (UlgClassDefinition)(UlgClassFactory*);
-
-/**
- * Register a class in the class module, using the given definition.
- *
- * It will assert if the class is already registered in the module.
- *
- * @param module    A previously created UlgModule.
- * @param definition A class definition callback.
- *
- * @return The newly created class.
- */
-
-void ulg_class_register(UlgModule* module, UlgClassDefinition definition);
-
-/**
- * Create a new class object.
- *
- * This method is meant to be called in a UlgClassDefinition callback only.
- *
- * @param factory           Opaque type passed to type definitions functions by the type module.
- * @param name              Name of the new class.
- * @param data_size         Size of the class data.
- * @param parent_definition Parent class definition function.
- * @param vtable_size       Size of the class virtual table. If 0 is given, the vtable of the parent
- *                          will be copied.
- */
-void ulg_class_declare(
-    UlgClassFactory* factory,
-    const char* name,
-    UlgClassDefinition parent_definition
-);
-
-/**
- * Get a pointer to this class vtable.
- *
- * When creating a class, the vtable is initialized by copying the parent class one,
- * so you can set only function that you want to override on it, function left alone
- * will be set to the parent's implementation.
- *
- * @param class_ The class for which to get the vtable.
- */
-void* ulg_class_create_vtable(UlgClassFactory* factory, size_t vtable_size, size_t vtable_alignment);
-
-/** Callback for voids property getter.*/
-typedef UlgValue (*UlgGetter)(const void*);
-
-/** Callback for voids property setter.*/
-typedef void (*UlgSetter)(void*, const UlgValue);
-
-/**
- * Add a property to this class.
- * @param class_  Add a property to this class.
- * @param name    The name of the property.
- * @param setter  Callback that get the property value.
- * @param getter  Callback that set the property value.
- */
-void ulg_class_add_property(UlgClassFactory* factory, const char* name, UlgGetter getter, UlgSetter setter);
-
-/**
- * Get a class using it's definition as a key.
- *
- * If the class wasn't registered, the function will return NULL.
- *
- * @param module   A previously created UlgModule.
- * @param definition A class definition callback.
- *
- * @return The newly created class.
- */
-
-const UlgClass* ulg_class_get(UlgModule* module, UlgClassDefinition definition);
+typedef struct _UlgProperty UlgProperty;
+typedef struct _UlgModuleDefinition UlgModuleDefinition;
+typedef struct _UlgClassDefinition UlgClassDefinition;
 
 /**
  * Retrieve a class by it's type name.
@@ -133,7 +48,7 @@ typedef struct _UlgObjectVT {
 /**
  * @brief void class definition.
  */
-void ulg_object_type(UlgClassFactory* factory);
+void ulg_object_type(UlgClassDefinition* definition);
 
 /**
  * Create an object of the given class.
@@ -144,15 +59,6 @@ void ulg_object_type(UlgClassFactory* factory);
  * Release the given void.
  */
 void ulg_object_free(void* object);
-
-/**
- * @brief Return the virtual table of this object.
- * 
- * @param object Get the virtual table for this object.
- * 
- * @return A pointer to the object's virtual table.
- */
-const void* ulg_object_vtable(const void* object);
 
 /**
  * Get a property from an object.

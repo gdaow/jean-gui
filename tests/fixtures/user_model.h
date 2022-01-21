@@ -11,7 +11,7 @@
 #pragma once
 
 typedef struct _UlgClass UlgClass;
-typedef struct _UlgClassFactory UlgClassFactory;
+typedef struct _UlgClassDefinition UlgClassDefinition;
 
 typedef struct _Admin Admin;
 typedef struct _Team Team;
@@ -42,8 +42,8 @@ struct _Team {
 
 UlgModule* user_model_module_new();
 
-void user_type(UlgClassFactory* factory);
+void user_type(UlgClassDefinition* class_);
 PermissionFlags user_get_default_permissions(User* user);
 
-void admin_type(UlgClassFactory* factory);
-void team_type(UlgClassFactory* factory);
+void admin_type(UlgClassDefinition* class_);
+void team_type(UlgClassDefinition* class_);

@@ -8,6 +8,8 @@
         "-Wno-pragma-once-outside-header"
     ],
     "files.associations": {
-        "admin.h": "c"
+        "admin.h": "c",
+        "ranges": "c",
+        "object.h": "c"
     }
 }

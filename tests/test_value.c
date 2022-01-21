@@ -12,6 +12,7 @@
 #include <minunit.h>
 
 #include <uiligi/value.h>
+#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "fixtures/user_model.h"

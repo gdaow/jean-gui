@@ -8,20 +8,18 @@
 #include <assert.h>
 #include <stdalign.h>
 
+#include <uiligi/class.h>
+#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "user_model.h"
 
 UlgModule* user_model_module_new() {
-    UlgModule* module = ulg_module_new();
+    UlgModuleDefinition* module = ulg_module_new();
     ulg_class_register(module, user_type);
     ulg_class_register(module, admin_type);
     ulg_class_register(module, team_type);
-    return module;
-}
-
-static PermissionFlags _user_get_default_permissions() {
-    return PERM_CAN_LOGIN;
+    return ulg_module_build(module);
 }
 
 static UlgValue _user_get_name(const void* object) {
@@ -51,22 +49,11 @@ typedef struct {
     PermissionFlags (*get_default_permissions)();
 } UserVT;
 
-void user_type(UlgClassFactory* factory) {
-    ulg_class_declare(factory, "User", ulg_object_type);
+void user_type(UlgClassDefinition* class_) {
+    ulg_class_define(class_, "User", ulg_object_type);
 
-    ulg_class_add_property(factory, "name", _user_get_name, _user_set_name);
-    ulg_class_add_property(factory, "team", _user_get_team, _user_set_team);
-
-    UserVT* vtable = ulg_class_create_vtable(factory, sizeof(UserVT), alignof(UserVT));
-    vtable->get_default_permissions = _user_get_default_permissions;
-}
-
-PermissionFlags user_get_default_permissions(User* user) {
-    return ((const UserVT*)ulg_object_vtable((void*)user))->get_default_permissions();
-}
-
-static PermissionFlags _admin_get_default_permissions() {
-    return PERM_ALL;
+    ulg_class_add_property(class_, "name", _user_get_name, _user_set_name);
+    ulg_class_add_property(class_, "team", _user_get_team, _user_set_team);
 }
 
 static UlgValue _admin_get_role(const void* object) {
@@ -79,12 +66,9 @@ static void _admin_set_role(void* object, UlgValue value) {
     admin->role = ulg_to_string(value);
 }
 
-void admin_type(UlgClassFactory* factory) {
-    ulg_class_declare(factory, "Admin", user_type);
-    ulg_class_add_property(factory, "role", _admin_get_role, _admin_set_role);
-
-    UserVT* vtable = ulg_class_create_vtable(factory, sizeof(UserVT), alignof(UserVT));
-    vtable->get_default_permissions = _admin_get_default_permissions;
+void admin_type(UlgClassDefinition* class_) {
+    ulg_class_define(class_, "Admin", user_type);
+    ulg_class_add_property(class_, "role", _admin_get_role, _admin_set_role);
 }
 
 static void _team_set_name(void* object, UlgValue value) {
@@ -97,7 +81,7 @@ static UlgValue _team_get_name(const void* object) {
     return ulg_string(team->name);
 }
 
-void team_type(UlgClassFactory* factory) {
-    ulg_class_declare(factory, "Team", ulg_object_type);
-    ulg_class_add_property(factory, "name", _team_get_name, _team_set_name);
+void team_type(UlgClassDefinition* class_) {
+    ulg_class_define(class_, "Team", ulg_object_type);
+    ulg_class_add_property(class_, "name", _team_get_name, _team_set_name);
 }
