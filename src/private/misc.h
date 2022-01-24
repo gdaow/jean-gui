@@ -8,17 +8,19 @@
  * Miscelaneous helpers & utilities.
  *
  */
+#ifndef UILIGI_SRC_PRIVATE_MISC_H
+#define UILIGI_SRC_PRIVATE_MISC_H
+
 #include <stddef.h>
 
-size_t _ulg_strnlen(const char *s, size_t maxlen);
+size_t ulg_strnlen(const char *s, size_t max_size);
 
-
-typedef int (*CompareFunction)(void* a, void* b);
-
-typedef struct __Index {
+typedef struct ulg_index_s {
     const char** keys;
     size_t count;
-} _Index;
+} ulg_index_t;
 
-void _index_sort(_Index* index);
-int _index_search(const _Index* index, const char* key);
+void ulg_index_sort(ulg_index_t* index);
+int ulg_index_search(const ulg_index_t* index, const char* key);
+
+#endif

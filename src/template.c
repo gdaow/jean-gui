@@ -13,54 +13,52 @@
 #include <uiligi/template.h>
 #include <uiligi/value.h>
 
-typedef struct _UlgPropertyTemplate UlgPropertyTemplate;
+#include "private/memory.h"
+
+typedef struct ulg_property_template_t ulg_property_template_t;
 
 typedef enum  {
     ULG_TEMPLATE_PROPERTY_SCALAR,
     ULG_TEMPLATE_PROPERTY_OBJECT
-} UlgPropertyTemplateType;
+} ulg_property_type_t;
 
-struct _UlgPropertyTemplate {
+struct ulg_property_template_t {
     const char* name;
-    UlgPropertyTemplateType type;
+    ulg_property_type_t type;
     union {
-        UlgTemplate* template;
+        ulg_template_t* template_;
         const char* scalar;
     } value;
-    UlgPropertyTemplate* next;
+    ulg_property_template_t* next;
 };
 
-struct _UlgTemplate {
-    UlgModule* module; // Could be nice to remove that
-    const UlgClass* class_;
-    UlgPropertyTemplate* properties;
+struct ulg_template_s {
+    ulg_module_t* module; // Could be nice to remove that
+    const ulg_class_t* class_;
+    ulg_property_template_t* properties;
 };
 
-UlgTemplate* ulg_template_new(UlgModule* module, const UlgClass* class_) {
-    return memcpy(
-        malloc(sizeof(UlgTemplate)),
-        &(UlgTemplate) {
-            .module = module,
-            .class_ = class_,
-            .properties = NULL
-        },
-        sizeof(UlgTemplate)
-    );
+ulg_template_t* ulg_template_new(ulg_module_t* module, const ulg_class_t* class_) {
+    return ULG_MALLOC_INIT(&(ulg_template_t) {
+        .module = module,
+        .class_ = class_,
+        .properties = NULL
+    });
 }
 
-UlgTemplate* ulg_template_new_by_name(UlgModule* module, const char* class_name) {
-    const UlgClass* class_ = ulg_class_get(module, class_name);
+ulg_template_t* ulg_template_new_by_name(ulg_module_t* module, const char* class_name) {
+    const ulg_class_t* class_ = ulg_class_get(module, class_name);
     assert(class_);
     return ulg_template_new(module, class_);
 }
 
-void ulg_template_free(UlgTemplate* template) {
-    UlgPropertyTemplate* property = template->properties;
+void ulg_template_free(ulg_template_t* template_) {
+    ulg_property_template_t* property = template_->properties;
     while(property) {
-        UlgPropertyTemplate* next = property->next;
+        ulg_property_template_t* next = property->next;
         switch(property->type) {
             case ULG_TEMPLATE_PROPERTY_OBJECT:
-                ulg_template_free(property->value.template);
+                ulg_template_free(property->value.template_);
                 break;
             default:
                 break;
@@ -68,62 +66,60 @@ void ulg_template_free(UlgTemplate* template) {
         free(property);
         property = next;
     }
-    free(template);
+    free(template_);
 }
 
-void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, const char* value) {
+void ulg_template_set_scalar(ulg_template_t* template_, const char* property_name, const char* value) {
     /* TODO: We should get the UlgProperty here and convert the value to an UlgProperty,
-       as both property_name and value could be destroyed later when instanciating the template,
+       as both property_name and value could be destroyed later when instanciating the template_,
        and it'd be more efficient.
     */
-    UlgPropertyTemplate* new_property = memcpy(
-        malloc(sizeof(UlgPropertyTemplate)),
-        &(UlgPropertyTemplate) {
+    ulg_property_template_t* new_property = memcpy(
+        malloc(sizeof(ulg_property_template_t)),
+        &(ulg_property_template_t) {
             .name = property_name,
             .value.scalar = value,
-            .next = template->properties
+            .next = template_->properties
         },
-        sizeof(UlgPropertyTemplate)
+        sizeof(ulg_property_template_t)
     );
 
-    template->properties = new_property;
+    template_->properties = new_property;
 }
 
-UlgTemplate* ulg_template_set_child(UlgTemplate* template, const char* property_name, const char* class_name) {
-    UlgModule* module = template->module;
+ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* property_name, const char* class_name) {
+    ulg_module_t* module = template_->module;
 
-    const UlgClass* child_class = ulg_class_get(module, class_name);
-    assert(child_class); // TODO: Handle errors.
+    const ulg_class_t* child_class = ulg_class_get(module, class_name);
+    assert(child_class); // TODO(corenting@ki-dour.org): Handle errors.
 
-    UlgTemplate* child_template = ulg_template_new(module, child_class);
+    ulg_template_t* child_template = ulg_template_new(module, child_class);
 
-    UlgPropertyTemplate* new_property = memcpy(
-        malloc(sizeof(UlgPropertyTemplate)),
-        &(UlgPropertyTemplate) {
-            .name = property_name,
-            .type = ULG_TEMPLATE_PROPERTY_OBJECT,
-            .value.template = child_template,
-            .next = template->properties
-        },
-        sizeof(UlgPropertyTemplate)
-    );
+    ulg_property_template_t* new_property = ULG_MALLOC_INIT(&(ulg_property_template_t) {
+        .name = property_name,
+        .type = ULG_TEMPLATE_PROPERTY_OBJECT,
+        .value.template_ = child_template,
+        .next = template_->properties
+    });
 
-    template->properties = new_property;
+    template_->properties = new_property;
     return child_template;
 }
 
-void* ulg_template_instanciate(const UlgTemplate* template) {
-    void* object = ulg_object_new(template->class_);
-    UlgPropertyTemplate* property = template->properties;
+void* ulg_template_instanciate(const ulg_template_t* template_) {
+    void* object = ulg_object_new(template_->class_);
+    ulg_property_template_t* property = template_->properties;
     while(property) {
-        UlgValue property_value;
+        ulg_value_t property_value;
         switch(property->type) {
             case ULG_TEMPLATE_PROPERTY_SCALAR:
                 property_value = ulg_string(property->value.scalar);
                 break;
             case ULG_TEMPLATE_PROPERTY_OBJECT:
-                void* child_object = ulg_template_instanciate(property->value.template);
-                property_value = ulg_object(child_object);
+                {
+                    void* child_object = ulg_template_instanciate(property->value.template_);
+                    property_value = ulg_object(child_object);
+                }
                 break;
             default:
                 assert(false);

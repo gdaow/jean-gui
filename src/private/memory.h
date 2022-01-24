@@ -8,34 +8,37 @@
  * Custom allocators & memory helpers.
  *
  */
-#pragma once
+#ifndef UILIGI_SRC_PRIVATE_MEMORY_H
+#define UILIGI_SRC_PRIVATE_MEMORY_H
 #include <stddef.h>
 
 static const size_t DEFAULT_CHUNK_SIZE = 0x1000;
 
-// _Arena allocator, used to store temporary data while creating modules or templates.
-typedef struct __Arena _Arena;
+// ulg_arena_t allocator, used to store temporary data while creating modules or templates.
+typedef struct ulg_arena_t ulg_arena_t;
 
 // Uses DEFAULT_CHUNK_SIZE if chunk_size is 0
-_Arena* _arena_new(size_t chunk_size);
-void* _arena_alloc(_Arena* arena, size_t size, size_t align_size);
-void _arena_free(_Arena* arena);
+ulg_arena_t* ulg_arena_new(size_t chunk_size);
+void* ulg_arena_alloc(ulg_arena_t* arena, size_t size, size_t align_size);
+void ulg_arena_free(ulg_arena_t* arena);
 
 // length_accumulate is used to grow the total memory needed to store strings, in order to allocate
 // the needed space when building modules. Length of the given string will be added to the pointed
 // size_t.
-char* _arena_strcpy(_Arena* arena, const char* value, size_t max_length, size_t* length_accumulate);
+char* ulg_arena_strcpy(ulg_arena_t* arena, const char* value, size_t max_length, size_t* length_accumulate);
 
-#define malloc_init(...)\
+#define ULG_MALLOC_INIT(...)\
     (memcpy(\
         malloc(sizeof(*(__VA_ARGS__))),\
         __VA_ARGS__,\
         sizeof(*(__VA_ARGS__))\
     ))
 
-#define _arena_alloc_init(ARENA, ...)\
+#define ULG_ARENA_ALLOC_INIT(ARENA, TYPE, ...)\
     (memcpy(\
-        _arena_alloc(ARENA, sizeof(*(__VA_ARGS__)), alignof(*(__VA_ARGS__))),\
+        ulg_arena_alloc(ARENA, sizeof(TYPE), alignof(TYPE)),\
         __VA_ARGS__,\
-        sizeof(*(__VA_ARGS__))\
+        sizeof(TYPE)\
     ))
+
+#endif

@@ -10,56 +10,60 @@
  * TODO: Finish documentation here.
  *
  */
+ #ifndef INCLUDE_UILIGI_TEMPLATE_H
+ #define INCLUDE_UILIGI_TEMPLATE_H
 
-typedef struct _UlgClass UlgClass;
-typedef struct _UlgModule UlgModule;
-typedef struct _UlgTemplate UlgTemplate;
+typedef struct ulg_class_s ulg_class_t;
+typedef struct ulg_module_s ulg_module_t;
+typedef struct ulg_template_s ulg_template_t;
 
 /**
- * @brief Create a new template node.
+ * @brief Create a new template_ node.
  * 
- * @return UlgTemplate* 
+ * @return ulg_template_t* 
  */
-UlgTemplate* ulg_template_new(UlgModule* module, const UlgClass* class_name);
+ulg_template_t* ulg_template_new(ulg_module_t* module, const ulg_class_t* class_name);
 
 /**
- * Return a new template node, with the class registered under the given name.
+ * Return a new template_ node, with the class registered under the given name.
  * 
  * @param module 
  * @param class_name 
- * @return UlgTemplate* 
+ * @return ulg_template_t* 
  */
-UlgTemplate* ulg_template_new_by_name(UlgModule* module, const char* class_name);
+ulg_template_t* ulg_template_new_by_name(ulg_module_t* module, const char* class_name);
 
 /**
- * @brief Destroy the given template node, and all of it's children.
+ * @brief Destroy the given template_ node, and all of it's children.
  * 
- * @param template The template to destroy.
+ * @param template_ The template_ to destroy.
  */
-void ulg_template_free(UlgTemplate* template);
+void ulg_template_free(ulg_template_t* template_);
 
 /**
- * @brief Add a scalar property to this template node.
+ * @brief Add a scalar property to this template_ node.
  * 
- * @param template The template to add a property to.
+ * @param template_ The template_ to add a property to.
  * @param name     The name of the property to assign this value to.
  * @param value    The value of the property.
  */
-void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, const char* value);
+void ulg_template_set_scalar(ulg_template_t* template_, const char* property_name, const char* value);
 
 /**
  * @brief Adds a child object as a property.
  * 
- * @param template The template to add a property to.
+ * @param template_ The template_ to add a property to.
  * @param name     The name of the property to assign the object to.
  * @param class    Class of the child object to create.
  */
-UlgTemplate* ulg_template_set_child(UlgTemplate* template, const char* property_name, const char* class_name);
+ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* property_name, const char* class_name);
 
 /**
- * @brief Create an object based on the specified template.
+ * @brief Create an object based on the specified template_.
  * 
- * @param template The template to instanciate.
+ * @param template_ The template_ to instanciate.
  * @return The created object.
  */
-void* ulg_template_instanciate(const UlgTemplate* template);
+void* ulg_template_instanciate(const ulg_template_t* template_);
+
+#endif

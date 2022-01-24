@@ -10,7 +10,8 @@
  * TODO: Finish documentation here.
  *
  */
-#pragma once
+#ifndef INCLUDE_UILIGI_OBJECT_H
+#define INCLUDE_UILIGI_OBJECT_H
 
 #include <stddef.h>
 
@@ -18,32 +19,32 @@
 
 static const size_t MAX_NAME_LENGTH = 256;
 
-typedef struct _UlgModule UlgModule;
-typedef struct _UlgClass UlgClass;
-typedef struct _UlgMember UlgMember;
-typedef struct _UlgModuleDefinition UlgModuleDefinition;
-typedef struct _UlgClassDefinition UlgClassDefinition;
+typedef struct ulg_module_s ulg_module_t;
+typedef struct ulg_class_s ulg_class_t;
+typedef struct ulg_member_s ulg_member_t;
+typedef struct ulg_module_definition_s ulg_module_definition_t;
+typedef struct ulg_class_definition_s ulg_class_definition_t;
 
 /**
  * Create a new module definition.
  *
  * @return The newly created class module.
  */
-UlgModuleDefinition* ulg_module_new();
+ulg_module_definition_t* ulg_module_new();
 
 /**
  * Register a class in the class module, using the given definition.
  *
  * It will assert if the class is already registered in the module.
  *
- * @param module    A previously created UlgModule.
+ * @param module    A previously created ulg_module_t.
  * @param definition A class definition callback.
  *
  * @return The newly created class.
  */
 
-UlgClassDefinition* ulg_class_new(
-    UlgModuleDefinition* module,
+ulg_class_definition_t* ulg_class_new(
+    ulg_module_definition_t* module,
     const char* name,
     const char* parent,
     size_t size,
@@ -51,10 +52,10 @@ UlgClassDefinition* ulg_class_new(
 );
 
 /** Callback for voids property getter.*/
-typedef UlgValue (*UlgGetter)(const void*);
+typedef ulg_value_t (*ulg_getter_t)(const void*);
 
 /** Callback for voids property setter.*/
-typedef void (*UlgSetter)(void*, const UlgValue);
+typedef void (*ulg_setter_t)(void*, const ulg_value_t);
 
 /**
  * Add a property to this class.
@@ -64,46 +65,46 @@ typedef void (*UlgSetter)(void*, const UlgValue);
  * @param getter  Callback that set the property value.
  */
 void ulg_class_add_property(
-    UlgClassDefinition* definition,
+    ulg_class_definition_t* class_,
     const char* name,
-    UlgGetter getter,
-    UlgSetter setter
+    ulg_getter_t getter,
+    ulg_setter_t setter
 );
 
 /**
- * Create a usable UlgModule from a UlgModuleDefinition
+ * Create a usable ulg_module_t from a ulg_module_definition_t
  * 
  * @param definition 
- * @return UlgModule* 
+ * @return ulg_module_t* 
  */
-UlgModule* ulg_module_build(UlgModuleDefinition* module);
+ulg_module_t* ulg_module_build(ulg_module_definition_t* module);
 
 /**
- * Destroy a UlgModule, and all it's registered classes.
+ * Destroy a ulg_module_t, and all it's registered classes.
  *
  * @param module The module to destroy.
  */
-void ulg_module_free(UlgModule* module);
+void ulg_module_free(ulg_module_t* module);
 
 /**
  * Get a class using it's definition as a key.
  *
  * If the class wasn't registered, the function will return NULL.
  *
- * @param module   A previously created UlgModule.
+ * @param module   A previously created ulg_module_t.
  * @param definition A class definition callback.
  *
  * @return The newly created class.
  */
 
-const UlgClass* ulg_class_get(const UlgModule* module, const char* name);
+const ulg_class_t* ulg_class_get(const ulg_module_t* module, const char* name);
 
 #define ULG_OBJECT "Object"
 
 /**
  * Create an object of the given class.
  */
-void* ulg_object_new(const UlgClass* class_);
+void* ulg_object_new(const ulg_class_t* class_);
 
 /**
  * Release the given void.
@@ -117,25 +118,7 @@ void ulg_object_free(void* object);
  * @param property_name Name of the property to set.
  * @return              The property value.
  */
-UlgValue ulg_object_get(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_bool(ulg_object_get(object, property_name)) */
-bool ulg_object_get_bool(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_int(ulg_object_get(object, property_name)) */
-int ulg_object_get_int(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_float(ulg_object_get(object, property_name)) */
-float ulg_object_get_float(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_string(ulg_object_get(object, property_name)) */
-const char* ulg_object_get_string(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_raw(ulg_object_get(object, property_name)) */
-const void* ulg_object_get_raw(const void* object, const char* property_name);
-
-/** Equivalent to ulg_to_object(ulg_object_get(object, property_name)) */
-const void* ulg_object_get_object(const void* object, const char* property_name);
+ulg_value_t ulg_object_get(const void* object, const char* property_name);
 
 /**
  * Set a property on an object.
@@ -144,4 +127,6 @@ const void* ulg_object_get_object(const void* object, const char* property_name)
  * @param property_name Name of the property to set.
  * @param value         Value to set the property to.
  */
-void ulg_object_set(void* object, const char* property_name, UlgValue value);
+void ulg_object_set(void* object, const char* property_name, ulg_value_t value);
+
+#endif

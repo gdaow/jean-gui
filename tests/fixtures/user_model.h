@@ -10,12 +10,11 @@
  */
 #pragma once
 
-typedef struct _UlgClass UlgClass;
-typedef struct _UlgClassDefinition UlgClassDefinition;
+typedef struct ulg_module_s ulg_module_t;
 
-typedef struct _Admin Admin;
-typedef struct _Team Team;
-typedef struct _User User;
+typedef struct admin_s admin_t;
+typedef struct team_s team_t;
+typedef struct user_s user_t;
 
 typedef enum {
     PERM_CAN_LOGIN = 1,
@@ -23,19 +22,19 @@ typedef enum {
     PERM_CAN_CREATE_USER = 0x4,
     PERM_CAN_DELETE_USER = 0x8,
     PERM_ALL = PERM_CAN_LOGIN | PERM_CAN_CHANGE_PASSWORD | PERM_CAN_CREATE_USER | PERM_CAN_DELETE_USER
-} PermissionFlags;
+} permission_flags_t;
 
-struct _User {
+struct user_s {
     const char* name;
-    Team* team;
+    team_t* team;
 };
 
-struct _Admin {
-    User base;
+struct admin_s {
+    user_t base;
     const char* role;
 };
 
-struct _Team {
+struct team_s {
     const char* name;
 };
 
@@ -44,5 +43,5 @@ struct _Team {
 #define ADMIN "Admin"
 #define TEAM "Team"
 
-UlgModule* user_model_module_new();
-PermissionFlags user_get_default_permissions(User* user);
+ulg_module_t* user_model_module_new();
+permission_flags_t user_get_default_permissions(user_t* user);

@@ -25,5 +25,17 @@
         "type_traits": "c",
         "utility": "c"
     },
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "clang-tidy.buildPath": ".build",
+    "clang-tidy.checks": [
+        
+        "bugprone-*",
+        "cert*",
+        "clang-*",
+        "llvm-*",
+        "modernize-*",
+        "performance-*",
+        "readability-*",
+        "misc-*"
+    ]
 }

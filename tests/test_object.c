@@ -15,21 +15,21 @@
 
 #include "fixtures/user_model.h"
 
-static UlgModule* module = NULL;
-static const UlgClass* user_class = NULL;
-static const UlgClass* admin_class = NULL;
+static ulg_module_t* module = NULL;
+static const ulg_class_t* user_class = NULL;
+static const ulg_class_t* admin_class = NULL;
 
-void _dummy_type(UlgClassDefinition* class_) {
+void _dummy_type(ulg_class_definition_t* class_) {
     (void)class_;
 }
 
 /** ulg_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
 MU_TEST(test_ulg_class_get) {
-    const UlgClass* user_class = ulg_class_get(module, USER);
+    const ulg_class_t* user_class = ulg_class_get(module, USER);
     mu_check(user_class != NULL);
 
-    const UlgClass* admin_class = ulg_class_get(module, ADMIN);
+    const ulg_class_t* admin_class = ulg_class_get(module, ADMIN);
     mu_check(admin_class != NULL);
 
     mu_check(ulg_class_get(module, "Dummy") == NULL);
@@ -37,12 +37,12 @@ MU_TEST(test_ulg_class_get) {
 
 /** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
 MU_TEST(test_ulg_object_get) {
-    Admin* admin = ulg_object_new(admin_class);
+    admin_t* admin = ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
     admin->base.name = test_string;
     admin->role = test_string;
 
-    UlgValue property;
+    ulg_value_t property;
     
     property = ulg_object_get(admin, "name");
     mu_assert_string_eq(test_string, ulg_to_string(property));
@@ -55,9 +55,9 @@ MU_TEST(test_ulg_object_get) {
 
 /** ulg_object_set should correctly set a property, be it declared on the type or on a parent. */
 MU_TEST(test_ulg_object_set) {
-    Admin* admin = ulg_object_new(admin_class);
+    admin_t* admin = ulg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
-    UlgValue test_value = ulg_string(test_string);
+    ulg_value_t test_value = ulg_string(test_string);
 
     ulg_object_set(admin, "name", test_value);
     ulg_object_set(admin, "role", test_value);

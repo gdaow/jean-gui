@@ -29,13 +29,17 @@ yaml = yaml_project.dependency('yaml')
 
 ulg_includes = include_directories('include')
 
-ulg_lib = static_library(
-    'uiligi',
+ulg_src = files(
     'src/object.c',
     'src/private/memory.c',
     'src/private/misc.c',
     'src/template.c',
     'src/value.c',
+)
+
+ulg_lib = static_library(
+    'uiligi',
+    ulg_src,
     dependencies: [wxc, yaml],
     include_directories: ulg_includes,
     c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing']
@@ -48,13 +52,27 @@ ulg_dep = declare_dependency(
 
 minunit_includes = include_directories('subprojects/minunit')
 
-executable(
-    'uiligi-tests',
+ulg_test_src = files(
     'tests/fixtures/user_model.c',
     'tests/main.c',
     'tests/test_object.c',
     'tests/test_template.c',
     'tests/test_value.c',
+)
+
+executable(
+    'uiligi-tests',
+    ulg_test_src,
     dependencies: [ulg_dep],
     include_directories: [minunit_includes]
 )
+
+clangtidy = find_program('clang-tidy', required: false)
+if clangtidy.found()
+    run_target(
+        'tidy',
+        command: [
+            clangtidy,
+            '-p', meson.build_root()
+        ] + ulg_src + ulg_test_src)
+endif
