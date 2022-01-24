@@ -67,13 +67,13 @@ MU_TEST(test_ulg_object_set) {
     ulg_object_free(admin);
 }
 
-static void _setup() {
+static void setup() {
     module = user_model_module_new();
     user_class = ulg_class_get(module, USER);
     admin_class = ulg_class_get(module, ADMIN);
 }
 
-static void _teardown() {
+static void teardown() {
     admin_class = NULL;
     user_class = NULL;
     ulg_module_free(module);
@@ -81,7 +81,7 @@ static void _teardown() {
 }
 
 MU_TEST_SUITE(object_suite) {
-    MU_SUITE_CONFIGURE(_setup, _teardown);
+    MU_SUITE_CONFIGURE(setup, teardown);
     MU_RUN_TEST(test_ulg_class_get);
     MU_RUN_TEST(test_ulg_object_get);
     MU_RUN_TEST(test_ulg_object_set);

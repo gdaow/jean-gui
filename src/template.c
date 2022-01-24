@@ -38,18 +38,10 @@ struct ulg_template_s {
     ulg_property_template_t* properties;
 };
 
-ulg_template_t* ulg_template_new(ulg_module_t* module, const ulg_class_t* class_) {
-    return ULG_MALLOC_INIT(&(ulg_template_t) {
-        .module = module,
-        .class_ = class_,
-        .properties = NULL
-    });
-}
-
-ulg_template_t* ulg_template_new_by_name(ulg_module_t* module, const char* class_name) {
-    const ulg_class_t* class_ = ulg_class_get(module, class_name);
-    assert(class_);
-    return ulg_template_new(module, class_);
+ulg_template_t* ulg_template_from_string(const char* source, ulg_module_t* module) {
+    (void)source;
+    (void)module;
+    return NULL;
 }
 
 void ulg_template_free(ulg_template_t* template_) {
@@ -93,7 +85,7 @@ ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* pr
     const ulg_class_t* child_class = ulg_class_get(module, class_name);
     assert(child_class); // TODO(corenting@ki-dour.org): Handle errors.
 
-    ulg_template_t* child_template = ulg_template_new(module, child_class);
+    ulg_template_t* child_template = NULL;
 
     ulg_property_template_t* new_property = ULG_MALLOC_INIT(&(ulg_property_template_t) {
         .name = property_name,

@@ -22,16 +22,7 @@ typedef struct ulg_template_s ulg_template_t;
  * 
  * @return ulg_template_t* 
  */
-ulg_template_t* ulg_template_new(ulg_module_t* module, const ulg_class_t* class_name);
-
-/**
- * Return a new template_ node, with the class registered under the given name.
- * 
- * @param module 
- * @param class_name 
- * @return ulg_template_t* 
- */
-ulg_template_t* ulg_template_new_by_name(ulg_module_t* module, const char* class_name);
+ulg_template_t* ulg_template_from_string(const char* source, ulg_module_t* module);
 
 /**
  * @brief Destroy the given template_ node, and all of it's children.
@@ -39,24 +30,6 @@ ulg_template_t* ulg_template_new_by_name(ulg_module_t* module, const char* class
  * @param template_ The template_ to destroy.
  */
 void ulg_template_free(ulg_template_t* template_);
-
-/**
- * @brief Add a scalar property to this template_ node.
- * 
- * @param template_ The template_ to add a property to.
- * @param name     The name of the property to assign this value to.
- * @param value    The value of the property.
- */
-void ulg_template_set_scalar(ulg_template_t* template_, const char* property_name, const char* value);
-
-/**
- * @brief Adds a child object as a property.
- * 
- * @param template_ The template_ to add a property to.
- * @param name     The name of the property to assign the object to.
- * @param class    Class of the child object to create.
- */
-ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* property_name, const char* class_name);
 
 /**
  * @brief Create an object based on the specified template_.
