@@ -10,6 +10,5 @@
    and data binding updates trigerred by calling event handlers. Only the binding system could access
    property getter / setters.
  * Don't store member_count, class_count and names_length : find them when building modules.
- * Integrate clang-tidy
- * Rename struct to make clang-tidy shut up.
+ * Handle OOM
  
