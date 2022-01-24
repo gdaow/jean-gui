@@ -5,12 +5,9 @@
  * Support code coverage.
  * Setup CI on github.
  * Add a magic number and an assert to raise early on UlgObjects pointer errors in debug.
- * Check for parent virtual table size only in Debug.
- * UlgClassFactory / id is not clear, we should make it more straightforward, event if it cost a
-   const cast
- * Handle other values than string in templates.
  * Expose UlgProperty publicly : Maybe not. Actually, it may be a good idea to not even Expose
  * ulg_object_get and ulg_object_set publicly : all data modification may be done 'the native way',
    and data binding updates trigerred by calling event handlers. Only the binding system could access
    property getter / setters.
- * We have a problem : binding will eventually get a const* object 
+ * Don't store member_count, class_count and names_length : find them when building modules.
+ 
