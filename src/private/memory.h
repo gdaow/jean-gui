@@ -5,83 +5,37 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Custom allocators.
+ * Custom allocators & memory helpers.
  *
  */
 #pragma once
 #include <stddef.h>
 
-/**
- * Helper to malloc and initialize a struct fields.
- * 
- * Usage :
- * User* user = ulg_malloc_struct(User,
- *     .name = "Mr Meeseeks",
- *     .age = 0.001
- * )
- */
-#define ulg_malloc_struct(TYPE, ...)\
-    memcpy(\
-        malloc(sizeof(TYPE)),\
-        &(TYPE) {\
-            __VA_ARGS__\
-        },\
-        sizeof(TYPE)\
-    )
-
 static const size_t DEFAULT_CHUNK_SIZE = 0x1000;
 
-typedef struct _UlgArena UlgArena;
+// _Arena allocator, used to store temporary data while creating modules or templates.
+typedef struct __Arena _Arena;
 
-void* _ulg_buffer_alloc(void* base, size_t* offset, size_t size, size_t align);
+// Uses DEFAULT_CHUNK_SIZE if chunk_size is 0
+_Arena* _arena_new(size_t chunk_size);
+void* _arena_alloc(_Arena* arena, size_t size, size_t align_size);
+void _arena_free(_Arena* arena);
 
-#define ulg_buffer_alloc(BASE, OFFSET, ...)\
+// length_accumulate is used to grow the total memory needed to store strings, in order to allocate
+// the needed space when building modules. Length of the given string will be added to the pointed
+// size_t.
+char* _arena_strcpy(_Arena* arena, const char* value, size_t max_length, size_t* length_accumulate);
+
+#define malloc_init(...)\
     (memcpy(\
-        _ulg_buffer_alloc(BASE, OFFSET, sizeof(*(__VA_ARGS__)), alignof(*(__VA_ARGS__))),\
+        malloc(sizeof(*(__VA_ARGS__))),\
         __VA_ARGS__,\
         sizeof(*(__VA_ARGS__))\
     ))
 
-#define ulg_buffer_calloc(BASE, OFFSET, TYPE, SIZE)\
-    (_ulg_buffer_alloc(BASE, OFFSET, SIZE*sizeof(TYPE), alignof(TYPE)))
-
-/**
- * Create a new arena allocator.
- * 
- * @param chunk_size Size of allocated chunks.
- * @return The created arena.
- */
-UlgArena* ulg_arena_new(size_t chunk_size);
-
-/**
- * Allocate memory from an arena.
- * 
- * @param size size to allocate.
- * @param align_size Align the allocation to this size (use alignof operator)
- * @return The allocated memory.
- */
-void* ulg_arena_alloc(UlgArena* arena, size_t size, size_t align_size);
-
-/**
- * Release memory occupied by an arena.
- * 
- * @param arena 
- */
-void ulg_arena_free(UlgArena* arena);
-
-#define ulg_arena_alloc_struct(ARENA, ...)\
+#define _arena_alloc_init(ARENA, ...)\
     (memcpy(\
-        ulg_arena_alloc(ARENA, sizeof(*__VA_ARGS__), alignof(*__VA_ARGS__)),\
+        _arena_alloc(ARENA, sizeof(*(__VA_ARGS__)), alignof(*(__VA_ARGS__))),\
         __VA_ARGS__,\
-        sizeof(*__VA_ARGS__)\
+        sizeof(*(__VA_ARGS__))\
     ))
-
-/**
- * @brief 
- * 
- * @param arena 
- * @param name 
- * @param max_length 
- * @return char* 
- */
-char* ulg_arena_strcpy(UlgArena* arena, const char* name, size_t max_length);

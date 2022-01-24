@@ -11,7 +11,6 @@
 
 #include <minunit.h>
 
-#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "fixtures/user_model.h"
@@ -24,19 +23,16 @@ void _dummy_type(UlgClassDefinition* class_) {
     (void)class_;
 }
 
-/** ulg_class_get should return the class object given a class name or a class definition, and return
- *  NULL if the class was not registered in the module. */
+/** ulg_class_get should return the class object given a class name and return NULL if the class was not
+ *  registered in the module. */
 MU_TEST(test_ulg_class_get) {
-    const UlgClass* user_class = ulg_class_get_by_name(module, "User");
+    const UlgClass* user_class = ulg_class_get(module, USER);
     mu_check(user_class != NULL);
-    mu_check(user_class == ulg_class_get(module, user_type));
 
-    const UlgClass* admin_class = ulg_class_get_by_name(module, "Admin");
+    const UlgClass* admin_class = ulg_class_get(module, ADMIN);
     mu_check(admin_class != NULL);
-    mu_check(admin_class == ulg_class_get(module, admin_type));
 
-    mu_check(ulg_class_get(module, _dummy_type) == NULL);
-    mu_check(ulg_class_get_by_name(module, "Dummy") == NULL);
+    mu_check(ulg_class_get(module, "Dummy") == NULL);
 }
 
 /** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
@@ -73,8 +69,8 @@ MU_TEST(test_ulg_object_set) {
 
 static void _setup() {
     module = user_model_module_new();
-    user_class = ulg_class_get(module, user_type);
-    admin_class = ulg_class_get(module, admin_type);
+    user_class = ulg_class_get(module, USER);
+    admin_class = ulg_class_get(module, ADMIN);
 }
 
 static void _teardown() {

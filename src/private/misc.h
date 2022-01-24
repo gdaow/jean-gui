@@ -10,4 +10,15 @@
  */
 #include <stddef.h>
 
-size_t ulg_strnlen(const char *s, size_t maxlen);
+size_t _ulg_strnlen(const char *s, size_t maxlen);
+
+
+typedef int (*CompareFunction)(void* a, void* b);
+
+typedef struct __Index {
+    const char** keys;
+    size_t count;
+} _Index;
+
+void _index_sort(_Index* index);
+int _index_search(const _Index* index, const char* key);

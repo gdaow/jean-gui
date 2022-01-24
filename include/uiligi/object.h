@@ -16,44 +16,94 @@
 
 #include <uiligi/value.h>
 
+static const size_t MAX_NAME_LENGTH = 256;
+
 typedef struct _UlgModule UlgModule;
 typedef struct _UlgClass UlgClass;
-typedef struct _UlgProperty UlgProperty;
+typedef struct _UlgMember UlgMember;
 typedef struct _UlgModuleDefinition UlgModuleDefinition;
 typedef struct _UlgClassDefinition UlgClassDefinition;
 
 /**
- * Retrieve a class by it's type name.
+ * Create a new module definition.
  *
- * @param module A previously created and initialized UlgModule.
- * @param name    The class name to get.
- *
- * @return The matching class, or NULL if it was not found in the module.
+ * @return The newly created class module.
  */
-
-const UlgClass* ulg_class_get_by_name(UlgModule* module, const char* name);
+UlgModuleDefinition* ulg_module_new();
 
 /**
- * void virtual table structure. See ulg_class_edit_vtable to implement methods on
- * class inheriting from void.
+ * Register a class in the class module, using the given definition.
+ *
+ * It will assert if the class is already registered in the module.
+ *
+ * @param module    A previously created UlgModule.
+ * @param definition A class definition callback.
+ *
+ * @return The newly created class.
  */
-typedef struct _UlgObjectVT {
-    /** Called after the given object is allocated and initialized. */
-    void (*init)(void*);
 
-    /** Called after the given object is allocated and initialized. */
-    void (*cleanup)(void*);
-} UlgObjectVT;
+UlgClassDefinition* ulg_class_new(
+    UlgModuleDefinition* module,
+    const char* name,
+    const char* parent,
+    size_t size,
+    size_t align
+);
+
+/** Callback for voids property getter.*/
+typedef UlgValue (*UlgGetter)(const void*);
+
+/** Callback for voids property setter.*/
+typedef void (*UlgSetter)(void*, const UlgValue);
 
 /**
- * @brief void class definition.
+ * Add a property to this class.
+ * @param class_  Add a property to this class.
+ * @param name    The name of the property.
+ * @param setter  Callback that get the property value.
+ * @param getter  Callback that set the property value.
  */
-void ulg_object_type(UlgClassDefinition* definition);
+void ulg_class_add_property(
+    UlgClassDefinition* definition,
+    const char* name,
+    UlgGetter getter,
+    UlgSetter setter
+);
+
+/**
+ * Create a usable UlgModule from a UlgModuleDefinition
+ * 
+ * @param definition 
+ * @return UlgModule* 
+ */
+UlgModule* ulg_module_build(UlgModuleDefinition* module);
+
+/**
+ * Destroy a UlgModule, and all it's registered classes.
+ *
+ * @param module The module to destroy.
+ */
+void ulg_module_free(UlgModule* module);
+
+/**
+ * Get a class using it's definition as a key.
+ *
+ * If the class wasn't registered, the function will return NULL.
+ *
+ * @param module   A previously created UlgModule.
+ * @param definition A class definition callback.
+ *
+ * @return The newly created class.
+ */
+
+const UlgClass* ulg_class_get(const UlgModule* module, const char* name);
+
+#define ULG_OBJECT "Object"
 
 /**
  * Create an object of the given class.
  */
-[[nodiscard]] void* ulg_object_new(const UlgClass* class_);
+void* ulg_object_new(const UlgClass* class_);
 
 /**
  * Release the given void.

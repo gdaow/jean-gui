@@ -40,10 +40,9 @@ struct _Team {
 };
 
 
+#define USER "User"
+#define ADMIN "Admin"
+#define TEAM "Team"
+
 UlgModule* user_model_module_new();
-
-void user_type(UlgClassDefinition* class_);
 PermissionFlags user_get_default_permissions(User* user);
-
-void admin_type(UlgClassDefinition* class_);
-void team_type(UlgClassDefinition* class_);

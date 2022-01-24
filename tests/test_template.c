@@ -8,7 +8,6 @@
 #include <string.h>
 #include <minunit.h>
 
-#include <uiligi/module.h>
 #include <uiligi/object.h>
 #include <uiligi/template.h>
 

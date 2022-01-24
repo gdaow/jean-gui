@@ -19,72 +19,83 @@
 #include "memory.h"
 #include "misc.h"
 
-typedef struct _UlgArenaChunk UlgArenaChunk;
+typedef struct __ArenaChunk _ArenaChunk;
 
-struct _UlgArenaChunk {
-    UlgArenaChunk* next;
+struct __ArenaChunk {
+    _ArenaChunk* next;
     size_t offset;
 };
 
-struct _UlgArena {
+struct __Arena {
     size_t chunk_size;
-    UlgArenaChunk* chunks;
+    _ArenaChunk* chunks;
 };
 
-void* _ulg_buffer_alloc(void* base, size_t* offset, size_t size, size_t align) {
-    *offset = *offset + (align - *offset % align);
-    uintptr_t ptr = (uintptr_t)base + *offset;
-    *offset = *offset + size;
+_Arena* _arena_new(size_t chunk_size) {
+    if(!chunk_size) {
+        chunk_size = DEFAULT_CHUNK_SIZE;
+    }
+
+    return malloc_init(&(_Arena) {
+        .chunk_size = chunk_size,
+        .chunks = NULL
+    });
+}
+
+static void* _chunk_alloc(_ArenaChunk* chunk, size_t chunk_size, size_t size, size_t align) {
+    void* base = chunk + 1;
+    size_t offset = chunk->offset;
+
+    // align
+    offset = offset + (align - offset % align);
+
+    // reserve
+    uintptr_t ptr = (uintptr_t)base + offset;
+    offset = offset + size;
+
+    // out of bounds : no enough availabe space
+    if(offset > chunk_size)
+        return NULL;
+
+    chunk->offset = offset;
     return (void*)ptr;
 }
 
-UlgArena* ulg_arena_new(size_t chunk_size) {
-    UlgArena* result = ulg_malloc_struct(UlgArena, 
-        .chunk_size = chunk_size,
-        .chunks = NULL,
-    );
-    return result;
-}
-
-static UlgArenaChunk* _new_chunk(UlgArena* arena) {
-    UlgArenaChunk* chunk = malloc(sizeof(UlgArenaChunk) + arena->chunk_size);
+static _ArenaChunk* _new_chunk(_Arena* arena) {
+    _ArenaChunk* chunk = malloc(sizeof(_ArenaChunk) + arena->chunk_size);
     chunk->next = arena->chunks;
     chunk->offset = 0;
     arena->chunks = chunk;
     return chunk;
 }
 
-void* ulg_arena_alloc(UlgArena* arena, size_t size, size_t align) {
-    UlgArenaChunk* chunk = arena->chunks;
+void* _arena_alloc(_Arena* arena, size_t size, size_t align) {
+    _ArenaChunk* chunk = arena->chunks;
     size_t chunk_size = arena->chunk_size;
     void* result = NULL;
 
-    // Search chunks free memory large enough
+    // search chunks for free memory large enough
     while(chunk) {
-        size_t offset = chunk->offset;
-        result = _ulg_buffer_alloc(chunk + 1, &offset, size, align);
+        result = _chunk_alloc(chunk, chunk_size, size, align);
 
-        if(offset <= chunk_size)
-        {
-            chunk->offset = offset;
+        if(result)
             return result;
-        }
 
         chunk = chunk->next;
     }
 
-    // Everyhing is full, we create a new chunk
+    // everyhing is full, we create a new chunk
     chunk = _new_chunk(arena);
-    result = _ulg_buffer_alloc(chunk + 1, &chunk->offset, size, align);
-    assert(chunk->offset < chunk_size); // Alignment and size requirements don't fit in chunk_size
+    result = _chunk_alloc(chunk, chunk_size, size, align);
+    assert(result); // alignment and size requirements don't fit in chunk_size
 
     return result;
 }
 
-void ulg_arena_free(UlgArena* arena) {
-    UlgArenaChunk* chunk = arena->chunks;
+void _arena_free(_Arena* arena) {
+    _ArenaChunk* chunk = arena->chunks;
     while(chunk) {
-        UlgArenaChunk* next = chunk->next;
+        _ArenaChunk* next = chunk->next;
         free(chunk);
         chunk = next;
     }
@@ -92,10 +103,13 @@ void ulg_arena_free(UlgArena* arena) {
     free(arena);
 }
 
-char* ulg_arena_strcpy(UlgArena* arena, const char* name, size_t max_length) {
-    size_t name_len = ulg_strnlen(name, max_length);
-    char* name_copy = ulg_arena_alloc(arena, name_len, alignof(char));
-    memcpy(name_copy, name, name_len);
-    name_copy[name_len] = '\0';
-    return name_copy;
+char* _arena_strcpy(_Arena* arena, const char* value, size_t max_length, size_t* length_accumulate) {
+    size_t length = _ulg_strnlen(value, max_length) + 1;
+    if(length_accumulate) {
+        *length_accumulate += length;
+    }
+    char* copy = _arena_alloc(arena, length, alignof(char));
+    memcpy(copy, value, length);
+    copy[length] = '\0';
+    return copy;
 }

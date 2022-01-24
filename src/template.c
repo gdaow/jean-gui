@@ -49,7 +49,7 @@ UlgTemplate* ulg_template_new(UlgModule* module, const UlgClass* class_) {
 }
 
 UlgTemplate* ulg_template_new_by_name(UlgModule* module, const char* class_name) {
-    const UlgClass* class_ = ulg_class_get_by_name(module, class_name);
+    const UlgClass* class_ = ulg_class_get(module, class_name);
     assert(class_);
     return ulg_template_new(module, class_);
 }
@@ -92,7 +92,7 @@ void ulg_template_set_scalar(UlgTemplate* template, const char* property_name, c
 UlgTemplate* ulg_template_set_child(UlgTemplate* template, const char* property_name, const char* class_name) {
     UlgModule* module = template->module;
 
-    const UlgClass* child_class = ulg_class_get_by_name(module, class_name);
+    const UlgClass* child_class = ulg_class_get(module, class_name);
     assert(child_class); // TODO: Handle errors.
 
     UlgTemplate* child_template = ulg_template_new(module, child_class);

@@ -8,20 +8,21 @@
 #include <assert.h>
 #include <stdalign.h>
 
-#include <uiligi/class.h>
-#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "user_model.h"
 
+void register_user_type(UlgModuleDefinition* module);
+void register_admin_type(UlgModuleDefinition* module);
+void register_team_type(UlgModuleDefinition* module);
+
 UlgModule* user_model_module_new() {
     UlgModuleDefinition* module = ulg_module_new();
-    ulg_class_register(module, user_type);
-    ulg_class_register(module, admin_type);
-    ulg_class_register(module, team_type);
+    register_user_type(module);
+    register_admin_type(module);
+    register_team_type(module);
     return ulg_module_build(module);
 }
-
 static UlgValue _user_get_name(const void* object) {
     const User* user = object;
     return ulg_string(user->name);
@@ -44,14 +45,8 @@ static void _user_set_team(void* object, UlgValue value) {
     user->team = ulg_to_object(value);
 }
 
-typedef struct {
-    UlgObjectVT base;
-    PermissionFlags (*get_default_permissions)();
-} UserVT;
-
-void user_type(UlgClassDefinition* class_) {
-    ulg_class_define(class_, "User", ulg_object_type);
-
+void register_user_type(UlgModuleDefinition* module) {
+    UlgClassDefinition* class_ = ulg_class_new(module, USER, ULG_OBJECT, sizeof(User), alignof(User));
     ulg_class_add_property(class_, "name", _user_get_name, _user_set_name);
     ulg_class_add_property(class_, "team", _user_get_team, _user_set_team);
 }
@@ -66,8 +61,8 @@ static void _admin_set_role(void* object, UlgValue value) {
     admin->role = ulg_to_string(value);
 }
 
-void admin_type(UlgClassDefinition* class_) {
-    ulg_class_define(class_, "Admin", user_type);
+void register_admin_type(UlgModuleDefinition* module) {
+    UlgClassDefinition* class_ = ulg_class_new(module, ADMIN, USER, sizeof(Admin), alignof(Admin));
     ulg_class_add_property(class_, "role", _admin_get_role, _admin_set_role);
 }
 
@@ -81,7 +76,7 @@ static UlgValue _team_get_name(const void* object) {
     return ulg_string(team->name);
 }
 
-void team_type(UlgClassDefinition* class_) {
-    ulg_class_define(class_, "Team", ulg_object_type);
+void register_team_type(UlgModuleDefinition* module) {
+    UlgClassDefinition* class_ = ulg_class_new(module, TEAM, ULG_OBJECT, sizeof(Team), alignof(Team));
     ulg_class_add_property(class_, "name", _team_get_name, _team_set_name);
 }

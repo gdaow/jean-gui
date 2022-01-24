@@ -12,7 +12,6 @@
 #include <minunit.h>
 
 #include <uiligi/value.h>
-#include <uiligi/module.h>
 #include <uiligi/object.h>
 
 #include "fixtures/user_model.h"
@@ -93,7 +92,7 @@ MU_TEST(test_ulg_value_raw) {
 /** ulg_object, ulg_is_object and ulg_to_object should correctly handle boolean values. */
 MU_TEST(test_ulg_value_object) {
     UlgModule* module = user_model_module_new();
-    const UlgClass* admin_class = ulg_class_get(module, admin_type);
+    const UlgClass* admin_class = ulg_class_get(module, ADMIN);
     void* test_object = ulg_object_new(admin_class); 
 
     UlgValue value = ulg_object(test_object);
