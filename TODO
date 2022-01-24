@@ -11,4 +11,5 @@
    property getter / setters.
  * Don't store member_count, class_count and names_length : find them when building modules.
  * Handle OOM
+ * Remove uses of ULG_MALLOC_INIT, use memcpy_s instead.
  
