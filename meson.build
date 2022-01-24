@@ -74,5 +74,5 @@ if clangtidy.found()
         command: [
             clangtidy,
             '-p', meson.build_root()
-        ] + ulg_src + ulg_test_src)
+        ] + ulg_src)
 endif
