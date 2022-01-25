@@ -32,6 +32,7 @@ ulg_includes = include_directories('include')
 ulg_src = files(
     'src/object.c',
     'src/private/memory.c',
+    'src/private/stack.c',
     'src/private/misc.c',
     'src/template.c',
     'src/value.c',
