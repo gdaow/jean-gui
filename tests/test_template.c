@@ -18,7 +18,10 @@ mz_module* module = NULL;
 
 MU_TEST(test_mz_template_scalar_property) {
     mz_template* admin_template = mz_template_from_string(
-        "<Admin name=\"Dr. Meeseeks\" />",
+        "!Admin\n"
+        "name: Dr. Meeseeks\n"
+        "team: !Team\n"
+        "  name: Team Meeseeks\n",
         module
     );
 
@@ -27,7 +30,6 @@ MU_TEST(test_mz_template_scalar_property) {
 
     mz_object_free(admin);
     mz_template_free(admin_template); // team_template will be freed by i's parent
-    mz_module_free(module);
 }
 
 static void setup() {

@@ -23,7 +23,7 @@ void mz_stack_init(mz_stack* stack, size_t element_size) {
     *stack = (mz_stack) {
         .top = base,
         .base = base,
-        .size = GROW_SIZE,
+        .size = GROW_SIZE * element_size,
         .element_size = element_size
     };
 }
@@ -33,7 +33,8 @@ void mz_stack_clean(mz_stack* stack) {
 }
 
 void mz_stack_push(mz_stack* stack, void* element) {
-    assert(stack->base + stack->size <= stack->top);
+    size_t stack_size = (stack->top - stack->base) / stack->element_size;
+    assert(stack->base + stack->size >= stack->top);
     if(stack->base + stack->size == stack->top) { 
         size_t old_size = stack->size;
         stack->size = old_size + GROW_SIZE * stack->element_size;
@@ -45,11 +46,14 @@ void mz_stack_push(mz_stack* stack, void* element) {
     stack->top += stack->element_size;
 }
 
+void* mz_stack_peek(mz_stack* stack) {
+    return stack->top - stack->element_size;
+}
+
+
 void* mz_stack_pop(mz_stack* stack) {
-    void* result = NULL;
-    if(stack->base != stack->top) {
-        result = stack->top -= stack->element_size;
-    }
+    size_t stack_size = (stack->top - stack->base) / stack->element_size;
+    stack->top -= stack->element_size;
     assert(stack->base <= stack->top);
-    return result;
+    return stack->top;
 }
