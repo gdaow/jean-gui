@@ -1,5 +1,5 @@
 project(
-    'uiligi',
+    'mezo',
     'c',
     default_options: [
         'warning_level=3',
@@ -27,9 +27,9 @@ yaml_project = cmake.subproject(
 )
 yaml = yaml_project.dependency('yaml')
 
-ulg_includes = include_directories('include')
+mz_includes = include_directories('include')
 
-ulg_src = files(
+mz_src = files(
     'src/object.c',
     'src/private/memory.c',
     'src/private/stack.c',
@@ -38,22 +38,22 @@ ulg_src = files(
     'src/value.c',
 )
 
-ulg_lib = static_library(
-    'uiligi',
-    ulg_src,
+mz_lib = static_library(
+    'mezo',
+    mz_src,
     dependencies: [wxc, yaml],
-    include_directories: ulg_includes,
+    include_directories: mz_includes,
     c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing']
 )
 
-ulg_dep = declare_dependency(
-    include_directories: ulg_includes,
-    link_with: ulg_lib
+mz_dep = declare_dependency(
+    include_directories: mz_includes,
+    link_with: mz_lib
 )
 
 minunit_includes = include_directories('subprojects/minunit')
 
-ulg_test_src = files(
+mz_test_src = files(
     'tests/fixtures/user_model.c',
     'tests/main.c',
     'tests/test_object.c',
@@ -62,9 +62,9 @@ ulg_test_src = files(
 )
 
 executable(
-    'uiligi-tests',
-    ulg_test_src,
-    dependencies: [ulg_dep],
+    'mezo-tests',
+    mz_test_src,
+    dependencies: [mz_dep],
     include_directories: [minunit_includes]
 )
 
@@ -75,5 +75,5 @@ if clangtidy.found()
         command: [
             clangtidy,
             '-p', meson.build_root()
-        ] + ulg_src)
+        ] + mz_src)
 endif

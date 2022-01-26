@@ -8,75 +8,75 @@
 #include <assert.h>
 #include <stdalign.h>
 
-#include <uiligi/object.h>
+#include <mezo/object.h>
 
 #include "user_model.h"
 
-void register_user_type(ulg_module_definition_t* module);
-void register_admin_type(ulg_module_definition_t* module);
-void register_team_type(ulg_module_definition_t* module);
+void register_user_type(mz_module_definition* module);
+void register_admin_type(mz_module_definition* module);
+void register_team_type(mz_module_definition* module);
 
-ulg_module_t* user_model_module_new() {
-    ulg_module_definition_t* module = ulg_module_new();
+mz_module* user_model_module_new() {
+    mz_module_definition* module = mz_module_new();
     register_user_type(module);
     register_admin_type(module);
     register_team_type(module);
-    return ulg_module_build(module);
+    return mz_module_build(module);
 }
-static ulg_value_t user_get_name(const void* object) {
+static mz_value user_get_name(const void* object) {
     const user_t* user = object;
-    return ulg_string(user->name);
+    return mz_string(user->name);
 }
 
-static void user_set_name(void* object, ulg_value_t value) {
+static void user_set_name(void* object, mz_value value) {
     user_t* user = object;
-    user->name = ulg_to_string(value);
+    user->name = mz_to_string(value);
 }
 
-static ulg_value_t user_get_team(const void* object) {
+static mz_value user_get_team(const void* object) {
     const user_t* user = object;
     team_t* team = user->team;
     assert(team);
-    return ulg_object(user->team);
+    return mz_object(user->team);
 }
 
-static void user_set_team(void* object, ulg_value_t value) {
+static void user_set_team(void* object, mz_value value) {
     user_t* user = object;
-    user->team = ulg_to_object(value);
+    user->team = mz_to_object(value);
 }
 
-void register_user_type(ulg_module_definition_t* module) {
-    ulg_class_definition_t* class_ = ulg_class_new(module, USER, ULG_OBJECT, sizeof(user_t), alignof(user_t));
-    ulg_class_add_property(class_, "name", user_get_name, user_set_name);
-    ulg_class_add_property(class_, "team", user_get_team, user_set_team);
+void register_user_type(mz_module_definition* module) {
+    mz_class_definition* class_ = mz_class_new(module, USER, mz_OBJECT, sizeof(user_t), alignof(user_t));
+    mz_class_add_property(class_, "name", user_get_name, user_set_name);
+    mz_class_add_property(class_, "team", user_get_team, user_set_team);
 }
 
-static ulg_value_t admin_get_role(const void* object) {
+static mz_value admin_get_role(const void* object) {
     const admin_t* admin = (void *)object;
-    return ulg_string(admin->role);
+    return mz_string(admin->role);
 }
 
-static void admin_set_role(void* object, ulg_value_t value) {
+static void admin_set_role(void* object, mz_value value) {
     admin_t* admin = object;
-    admin->role = ulg_to_string(value);
+    admin->role = mz_to_string(value);
 }
 
-void register_admin_type(ulg_module_definition_t* module) {
-    ulg_class_definition_t* class_ = ulg_class_new(module, ADMIN, USER, sizeof(admin_t), alignof(admin_t));
-    ulg_class_add_property(class_, "role", admin_get_role, admin_set_role);
+void register_admin_type(mz_module_definition* module) {
+    mz_class_definition* class_ = mz_class_new(module, ADMIN, USER, sizeof(admin_t), alignof(admin_t));
+    mz_class_add_property(class_, "role", admin_get_role, admin_set_role);
 }
 
-static void team_set_name(void* object, ulg_value_t value) {
+static void team_set_name(void* object, mz_value value) {
     team_t* team = object;
-    team->name = ulg_to_string(value);
+    team->name = mz_to_string(value);
 }
 
-static ulg_value_t team_get_name(const void* object) {
+static mz_value team_get_name(const void* object) {
     const team_t* team = object;
-    return ulg_string(team->name);
+    return mz_string(team->name);
 }
 
-void register_team_type(ulg_module_definition_t* module) {
-    ulg_class_definition_t* class_ = ulg_class_new(module, TEAM, ULG_OBJECT, sizeof(team_t), alignof(team_t));
-    ulg_class_add_property(class_, "name", team_get_name, team_set_name);
+void register_team_type(mz_module_definition* module) {
+    mz_class_definition* class_ = mz_class_new(module, TEAM, mz_OBJECT, sizeof(team_t), alignof(team_t));
+    mz_class_add_property(class_, "name", team_get_name, team_set_name);
 }

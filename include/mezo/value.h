@@ -13,13 +13,13 @@
  * TODO: detail this and the choice I made.
  *
  */
-#ifndef INCLUDE_UILIGI_VALUE_H_
-#define INCLUDE_UILIGI_VALUE_H_
+#ifndef INCLUDE_MEZO_VALUE_H_
+#define INCLUDE_MEZO_VALUE_H_
 #include <stdbool.h>
 
 /* This struct member's are not meant to be used directly, and are not guaranteed to stay stable.
- * To handle ulg_value_ts, use the access function defined below. */
-typedef struct ulg_value_s {
+ * To handle mz_values, use the access function defined below. */
+typedef struct mz_value_s {
     int _type;
     union {
         bool _bool;
@@ -29,27 +29,27 @@ typedef struct ulg_value_s {
         void* _raw;
         void* _object;
     } _value;
-} ulg_value_t;
+} mz_value;
 
-ulg_value_t ulg_bool(bool value);
-ulg_value_t ulg_int(int value);
-ulg_value_t ulg_double(double value);
-ulg_value_t ulg_string(const char* value);
-ulg_value_t ulg_raw(void* value);
-ulg_value_t ulg_object(void* value);
+mz_value mz_bool(bool value);
+mz_value mz_int(int value);
+mz_value mz_double(double value);
+mz_value mz_string(const char* value);
+mz_value mz_raw(void* value);
+mz_value mz_object(void* value);
 
-bool ulg_is_bool(ulg_value_t value);
-bool ulg_is_int(ulg_value_t value);
-bool ulg_is_double(ulg_value_t value);
-bool ulg_is_string(ulg_value_t value);
-bool ulg_is_raw(ulg_value_t value);
-bool ulg_is_object(ulg_value_t value);
+bool mz_is_bool(mz_value value);
+bool mz_is_int(mz_value value);
+bool mz_is_double(mz_value value);
+bool mz_is_string(mz_value value);
+bool mz_is_raw(mz_value value);
+bool mz_is_object(mz_value value);
 
-bool ulg_to_bool(ulg_value_t value);
-long ulg_to_int(ulg_value_t value);
-double ulg_to_double(ulg_value_t value);
-const char* ulg_to_string(ulg_value_t value);
-const void* ulg_to_raw(ulg_value_t value);
-void* ulg_to_object(ulg_value_t value);
+bool mz_to_bool(mz_value value);
+long mz_to_int(mz_value value);
+double mz_to_double(mz_value value);
+const char* mz_to_string(mz_value value);
+const void* mz_to_raw(mz_value value);
+void* mz_to_object(mz_value value);
 
 #endif

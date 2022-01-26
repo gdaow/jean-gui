@@ -7,92 +7,92 @@
  */
 #include <assert.h>
 
-#include "uiligi/value.h"
+#include "mezo/value.h"
 
 typedef enum {
-    ULG_BOOLEAN,
-    ULG_INTEGER,
-    ULG_DOUBLE,
-    ULG_STRING,
-    ULG_RAW,
-    ULG_OBJECT
-} ulg_value_type;
+    mz_BOOLEAN,
+    mz_INTEGER,
+    mz_DOUBLE,
+    mz_STRING,
+    mz_RAW,
+    mz_OBJECT
+} mz_valueype;
 
-ulg_value_t ulg_bool(bool value) {
-    return (ulg_value_t){
-        ._type = ULG_BOOLEAN,
+mz_value mz_bool(bool value) {
+    return (mz_value){
+        ._type = mz_BOOLEAN,
         ._value._bool = value
     };
 }
 
-ulg_value_t ulg_int(int value) {
-    return (ulg_value_t){
-        ._type = ULG_INTEGER,
+mz_value mz_int(int value) {
+    return (mz_value){
+        ._type = mz_INTEGER,
         ._value._int = value
     };
 }
 
-ulg_value_t ulg_double(double value) {
-    return (ulg_value_t){
-        ._type = ULG_DOUBLE,
+mz_value mz_double(double value) {
+    return (mz_value){
+        ._type = mz_DOUBLE,
         ._value._double = value
     };
 }
 
-ulg_value_t ulg_string(const char* value) {
-    return (ulg_value_t){
-        ._type = ULG_STRING,
+mz_value mz_string(const char* value) {
+    return (mz_value){
+        ._type = mz_STRING,
         ._value._string = value
     };
 }
 
-ulg_value_t ulg_raw(void* value) {
-    return (ulg_value_t){
-        ._type = ULG_RAW,
+mz_value mz_raw(void* value) {
+    return (mz_value){
+        ._type = mz_RAW,
         ._value._raw = value
     };
 }
 
-ulg_value_t ulg_object(void* value) {
-    return (ulg_value_t){
-        ._type = ULG_OBJECT,
+mz_value mz_object(void* value) {
+    return (mz_value){
+        ._type = mz_OBJECT,
         ._value._object = value
     };
 }
 
-bool ulg_is_bool(ulg_value_t value) { return value._type == ULG_BOOLEAN; }
-bool ulg_is_int(ulg_value_t value) { return value._type == ULG_INTEGER; }
-bool ulg_is_double(ulg_value_t value) { return value._type == ULG_DOUBLE; }
-bool ulg_is_string(ulg_value_t value) { return value._type == ULG_STRING; }
-bool ulg_is_raw(ulg_value_t value) { return value._type == ULG_RAW; }
-bool ulg_is_object(ulg_value_t value) { return value._type == ULG_OBJECT; }
+bool mz_is_bool(mz_value value) { return value._type == mz_BOOLEAN; }
+bool mz_is_int(mz_value value) { return value._type == mz_INTEGER; }
+bool mz_is_double(mz_value value) { return value._type == mz_DOUBLE; }
+bool mz_is_string(mz_value value) { return value._type == mz_STRING; }
+bool mz_is_raw(mz_value value) { return value._type == mz_RAW; }
+bool mz_is_object(mz_value value) { return value._type == mz_OBJECT; }
 
-bool ulg_to_bool(ulg_value_t value) {
-    assert(ulg_is_bool(value));
+bool mz_to_bool(mz_value value) {
+    assert(mz_is_bool(value));
     return value._value._bool;
 }
 
-long ulg_to_int(ulg_value_t value) {
-    assert(ulg_is_int(value));
+long mz_to_int(mz_value value) {
+    assert(mz_is_int(value));
     return value._value._int;
 }
 
-double ulg_to_double(ulg_value_t value) {
-    assert(ulg_is_double(value));
+double mz_to_double(mz_value value) {
+    assert(mz_is_double(value));
     return value._value._double;
 }
 
-const char* ulg_to_string(ulg_value_t value) {
-    assert(ulg_is_string(value));
+const char* mz_to_string(mz_value value) {
+    assert(mz_is_string(value));
     return value._value._string;
 }
 
-const void* ulg_to_raw(ulg_value_t value) {
-    assert(ulg_is_raw(value));
+const void* mz_to_raw(mz_value value) {
+    assert(mz_is_raw(value));
     return value._value._raw;
 }
 
-void* ulg_to_object(ulg_value_t value) { 
-    assert(ulg_is_object(value));
+void* mz_to_object(mz_value value) { 
+    assert(mz_is_object(value));
     return value._value._object;
 }

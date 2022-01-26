@@ -10,16 +10,17 @@
  */
  #include <stddef.h>
 
-typedef struct ulg_stack_s ulg_stack_t;
+typedef struct mz_stack_s mz_stack;
 
-struct ulg_stack_s {
+struct mz_stack_s {
     char* top;
     char* base;
     size_t size;
     size_t element_size;
 };
 
-void ulg_stack_init(ulg_stack_t* stack, size_t element_size);
-void ulg_stack_clean(ulg_stack_t* stack);
-void ulg_stack_push(ulg_stack_t* stack, void* element);
-void* ulg_stack_pop(ulg_stack_t* stack);
+void mz_stack_init(mz_stack* stack, size_t element_size);
+void mz_stack_clean(mz_stack* stack);
+void mz_stack_push(mz_stack* stack, void* element);
+void* mz_stack_peek(mz_stack* stack);
+void* mz_stack_pop(mz_stack* stack);

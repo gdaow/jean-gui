@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Unit Tests",
-            "program": "${workspaceFolder}/.build/uiligi-tests",
+            "program": "${workspaceFolder}/.build/mezo-tests",
             "args": [],
             "cwd": "${workspaceFolder}",
             "env": {

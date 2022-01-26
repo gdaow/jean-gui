@@ -10,26 +10,26 @@
  * TODO: Finish documentation here.
  *
  */
- #ifndef INCLUDE_UILIGI_TEMPLATE_H
- #define INCLUDE_UILIGI_TEMPLATE_H
+ #ifndef INCLUDE_MEZO_TEMPLATE_H
+ #define INCLUDE_MEZO_TEMPLATE_H
 
-typedef struct ulg_class_s ulg_class_t;
-typedef struct ulg_module_s ulg_module_t;
-typedef struct ulg_template_s ulg_template_t;
+typedef struct mz_class_s mz_class;
+typedef struct mz_module_s mz_module;
+typedef struct mz_template_s mz_template;
 
 /**
  * @brief Create a new template_ node.
  * 
- * @return ulg_template_t* 
+ * @return mz_template* 
  */
-ulg_template_t* ulg_template_from_string(const char* source, ulg_module_t* module);
+mz_template* mz_template_from_string(const char* source, mz_module* module);
 
 /**
  * @brief Destroy the given template_ node, and all of it's children.
  * 
  * @param template_ The template_ to destroy.
  */
-void ulg_template_free(ulg_template_t* template_);
+void mz_template_free(mz_template* template_);
 
 /**
  * @brief Create an object based on the specified template_.
@@ -37,6 +37,6 @@ void ulg_template_free(ulg_template_t* template_);
  * @param template_ The template_ to instanciate.
  * @return The created object.
  */
-void* ulg_template_instanciate(const ulg_template_t* template_);
+void* mz_template_instanciate(const mz_template* template_);
 
 #endif

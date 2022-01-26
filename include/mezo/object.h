@@ -10,41 +10,41 @@
  * TODO: Finish documentation here.
  *
  */
-#ifndef INCLUDE_UILIGI_OBJECT_H
-#define INCLUDE_UILIGI_OBJECT_H
+#ifndef INCLUDE_MEZO_OBJECT_H
+#define INCLUDE_MEZO_OBJECT_H
 
 #include <stddef.h>
 
-#include <uiligi/value.h>
+#include <mezo/value.h>
 
 static const size_t MAX_NAME_LENGTH = 256;
 
-typedef struct ulg_module_s ulg_module_t;
-typedef struct ulg_class_s ulg_class_t;
-typedef struct ulg_member_s ulg_member_t;
-typedef struct ulg_module_definition_s ulg_module_definition_t;
-typedef struct ulg_class_definition_s ulg_class_definition_t;
+typedef struct mz_module_s mz_module;
+typedef struct mz_class_s mz_class;
+typedef struct mz_member_s mz_member;
+typedef struct mz_module_definition_s mz_module_definition;
+typedef struct mz_class_definition_s mz_class_definition;
 
 /**
  * Create a new module definition.
  *
  * @return The newly created class module.
  */
-ulg_module_definition_t* ulg_module_new();
+mz_module_definition* mz_module_new();
 
 /**
  * Register a class in the class module, using the given definition.
  *
  * It will assert if the class is already registered in the module.
  *
- * @param module    A previously created ulg_module_t.
+ * @param module    A previously created mz_module.
  * @param definition A class definition callback.
  *
  * @return The newly created class.
  */
 
-ulg_class_definition_t* ulg_class_new(
-    ulg_module_definition_t* module,
+mz_class_definition* mz_class_new(
+    mz_module_definition* module,
     const char* name,
     const char* parent,
     size_t size,
@@ -52,10 +52,10 @@ ulg_class_definition_t* ulg_class_new(
 );
 
 /** Callback for voids property getter.*/
-typedef ulg_value_t (*ulg_getter_t)(const void*);
+typedef mz_value (*mz_getter_t)(const void*);
 
 /** Callback for voids property setter.*/
-typedef void (*ulg_setter_t)(void*, const ulg_value_t);
+typedef void (*mz_setter_t)(void*, const mz_value);
 
 /**
  * Add a property to this class.
@@ -64,52 +64,52 @@ typedef void (*ulg_setter_t)(void*, const ulg_value_t);
  * @param setter  Callback that get the property value.
  * @param getter  Callback that set the property value.
  */
-void ulg_class_add_property(
-    ulg_class_definition_t* class_,
+void mz_class_add_property(
+    mz_class_definition* class_,
     const char* name,
-    ulg_getter_t getter,
-    ulg_setter_t setter
+    mz_getter_t getter,
+    mz_setter_t setter
 );
 
 /**
- * Create a usable ulg_module_t from a ulg_module_definition_t
+ * Create a usable mz_module from a mz_module_definition
  * 
  * @param definition 
- * @return ulg_module_t* 
+ * @return mz_module* 
  */
-ulg_module_t* ulg_module_build(ulg_module_definition_t* module);
+mz_module* mz_module_build(mz_module_definition* module);
 
 /**
- * Destroy a ulg_module_t, and all it's registered classes.
+ * Destroy a mz_module, and all it's registered classes.
  *
  * @param module The module to destroy.
  */
-void ulg_module_free(ulg_module_t* module);
+void mz_module_free(mz_module* module);
 
 /**
  * Get a class using it's definition as a key.
  *
  * If the class wasn't registered, the function will return NULL.
  *
- * @param module   A previously created ulg_module_t.
+ * @param module   A previously created mz_module.
  * @param definition A class definition callback.
  *
  * @return The newly created class.
  */
 
-const ulg_class_t* ulg_class_get(const ulg_module_t* module, const char* name);
+const mz_class* mz_class_get(const mz_module* module, const char* name);
 
-#define ULG_OBJECT "Object"
+#define mz_OBJECT "Object"
 
 /**
  * Create an object of the given class.
  */
-void* ulg_object_new(const ulg_class_t* class_);
+void* mz_object_new(const mz_class* class_);
 
 /**
  * Release the given void.
  */
-void ulg_object_free(void* object);
+void mz_object_free(void* object);
 
 /**
  * Get a property from an object.
@@ -118,7 +118,7 @@ void ulg_object_free(void* object);
  * @param property_name Name of the property to set.
  * @return              The property value.
  */
-ulg_value_t ulg_object_get(const void* object, const char* property_name);
+mz_value mz_object_get(const void* object, const char* property_name);
 
 /**
  * Set a property on an object.
@@ -127,6 +127,6 @@ ulg_value_t ulg_object_get(const void* object, const char* property_name);
  * @param property_name Name of the property to set.
  * @param value         Value to set the property to.
  */
-void ulg_object_set(void* object, const char* property_name, ulg_value_t value);
+void mz_object_set(void* object, const char* property_name, mz_value value);
 
 #endif

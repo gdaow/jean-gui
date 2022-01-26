@@ -11,105 +11,105 @@
 
 #include <minunit.h>
 
-#include <uiligi/value.h>
-#include <uiligi/object.h>
+#include <mezo/value.h>
+#include <mezo/object.h>
 
 #include "fixtures/user_model.h"
 
-typedef bool (*ulg_check_function_t)(ulg_value_t);
+typedef bool (*mz_check_function_t)(mz_value);
 
-static void _test_false_checks(ulg_value_t value, ulg_check_function_t expected_true_check) {
-    if(expected_true_check != ulg_is_bool)
-        mu_check(!ulg_is_bool(value));
-    if(expected_true_check != ulg_is_int)
-        mu_check(!ulg_is_int(value));
-    if(expected_true_check != ulg_is_double)
-        mu_check(!ulg_is_double(value));
-    if(expected_true_check != ulg_is_string)
-        mu_check(!ulg_is_string(value));
-    if(expected_true_check != ulg_is_raw)
-        mu_check(!ulg_is_raw(value));
-    if(expected_true_check != ulg_is_object)
-        mu_check(!ulg_is_object(value));
+static void _test_false_checks(mz_value value, mz_check_function_t expected_true_check) {
+    if(expected_true_check != mz_is_bool)
+        mu_check(!mz_is_bool(value));
+    if(expected_true_check != mz_is_int)
+        mu_check(!mz_is_int(value));
+    if(expected_true_check != mz_is_double)
+        mu_check(!mz_is_double(value));
+    if(expected_true_check != mz_is_string)
+        mu_check(!mz_is_string(value));
+    if(expected_true_check != mz_is_raw)
+        mu_check(!mz_is_raw(value));
+    if(expected_true_check != mz_is_object)
+        mu_check(!mz_is_object(value));
 }
 
-/** ulg_bool, ulg_is_bool and ulg_to_bool should correctly handle boolean values. */
-MU_TEST(test_ulg_value_bool) {
-    ulg_value_t false_ = ulg_bool(false);
-    ulg_value_t true_ = ulg_bool(true);
+/** mz_bool, mz_is_bool and mz_to_bool should correctly handle boolean values. */
+MU_TEST(test_mz_value_bool) {
+    mz_value false_ = mz_bool(false);
+    mz_value true_ = mz_bool(true);
 
-    _test_false_checks(false_, ulg_is_bool);
-    _test_false_checks(true_, ulg_is_bool);
+    _test_false_checks(false_, mz_is_bool);
+    _test_false_checks(true_, mz_is_bool);
 
-    mu_check(ulg_is_bool(false_));
-    mu_check(ulg_is_bool(true_));
+    mu_check(mz_is_bool(false_));
+    mu_check(mz_is_bool(true_));
 
-    mu_check(ulg_to_bool(false_) == false);
-    mu_check(ulg_to_bool(true_) == true);
+    mu_check(mz_to_bool(false_) == false);
+    mu_check(mz_to_bool(true_) == true);
 }
 
-/** ulg_int, ulg_is_int and ulg_to_int should correctly handle boolean values. */
-MU_TEST(test_ulg_value_int) {
+/** mz_int, mz_is_int and mz_to_int should correctly handle boolean values. */
+MU_TEST(test_mz_value_int) {
     const int test_int = 42; // If bugs happen with edge cases, put them in regression tests.
-    ulg_value_t value = ulg_int(test_int);
+    mz_value value = mz_int(test_int);
 
-    _test_false_checks(value, ulg_is_int);
-    mu_check(ulg_is_int(value));
-    mu_assert_int_eq(ulg_to_int(value), test_int);
+    _test_false_checks(value, mz_is_int);
+    mu_check(mz_is_int(value));
+    mu_assert_int_eq(mz_to_int(value), test_int);
 }
 
-/** ulg_double, ulg_is_double and ulg_to_double should correctly handle boolean values. */
-MU_TEST(test_ulg_value_double) {
+/** mz_double, mz_is_double and mz_to_double should correctly handle boolean values. */
+MU_TEST(test_mz_value_double) {
     const double test_double = .42; // If bugs happen with edge cases, put them in regression tests.
-    ulg_value_t value = ulg_double(test_double);
+    mz_value value = mz_double(test_double);
 
-    _test_false_checks(value, ulg_is_double);
-    mu_check(ulg_is_double(value));
-    mu_assert_double_eq(ulg_to_double(value), test_double);
+    _test_false_checks(value, mz_is_double);
+    mu_check(mz_is_double(value));
+    mu_assert_double_eq(mz_to_double(value), test_double);
 }
 
-/** ulg_string, ulg_is_string and ulg_to_string should correctly handle boolean values. */
-MU_TEST(test_ulg_value_string) {
+/** mz_string, mz_is_string and mz_to_string should correctly handle boolean values. */
+MU_TEST(test_mz_value_string) {
     // If bugs happen with edge cases, put them in regression tests.
     const char* test_string = "Jean-Mi Mo";
-    ulg_value_t value = ulg_string(test_string);
+    mz_value value = mz_string(test_string);
 
-    _test_false_checks(value, ulg_is_string);
-    mu_check(ulg_is_string(value));
-    mu_assert_string_eq(ulg_to_string(value), test_string);
+    _test_false_checks(value, mz_is_string);
+    mu_check(mz_is_string(value));
+    mu_assert_string_eq(mz_to_string(value), test_string);
 }
 
-/** ulg_raw, ulg_is_raw and ulg_to_raw should correctly handle boolean values. */
-MU_TEST(test_ulg_value_raw) {
+/** mz_raw, mz_is_raw and mz_to_raw should correctly handle boolean values. */
+MU_TEST(test_mz_value_raw) {
     void* test_raw = (void*)(0xDEADBEEF); // RAW BEEF XD XD XD
-    ulg_value_t value = ulg_raw(test_raw);
+    mz_value value = mz_raw(test_raw);
 
-    _test_false_checks(value, ulg_is_raw);
-    mu_check(ulg_is_raw(value));
-    mu_check(ulg_to_raw(value) == test_raw);
+    _test_false_checks(value, mz_is_raw);
+    mu_check(mz_is_raw(value));
+    mu_check(mz_to_raw(value) == test_raw);
 }
 
-/** ulg_object, ulg_is_object and ulg_to_object should correctly handle boolean values. */
-MU_TEST(test_ulg_value_object) {
-    ulg_module_t* module = user_model_module_new();
-    const ulg_class_t* admin_class = ulg_class_get(module, ADMIN);
-    void* test_object = ulg_object_new(admin_class); 
+/** mz_object, mz_is_object and mz_to_object should correctly handle boolean values. */
+MU_TEST(test_mz_value_object) {
+    mz_module* module = user_model_module_new();
+    const mz_class* admin_class = mz_class_get(module, ADMIN);
+    void* test_object = mz_object_new(admin_class); 
 
-    ulg_value_t value = ulg_object(test_object);
+    mz_value value = mz_object(test_object);
 
-    _test_false_checks(value, ulg_is_object);
-    mu_check(ulg_is_object(value));
-    mu_check(ulg_to_object(value) == test_object);
+    _test_false_checks(value, mz_is_object);
+    mu_check(mz_is_object(value));
+    mu_check(mz_to_object(value) == test_object);
 
-    ulg_object_free(test_object);
-    ulg_module_free(module);
+    mz_object_free(test_object);
+    mz_module_free(module);
 }
 
 MU_TEST_SUITE(value_suite) {
-    MU_RUN_TEST(test_ulg_value_bool);
-    MU_RUN_TEST(test_ulg_value_int);
-    MU_RUN_TEST(test_ulg_value_double);
-    MU_RUN_TEST(test_ulg_value_string);
-    MU_RUN_TEST(test_ulg_value_raw);
-    MU_RUN_TEST(test_ulg_value_object);
+    MU_RUN_TEST(test_mz_value_bool);
+    MU_RUN_TEST(test_mz_value_int);
+    MU_RUN_TEST(test_mz_value_double);
+    MU_RUN_TEST(test_mz_value_string);
+    MU_RUN_TEST(test_mz_value_raw);
+    MU_RUN_TEST(test_mz_value_object);
 }

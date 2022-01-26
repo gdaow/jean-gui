@@ -8,26 +8,26 @@
 #include <string.h>
 #include <minunit.h>
 
-#include <uiligi/object.h>
-#include <uiligi/template.h>
+#include <mezo/object.h>
+#include <mezo/template.h>
 
 #include "fixtures/user_model.h"
 
 
-ulg_module_t* module = NULL;
+mz_module* module = NULL;
 
-MU_TEST(test_ulg_template_scalar_property) {
-    ulg_template_t* admin_template = ulg_template_from_string(
+MU_TEST(test_mz_template_scalar_property) {
+    mz_template* admin_template = mz_template_from_string(
         "<Admin name=\"Dr. Meeseeks\" />",
         module
     );
 
-    admin_t* admin = (admin_t*)ulg_template_instanciate(admin_template);
+    admin_t* admin = (admin_t*)mz_template_instanciate(admin_template);
     mu_assert_string_eq(admin->base.name, "Dr. Meeseeks");
 
-    ulg_object_free(admin);
-    ulg_template_free(admin_template); // team_template will be freed by i's parent
-    ulg_module_free(module);
+    mz_object_free(admin);
+    mz_template_free(admin_template); // team_template will be freed by i's parent
+    mz_module_free(module);
 }
 
 static void setup() {
@@ -35,11 +35,11 @@ static void setup() {
 }
 
 static void teardown() {
-    ulg_module_free(module);
+    mz_module_free(module);
     module = NULL;
 }
 
 MU_TEST_SUITE(template_suite) {
     MU_SUITE_CONFIGURE(setup, teardown);
-    MU_RUN_TEST(test_ulg_template_scalar_property);
+    MU_RUN_TEST(test_mz_template_scalar_property);
 }

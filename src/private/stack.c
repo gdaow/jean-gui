@@ -18,9 +18,9 @@
 
 static const size_t GROW_SIZE = 0x10;
 
-void ulg_stack_init(ulg_stack_t* stack, size_t element_size) {
+void mz_stack_init(mz_stack* stack, size_t element_size) {
     void* base = calloc(GROW_SIZE, element_size);
-    *stack = (ulg_stack_t) {
+    *stack = (mz_stack) {
         .top = base,
         .base = base,
         .size = GROW_SIZE,
@@ -28,11 +28,11 @@ void ulg_stack_init(ulg_stack_t* stack, size_t element_size) {
     };
 }
 
-void ulg_stack_clean(ulg_stack_t* stack) {
+void mz_stack_clean(mz_stack* stack) {
     free(stack->base);
 }
 
-void ulg_stack_push(ulg_stack_t* stack, void* element) {
+void mz_stack_push(mz_stack* stack, void* element) {
     assert(stack->base + stack->size <= stack->top);
     if(stack->base + stack->size == stack->top) { 
         size_t old_size = stack->size;
@@ -45,7 +45,7 @@ void ulg_stack_push(ulg_stack_t* stack, void* element) {
     stack->top += stack->element_size;
 }
 
-void* ulg_stack_pop(ulg_stack_t* stack) {
+void* mz_stack_pop(mz_stack* stack) {
     void* result = NULL;
     if(stack->base != stack->top) {
         result = stack->top -= stack->element_size;

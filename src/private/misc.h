@@ -8,19 +8,19 @@
  * Miscelaneous helpers & utilities.
  *
  */
-#ifndef UILIGI_SRC_PRIVATE_MISC_H
-#define UILIGI_SRC_PRIVATE_MISC_H
+#ifndef MEZO_SRC_PRIVATE_MISC_H
+#define MEZO_SRC_PRIVATE_MISC_H
 
 #include <stddef.h>
 
-size_t ulg_strnlen(const char *s, size_t max_size);
+size_t mz_strnlen(const char *s, size_t max_size);
 
-typedef struct ulg_index_s {
+typedef struct mz_index_s {
     const char** keys;
     size_t count;
-} ulg_index_t;
+} mz_index;
 
-void ulg_index_sort(ulg_index_t* index);
-int ulg_index_search(const ulg_index_t* index, const char* key);
+void mz_index_sort(mz_index* index);
+int mz_index_search(const mz_index* index, const char* key);
 
 #endif

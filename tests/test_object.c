@@ -11,78 +11,78 @@
 
 #include <minunit.h>
 
-#include <uiligi/object.h>
+#include <mezo/object.h>
 
 #include "fixtures/user_model.h"
 
-static ulg_module_t* module = NULL;
-static const ulg_class_t* user_class = NULL;
-static const ulg_class_t* admin_class = NULL;
+static mz_module* module = NULL;
+static const mz_class* user_class = NULL;
+static const mz_class* admin_class = NULL;
 
-void _dummy_type(ulg_class_definition_t* class_) {
+void _dummy_type(mz_class_definition* class_) {
     (void)class_;
 }
 
-/** ulg_class_get should return the class object given a class name and return NULL if the class was not
+/** mz_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
-MU_TEST(test_ulg_class_get) {
-    const ulg_class_t* user_class = ulg_class_get(module, USER);
+MU_TEST(test_mz_class_get) {
+    const mz_class* user_class = mz_class_get(module, USER);
     mu_check(user_class != NULL);
 
-    const ulg_class_t* admin_class = ulg_class_get(module, ADMIN);
+    const mz_class* admin_class = mz_class_get(module, ADMIN);
     mu_check(admin_class != NULL);
 
-    mu_check(ulg_class_get(module, "Dummy") == NULL);
+    mu_check(mz_class_get(module, "Dummy") == NULL);
 }
 
-/** ulg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
-MU_TEST(test_ulg_object_get) {
-    admin_t* admin = ulg_object_new(admin_class);
+/** mz_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
+MU_TEST(test_mz_object_get) {
+    admin_t* admin = mz_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
     admin->base.name = test_string;
     admin->role = test_string;
 
-    ulg_value_t property;
+    mz_value property;
     
-    property = ulg_object_get(admin, "name");
-    mu_assert_string_eq(test_string, ulg_to_string(property));
+    property = mz_object_get(admin, "name");
+    mu_assert_string_eq(test_string, mz_to_string(property));
 
-    property = ulg_object_get(admin, "role");
-    mu_assert_string_eq(test_string, ulg_to_string(property));
+    property = mz_object_get(admin, "role");
+    mu_assert_string_eq(test_string, mz_to_string(property));
 
-    ulg_object_free(admin);
+    mz_object_free(admin);
 }
 
-/** ulg_object_set should correctly set a property, be it declared on the type or on a parent. */
-MU_TEST(test_ulg_object_set) {
-    admin_t* admin = ulg_object_new(admin_class);
+/** mz_object_set should correctly set a property, be it declared on the type or on a parent. */
+MU_TEST(test_mz_object_set) {
+    admin_t* admin = mz_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
-    ulg_value_t test_value = ulg_string(test_string);
+    mz_value test_value = mz_string(test_string);
 
-    ulg_object_set(admin, "name", test_value);
-    ulg_object_set(admin, "role", test_value);
+    mz_object_set(admin, "name", test_value);
+    mz_object_set(admin, "role", test_value);
     mu_assert_string_eq(test_string, admin->base.name);
     mu_assert_string_eq(test_string, admin->role);
 
-    ulg_object_free(admin);
+    mz_object_free(admin);
 }
 
 static void setup() {
     module = user_model_module_new();
-    user_class = ulg_class_get(module, USER);
-    admin_class = ulg_class_get(module, ADMIN);
+    user_class = mz_class_get(module, USER);
+    admin_class = mz_class_get(module, ADMIN);
 }
 
 static void teardown() {
     admin_class = NULL;
     user_class = NULL;
-    ulg_module_free(module);
+    mz_module_free(module);
     module = NULL;
 }
 
 MU_TEST_SUITE(object_suite) {
     MU_SUITE_CONFIGURE(setup, teardown);
-    MU_RUN_TEST(test_ulg_class_get);
-    MU_RUN_TEST(test_ulg_object_get);
-    MU_RUN_TEST(test_ulg_object_set);
+    MU_RUN_TEST(test_mz_class_get);
+    MU_RUN_TEST(test_mz_object_get);
+    MU_RUN_TEST(test_mz_object_set);
 }

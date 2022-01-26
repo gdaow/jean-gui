@@ -9,48 +9,48 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <uiligi/object.h>
-#include <uiligi/template.h>
-#include <uiligi/value.h>
+#include <mezo/object.h>
+#include <mezo/template.h>
+#include <mezo/value.h>
 
 #include "private/memory.h"
 
-typedef struct ulg_property_template_t ulg_property_template_t;
+typedef struct mz_property_template_s mz_property_template;
 
 typedef enum  {
-    ULG_TEMPLATE_PROPERTY_SCALAR,
-    ULG_TEMPLATE_PROPERTY_OBJECT
-} ulg_property_type_t;
+    mz_TEMPLATE_PROPERTY_SCALAR,
+    mz_TEMPLATE_PROPERTY_OBJECT
+} mz_property_type;
 
-struct ulg_property_template_t {
+struct mz_property_template_s {
     const char* name;
-    ulg_property_type_t type;
+    mz_property_type type;
     union {
-        ulg_template_t* template_;
+        mz_template* template_;
         const char* scalar;
     } value;
-    ulg_property_template_t* next;
+    mz_property_template* next;
 };
 
-struct ulg_template_s {
-    ulg_module_t* module; // Could be nice to remove that
-    const ulg_class_t* class_;
-    ulg_property_template_t* properties;
+struct mz_template_s {
+    mz_module* module; // Could be nice to remove that
+    const mz_class* class_;
+    mz_property_template* properties;
 };
 
-ulg_template_t* ulg_template_from_string(const char* source, ulg_module_t* module) {
+mz_template* mz_template_from_string(const char* source, mz_module* module) {
     (void)source;
     (void)module;
     return NULL;
 }
 
-void ulg_template_free(ulg_template_t* template_) {
-    ulg_property_template_t* property = template_->properties;
+void mz_template_free(mz_template* template_) {
+    mz_property_template* property = template_->properties;
     while(property) {
-        ulg_property_template_t* next = property->next;
+        mz_property_template* next = property->next;
         switch(property->type) {
-            case ULG_TEMPLATE_PROPERTY_OBJECT:
-                ulg_template_free(property->value.template_);
+            case mz_TEMPLATE_PROPERTY_OBJECT:
+                mz_template_free(property->value.template_);
                 break;
             default:
                 break;
@@ -61,35 +61,35 @@ void ulg_template_free(ulg_template_t* template_) {
     free(template_);
 }
 
-void ulg_template_set_scalar(ulg_template_t* template_, const char* property_name, const char* value) {
+void mz_template_set_scalar(mz_template* template_, const char* property_name, const char* value) {
     /* TODO: We should get the UlgProperty here and convert the value to an UlgProperty,
        as both property_name and value could be destroyed later when instanciating the template_,
        and it'd be more efficient.
     */
-    ulg_property_template_t* new_property = memcpy(
-        malloc(sizeof(ulg_property_template_t)),
-        &(ulg_property_template_t) {
+    mz_property_template* new_property = memcpy(
+        malloc(sizeof(mz_property_template)),
+        &(mz_property_template) {
             .name = property_name,
             .value.scalar = value,
             .next = template_->properties
         },
-        sizeof(ulg_property_template_t)
+        sizeof(mz_property_template)
     );
 
     template_->properties = new_property;
 }
 
-ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* property_name, const char* class_name) {
-    ulg_module_t* module = template_->module;
+mz_template* mz_template_set_child(mz_template* template_, const char* property_name, const char* class_name) {
+    mz_module* module = template_->module;
 
-    const ulg_class_t* child_class = ulg_class_get(module, class_name);
+    const mz_class* child_class = mz_class_get(module, class_name);
     assert(child_class); // TODO(corenting@ki-dour.org): Handle errors.
 
-    ulg_template_t* child_template = NULL;
+    mz_template* child_template = NULL;
 
-    ulg_property_template_t* new_property = ULG_MALLOC_INIT(&(ulg_property_template_t) {
+    mz_property_template* new_property = MZ_MALLOC_INIT(&(mz_property_template) {
         .name = property_name,
-        .type = ULG_TEMPLATE_PROPERTY_OBJECT,
+        .type = mz_TEMPLATE_PROPERTY_OBJECT,
         .value.template_ = child_template,
         .next = template_->properties
     });
@@ -98,25 +98,25 @@ ulg_template_t* ulg_template_set_child(ulg_template_t* template_, const char* pr
     return child_template;
 }
 
-void* ulg_template_instanciate(const ulg_template_t* template_) {
-    void* object = ulg_object_new(template_->class_);
-    ulg_property_template_t* property = template_->properties;
+void* mz_template_instanciate(const mz_template* template_) {
+    void* object = mz_object_new(template_->class_);
+    mz_property_template* property = template_->properties;
     while(property) {
-        ulg_value_t property_value;
+        mz_value property_value;
         switch(property->type) {
-            case ULG_TEMPLATE_PROPERTY_SCALAR:
-                property_value = ulg_string(property->value.scalar);
+            case mz_TEMPLATE_PROPERTY_SCALAR:
+                property_value = mz_string(property->value.scalar);
                 break;
-            case ULG_TEMPLATE_PROPERTY_OBJECT:
+            case mz_TEMPLATE_PROPERTY_OBJECT:
                 {
-                    void* child_object = ulg_template_instanciate(property->value.template_);
-                    property_value = ulg_object(child_object);
+                    void* child_object = mz_template_instanciate(property->value.template_);
+                    property_value = mz_object(child_object);
                 }
                 break;
             default:
                 assert(false);
         }
-        ulg_object_set(object, property->name, property_value);
+        mz_object_set(object, property->name, property_value);
         property = property->next;
     }
 
