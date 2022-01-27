@@ -8,6 +8,5 @@
  * jg_object_get and jg_object_set publicly : all data modification may be done 'the native way',
    and data binding updates trigerred by calling event handlers. Only the binding system could access
    property getter / setters.
- * Don't store member_count, class_count and names_length : find them when building modules.
  * Handle OOM
  
