@@ -8,16 +8,16 @@
 #include <string.h>
 #include <minunit.h>
 
-#include <mezo/object.h>
-#include <mezo/template.h>
+#include <jg/object.h>
+#include <jg/template.h>
 
 #include "fixtures/user_model.h"
 
 
-mz_module* module = NULL;
+jg_module* module = NULL;
 
-MU_TEST(test_mz_template_scalar_property) {
-    mz_template* admin_template = mz_template_from_string(
+MU_TEST(test_jg_template_scalar_property) {
+    jg_template* admin_template = jg_template_from_string(
         "!Admin\n"
         "name: Dr. Meeseeks\n"
         "team: !Team\n"
@@ -25,11 +25,11 @@ MU_TEST(test_mz_template_scalar_property) {
         module
     );
 
-    admin_t* admin = (admin_t*)mz_template_instanciate(admin_template);
+    admin_t* admin = (admin_t*)jg_template_instanciate(admin_template);
     mu_assert_string_eq(admin->base.name, "Dr. Meeseeks");
 
-    mz_object_free(admin);
-    mz_template_free(admin_template); // team_template will be freed by i's parent
+    jg_object_free(admin);
+    jg_template_free(admin_template); // team_template will be freed by i's parent
 }
 
 static void setup() {
@@ -37,11 +37,11 @@ static void setup() {
 }
 
 static void teardown() {
-    mz_module_free(module);
+    jg_module_free(module);
     module = NULL;
 }
 
 MU_TEST_SUITE(template_suite) {
     MU_SUITE_CONFIGURE(setup, teardown);
-    MU_RUN_TEST(test_mz_template_scalar_property);
+    MU_RUN_TEST(test_jg_template_scalar_property);
 }

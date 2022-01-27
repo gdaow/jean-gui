@@ -13,23 +13,23 @@
  #ifndef INCLUDE_MEZO_TEMPLATE_H
  #define INCLUDE_MEZO_TEMPLATE_H
 
-typedef struct mz_class_s mz_class;
-typedef struct mz_module_s mz_module;
-typedef struct mz_template_s mz_template;
+typedef struct jg_class_s jg_class;
+typedef struct jg_module_s jg_module;
+typedef struct jg_template_s jg_template;
 
 /**
  * @brief Create a new template_ node.
  * 
- * @return mz_template* 
+ * @return jg_template* 
  */
-mz_template* mz_template_from_string(const char* source, mz_module* module);
+jg_template* jg_template_from_string(const char* source, jg_module* module);
 
 /**
  * @brief Destroy the given template_ node, and all of it's children.
  * 
  * @param template_ The template_ to destroy.
  */
-void mz_template_free(mz_template* template_);
+void jg_template_free(jg_template* template_);
 
 /**
  * @brief Create an object based on the specified template_.
@@ -37,6 +37,6 @@ void mz_template_free(mz_template* template_);
  * @param template_ The template_ to instanciate.
  * @return The created object.
  */
-void* mz_template_instanciate(const mz_template* template_);
+void* jg_template_instanciate(const jg_template* template_);
 
 #endif

@@ -14,7 +14,7 @@
 
 #include "misc.h"
 
-size_t mz_strnlen(const char *s, size_t max_size) {
+size_t jg_strnlen(const char *s, size_t max_size) {
     (void)s;
     (void)max_size;
     
@@ -88,14 +88,14 @@ static int binary_search(const char** index, const char* key, int low, int high,
     }
 }
 
-void mz_index_sort(mz_index* index) {
+void jg_index_sort(jg_index* index) {
     if(index->count == 0) {
         return;
     }
     quick_sort(index->keys, 0, (int)index->count - 1);
 }
 
-int mz_index_search(const mz_index* index, const char* key) {
+int jg_index_search(const jg_index* index, const char* key) {
     if(!index->count) {
         return -1;
     }

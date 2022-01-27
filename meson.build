@@ -1,5 +1,5 @@
 project(
-    'mezo',
+    'jg',
     'c',
     default_options: [
         'warning_level=3',
@@ -27,9 +27,9 @@ yaml_project = cmake.subproject(
 )
 yaml = yaml_project.dependency('yaml')
 
-mz_includes = include_directories('include')
+jg_includes = include_directories('include')
 
-mz_src = files(
+jg_src = files(
     'src/object.c',
     'src/private/memory.c',
     'src/private/stack.c',
@@ -38,22 +38,22 @@ mz_src = files(
     'src/value.c',
 )
 
-mz_lib = static_library(
-    'mezo',
-    mz_src,
+jg_lib = static_library(
+    'jg',
+    jg_src,
     dependencies: [wxc, yaml],
-    include_directories: mz_includes,
+    include_directories: jg_includes,
     c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing']
 )
 
-mz_dep = declare_dependency(
-    include_directories: mz_includes,
-    link_with: mz_lib
+jg_dep = declare_dependency(
+    include_directories: jg_includes,
+    link_with: jg_lib
 )
 
 minunit_includes = include_directories('subprojects/minunit')
 
-mz_test_src = files(
+jg_test_src = files(
     'tests/fixtures/user_model.c',
     'tests/main.c',
     'tests/test_object.c',
@@ -62,9 +62,9 @@ mz_test_src = files(
 )
 
 executable(
-    'mezo-tests',
-    mz_test_src,
-    dependencies: [mz_dep],
+    'jg-tests',
+    jg_test_src,
+    dependencies: [jg_dep],
     include_directories: [minunit_includes]
 )
 
@@ -75,5 +75,5 @@ if clangtidy.found()
         command: [
             clangtidy,
             '-p', meson.build_root()
-        ] + mz_src)
+        ] + jg_src)
 endif

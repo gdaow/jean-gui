@@ -10,7 +10,7 @@
  */
 #pragma once
 
-typedef struct mz_module_s mz_module;
+typedef struct jg_module_s jg_module;
 
 typedef struct admin_s admin_t;
 typedef struct team_s team_t;
@@ -43,5 +43,5 @@ struct team_s {
 #define ADMIN "Admin"
 #define TEAM "Team"
 
-mz_module* user_model_module_new();
+jg_module* user_model_module_new();
 permission_flags_t user_get_default_permissions(user_t* user);

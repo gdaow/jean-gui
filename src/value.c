@@ -7,92 +7,92 @@
  */
 #include <assert.h>
 
-#include "mezo/value.h"
+#include "jg/value.h"
 
 typedef enum {
-    mz_BOOLEAN,
-    mz_INTEGER,
-    mz_DOUBLE,
-    mz_STRING,
-    mz_RAW,
-    mz_OBJECT
-} mz_valueype;
+    jg_BOOLEAN,
+    jg_INTEGER,
+    jg_DOUBLE,
+    jg_STRING,
+    jg_RAW,
+    jg_OBJECT
+} jg_valueype;
 
-mz_value mz_bool(bool value) {
-    return (mz_value){
-        ._type = mz_BOOLEAN,
+jg_value jg_bool(bool value) {
+    return (jg_value){
+        ._type = jg_BOOLEAN,
         ._value._bool = value
     };
 }
 
-mz_value mz_int(int value) {
-    return (mz_value){
-        ._type = mz_INTEGER,
+jg_value jg_int(int value) {
+    return (jg_value){
+        ._type = jg_INTEGER,
         ._value._int = value
     };
 }
 
-mz_value mz_double(double value) {
-    return (mz_value){
-        ._type = mz_DOUBLE,
+jg_value jg_double(double value) {
+    return (jg_value){
+        ._type = jg_DOUBLE,
         ._value._double = value
     };
 }
 
-mz_value mz_string(const char* value) {
-    return (mz_value){
-        ._type = mz_STRING,
+jg_value jg_string(const char* value) {
+    return (jg_value){
+        ._type = jg_STRING,
         ._value._string = value
     };
 }
 
-mz_value mz_raw(void* value) {
-    return (mz_value){
-        ._type = mz_RAW,
+jg_value jg_raw(void* value) {
+    return (jg_value){
+        ._type = jg_RAW,
         ._value._raw = value
     };
 }
 
-mz_value mz_object(void* value) {
-    return (mz_value){
-        ._type = mz_OBJECT,
+jg_value jg_object(void* value) {
+    return (jg_value){
+        ._type = jg_OBJECT,
         ._value._object = value
     };
 }
 
-bool mz_is_bool(mz_value value) { return value._type == mz_BOOLEAN; }
-bool mz_is_int(mz_value value) { return value._type == mz_INTEGER; }
-bool mz_is_double(mz_value value) { return value._type == mz_DOUBLE; }
-bool mz_is_string(mz_value value) { return value._type == mz_STRING; }
-bool mz_is_raw(mz_value value) { return value._type == mz_RAW; }
-bool mz_is_object(mz_value value) { return value._type == mz_OBJECT; }
+bool jg_is_bool(jg_value value) { return value._type == jg_BOOLEAN; }
+bool jg_is_int(jg_value value) { return value._type == jg_INTEGER; }
+bool jg_is_double(jg_value value) { return value._type == jg_DOUBLE; }
+bool jg_is_string(jg_value value) { return value._type == jg_STRING; }
+bool jg_is_raw(jg_value value) { return value._type == jg_RAW; }
+bool jg_is_object(jg_value value) { return value._type == jg_OBJECT; }
 
-bool mz_to_bool(mz_value value) {
-    assert(mz_is_bool(value));
+bool jg_to_bool(jg_value value) {
+    assert(jg_is_bool(value));
     return value._value._bool;
 }
 
-long mz_to_int(mz_value value) {
-    assert(mz_is_int(value));
+long jg_to_int(jg_value value) {
+    assert(jg_is_int(value));
     return value._value._int;
 }
 
-double mz_to_double(mz_value value) {
-    assert(mz_is_double(value));
+double jg_to_double(jg_value value) {
+    assert(jg_is_double(value));
     return value._value._double;
 }
 
-const char* mz_to_string(mz_value value) {
-    assert(mz_is_string(value));
+const char* jg_to_string(jg_value value) {
+    assert(jg_is_string(value));
     return value._value._string;
 }
 
-const void* mz_to_raw(mz_value value) {
-    assert(mz_is_raw(value));
+const void* jg_to_raw(jg_value value) {
+    assert(jg_is_raw(value));
     return value._value._raw;
 }
 
-void* mz_to_object(mz_value value) { 
-    assert(mz_is_object(value));
+void* jg_to_object(jg_value value) { 
+    assert(jg_is_object(value));
     return value._value._object;
 }

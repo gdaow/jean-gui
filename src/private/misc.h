@@ -13,14 +13,14 @@
 
 #include <stddef.h>
 
-size_t mz_strnlen(const char *s, size_t max_size);
+size_t jg_strnlen(const char *s, size_t max_size);
 
-typedef struct mz_index_s {
+typedef struct jg_index_s {
     const char** keys;
     size_t count;
-} mz_index;
+} jg_index;
 
-void mz_index_sort(mz_index* index);
-int mz_index_search(const mz_index* index, const char* key);
+void jg_index_sort(jg_index* index);
+int jg_index_search(const jg_index* index, const char* key);
 
 #endif

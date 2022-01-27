@@ -18,8 +18,8 @@
 #include <stdbool.h>
 
 /* This struct member's are not meant to be used directly, and are not guaranteed to stay stable.
- * To handle mz_values, use the access function defined below. */
-typedef struct mz_value_s {
+ * To handle jg_values, use the access function defined below. */
+typedef struct jg_value_s {
     int _type;
     union {
         bool _bool;
@@ -29,27 +29,27 @@ typedef struct mz_value_s {
         void* _raw;
         void* _object;
     } _value;
-} mz_value;
+} jg_value;
 
-mz_value mz_bool(bool value);
-mz_value mz_int(int value);
-mz_value mz_double(double value);
-mz_value mz_string(const char* value);
-mz_value mz_raw(void* value);
-mz_value mz_object(void* value);
+jg_value jg_bool(bool value);
+jg_value jg_int(int value);
+jg_value jg_double(double value);
+jg_value jg_string(const char* value);
+jg_value jg_raw(void* value);
+jg_value jg_object(void* value);
 
-bool mz_is_bool(mz_value value);
-bool mz_is_int(mz_value value);
-bool mz_is_double(mz_value value);
-bool mz_is_string(mz_value value);
-bool mz_is_raw(mz_value value);
-bool mz_is_object(mz_value value);
+bool jg_is_bool(jg_value value);
+bool jg_is_int(jg_value value);
+bool jg_is_double(jg_value value);
+bool jg_is_string(jg_value value);
+bool jg_is_raw(jg_value value);
+bool jg_is_object(jg_value value);
 
-bool mz_to_bool(mz_value value);
-long mz_to_int(mz_value value);
-double mz_to_double(mz_value value);
-const char* mz_to_string(mz_value value);
-const void* mz_to_raw(mz_value value);
-void* mz_to_object(mz_value value);
+bool jg_to_bool(jg_value value);
+long jg_to_int(jg_value value);
+double jg_to_double(jg_value value);
+const char* jg_to_string(jg_value value);
+const void* jg_to_raw(jg_value value);
+void* jg_to_object(jg_value value);
 
 #endif

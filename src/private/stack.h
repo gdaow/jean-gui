@@ -10,17 +10,17 @@
  */
  #include <stddef.h>
 
-typedef struct mz_stack_s mz_stack;
+typedef struct jg_stack_s jg_stack;
 
-struct mz_stack_s {
+struct jg_stack_s {
     char* top;
     char* base;
     size_t size;
     size_t element_size;
 };
 
-void mz_stack_init(mz_stack* stack, size_t element_size);
-void mz_stack_clean(mz_stack* stack);
-void mz_stack_push(mz_stack* stack, void* element);
-void* mz_stack_peek(mz_stack* stack);
-void* mz_stack_pop(mz_stack* stack);
+void jg_stack_init(jg_stack* stack, size_t element_size);
+void jg_stack_clean(jg_stack* stack);
+void jg_stack_push(jg_stack* stack, void* element);
+void* jg_stack_peek(jg_stack* stack);
+void* jg_stack_pop(jg_stack* stack);

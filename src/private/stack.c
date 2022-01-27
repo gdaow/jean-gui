@@ -18,9 +18,9 @@
 
 static const size_t GROW_SIZE = 0x10;
 
-void mz_stack_init(mz_stack* stack, size_t element_size) {
+void jg_stack_init(jg_stack* stack, size_t element_size) {
     void* base = calloc(GROW_SIZE, element_size);
-    *stack = (mz_stack) {
+    *stack = (jg_stack) {
         .top = base,
         .base = base,
         .size = GROW_SIZE * element_size,
@@ -28,12 +28,11 @@ void mz_stack_init(mz_stack* stack, size_t element_size) {
     };
 }
 
-void mz_stack_clean(mz_stack* stack) {
+void jg_stack_clean(jg_stack* stack) {
     free(stack->base);
 }
 
-void mz_stack_push(mz_stack* stack, void* element) {
-    size_t stack_size = (stack->top - stack->base) / stack->element_size;
+void jg_stack_push(jg_stack* stack, void* element) {
     assert(stack->base + stack->size >= stack->top);
     if(stack->base + stack->size == stack->top) { 
         size_t old_size = stack->size;
@@ -46,13 +45,12 @@ void mz_stack_push(mz_stack* stack, void* element) {
     stack->top += stack->element_size;
 }
 
-void* mz_stack_peek(mz_stack* stack) {
+void* jg_stack_peek(jg_stack* stack) {
     return stack->top - stack->element_size;
 }
 
 
-void* mz_stack_pop(mz_stack* stack) {
-    size_t stack_size = (stack->top - stack->base) / stack->element_size;
+void* jg_stack_pop(jg_stack* stack) {
     stack->top -= stack->element_size;
     assert(stack->base <= stack->top);
     return stack->top;
