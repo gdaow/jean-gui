@@ -55,18 +55,15 @@ static const char* user_has_permission_id = "has_permissions";
 
 bool user_has_permission(user* user, permission_flags flags) {
     return jg_to_bool(
-        jg_object_call(
-            user,
-            user_has_permission_id,
-            (jg_value[]) { jg_int(flags) },
-            1
-        )
+        jg_object_call(user, user_has_permission_id, (jg_value[]) {
+            jg_int(flags), jg_none()
+        })
     );
 }
 
-static jg_value user_has_permission_impl(jg_value* arguments, size_t argument_count) {
-    assert(argument_count == 1);
+static jg_value user_has_permission_impl(jg_value* arguments) {
     assert(jg_is_int(arguments[0]));
+    assert(jg_is_none(arguments[1]));
 
     return jg_bool(jg_to_int(arguments[0]) & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
 }
@@ -94,9 +91,9 @@ static void admin_set_role(void* object, jg_value value) {
     admin->role = jg_to_string(value);
 }
 
-static jg_value admin_has_permission(jg_value* arguments, size_t argument_count) {
-    assert(argument_count == 1);
+static jg_value admin_has_permission(jg_value* arguments) {
     assert(jg_is_int(arguments[0]));
+    assert(jg_is_none(arguments[1]));
     return jg_bool(jg_to_int(arguments[0]) & PERM_ALL);
 }
 

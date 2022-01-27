@@ -31,6 +31,7 @@ typedef struct jg_value_s {
     } _value;
 } jg_value;
 
+jg_value jg_none();
 jg_value jg_bool(bool value);
 jg_value jg_int(int value);
 jg_value jg_double(double value);
@@ -38,6 +39,7 @@ jg_value jg_string(const char* value);
 jg_value jg_raw(void* value);
 jg_value jg_object(void* value);
 
+bool jg_is_none();
 bool jg_is_bool(jg_value value);
 bool jg_is_int(jg_value value);
 bool jg_is_double(jg_value value);

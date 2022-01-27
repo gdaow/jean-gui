@@ -437,12 +437,7 @@ void jg_object_set(void* object, const char* property_id, const jg_value value) 
     member->data.property.setter(object, value);
 }
 
-jg_value jg_object_call(
-    const void* object,
-    const char* method_id,
-    jg_value* arguments,
-    size_t argument_count
-){
+jg_value jg_object_call(const void* object, const char* method_id, jg_value* arguments) {
     jg_member* member = get_member(object, method_id, JG_MEMBER_METHOD);
-    return member->data.method(arguments, argument_count);
+    return member->data.method(arguments);
 }

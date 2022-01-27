@@ -23,7 +23,7 @@ typedef struct jg_member_s jg_member;
 typedef struct jg_module_definition_s jg_module_definition;
 typedef struct jg_class_definition_s jg_class_definition;
 
-typedef jg_value (*jg_method)(jg_value* arguments, size_t argument_count);
+typedef jg_value (*jg_method)(jg_value* arguments);
 
 /**
  * Create a new module definition.
@@ -149,11 +149,6 @@ void jg_object_set(void* object, const char* property_id, jg_value value);
  * @param property_id Name of the property to set.
  * @return            The property value.
  */
-jg_value jg_object_call(
-    const void* object,
-    const char* method_id,
-    jg_value* arguments,
-    size_t argument_count
-);
+jg_value jg_object_call(const void* object, const char* method_id, jg_value* arguments);
 
 #endif
