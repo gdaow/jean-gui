@@ -22,13 +22,13 @@ bool wxc_app_on_init_parent(WxcApp* app) {
 
 static WxcApp* g_app;
 
-wxAppConsole* _wxc_initialize() {
+static wxAppConsole* wxc_initialize() {
     return g_app;
 }
 
 void wxc_app_run(WxcApp* app) {
     g_app = app;
-    wxApp::SetInitializerFunction(_wxc_initialize);
+    wxApp::SetInitializerFunction(wxc_initialize);
     int argc = 1;
     char** argv = new char*[1];
     argv[0] = new char[4];

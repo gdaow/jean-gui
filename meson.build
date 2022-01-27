@@ -70,6 +70,8 @@ executable(
     include_directories: [minunit_includes]
 )
 
+executable('jg-sample', 'src/samples/main.c', dependencies: [jg_dep])
+
 clangtidy = find_program('clang-tidy', required: false)
 if clangtidy.found()
     run_target(

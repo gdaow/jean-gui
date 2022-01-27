@@ -12,6 +12,7 @@ Checks: '
   -hicpp-*,
   -llvm*,
   -misc-no-recursion,
+  -modernize-use-return-type,
   -objc-*,
   -zircon-*'
 WarningsAsErrors: 'true'
