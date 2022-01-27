@@ -27,13 +27,6 @@ void jg_arena_free(jg_arena* arena);
 // size_t.
 char* jg_arena_strcpy(jg_arena* arena, const char* value, size_t max_length, size_t* length_accumulate);
 
-#define JG_MALLOC_INIT(...)\
-    (memcpy(\
-        malloc(sizeof(*(__VA_ARGS__))),\
-        __VA_ARGS__,\
-        sizeof(*(__VA_ARGS__))\
-    ))
-
 #define JG_ARENA_ALLOC_INIT(ARENA, TYPE, ...)\
     (memcpy(\
         jg_arena_alloc(ARENA, sizeof(TYPE), alignof(TYPE)),\

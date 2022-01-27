@@ -33,10 +33,14 @@ jg_arena* jg_arena_new(size_t chunk_size) {
         chunk_size = DEFAULT_CHUNK_SIZE;
     }
 
-    return JG_MALLOC_INIT(&(jg_arena) {
+    jg_arena* new_arena = malloc(sizeof(jg_arena));
+
+    *new_arena = (jg_arena) {
         .chunk_size = chunk_size,
         .chunks = NULL
-    });
+    };
+
+    return new_arena;
 }
 
 static void* chunk_alloc(jg_arena_chunk_t* chunk, size_t chunk_size, size_t size, size_t align) {

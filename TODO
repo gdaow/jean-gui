@@ -1,7 +1,6 @@
  * It'll be complicated to create objects around without having a context available, but I'm not fond
    of creating static variables, for sake of testability and reentrance. We may should store the
    context in classes.
- * Add an error hooking mecanism, test for errors too in unit tests.
  * Support code coverage.
  * Setup CI on github.
  * Add a magic number and an assert to raise early on UlgObjects pointer errors in debug.
@@ -11,5 +10,4 @@
    property getter / setters.
  * Don't store member_count, class_count and names_length : find them when building modules.
  * Handle OOM
- * Remove uses of jg_MALLOC_INIT, use memcpy_s instead.
  

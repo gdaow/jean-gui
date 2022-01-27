@@ -160,17 +160,19 @@ jg_module* jg_module_build(jg_module_definition* module) {
     jg_member* member_pool = calloc(member_count, sizeof(jg_member));
     char* string_pool = calloc(names_length, sizeof(char));
 
-    jg_module* result = JG_MALLOC_INIT(&(jg_module) {
+    jg_module* new_module = malloc(sizeof(jg_module));
+    
+    *new_module = (jg_module) {
         .class_index = build_class_index(class_array, index_pool, member_pool, string_pool, module),
         .class_array = class_array,
         .index_pool = index_pool,
         .member_pool = member_pool,
         .string_pool = string_pool
-    });
+    };
 
     jg_arena_free(module->allocator);
 
-    return result;
+    return new_module;
 }
 
 void jg_module_free(jg_module* module) {
