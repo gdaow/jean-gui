@@ -8,16 +8,18 @@
 #define MU_MAIN
 #include <minunit.h>
 
-void value_suite();
+void context_suite();
 void object_suite();
 void template_suite();
+void value_suite();
 
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
-    MU_RUN_SUITE(value_suite);
+    MU_RUN_SUITE(context_suite);
     MU_RUN_SUITE(object_suite);
     MU_RUN_SUITE(template_suite);
+    MU_RUN_SUITE(value_suite);
 	MU_REPORT();
 	return MU_EXIT_CODE;
 }

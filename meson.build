@@ -30,10 +30,11 @@ yaml = yaml_project.dependency('yaml')
 jg_includes = include_directories('include')
 
 jg_src = files(
+    'src/context.c',
     'src/object.c',
     'src/private/memory.c',
-    'src/private/stack.c',
     'src/private/misc.c',
+    'src/private/stack.c',
     'src/template.c',
     'src/value.c',
 )
@@ -56,6 +57,7 @@ minunit_includes = include_directories('subprojects/minunit')
 jg_test_src = files(
     'tests/fixtures/user_model.c',
     'tests/main.c',
+    'tests/test_context.c',
     'tests/test_object.c',
     'tests/test_template.c',
     'tests/test_value.c',
