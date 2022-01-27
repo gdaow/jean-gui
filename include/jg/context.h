@@ -22,6 +22,8 @@ typedef void (*jg_error_handler)(jg_error_code error_code, const char* message);
 
 /**
  * Create a new context.
+ *
+ * @return A pointer to the created context on sucess, or NULL if OOM.
  */
 jg_context* jg_context_new();
 

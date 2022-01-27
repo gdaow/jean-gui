@@ -34,9 +34,6 @@ void jg_assert_handler(
 #endif
 
 size_t jg_strnlen(const char *s, size_t max_size) {
-    (void)s;
-    (void)max_size;
-    
     const char* end = memchr(s, '\0', max_size);
     if (end == NULL) {
         return max_size;

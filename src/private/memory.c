@@ -106,11 +106,8 @@ void jg_arena_free(jg_arena* arena) {
     free(arena);
 }
 
-char* jg_arena_strcpy(jg_arena* arena, const char* value, size_t max_length, size_t* length_accumulate) {
+char* jg_arena_strcpy(jg_arena* arena, const char* value, size_t max_length) {
     size_t length = jg_strnlen(value, max_length) + 1;
-    if(length_accumulate) {
-        *length_accumulate += length;
-    }
     char* copy = jg_arena_alloc(arena, length, alignof(char));
     memcpy(copy, value, length);
     copy[length] = '\0';

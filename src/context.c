@@ -24,6 +24,10 @@ static void default_error_handler(jg_error_code error_code, const char* message)
 
 jg_context* jg_context_new() {
     jg_context* new_context = malloc(sizeof(jg_context));
+    if(new_context == NULL) {
+        return NULL;
+    }
+
     *new_context = (jg_context) {
         .error_handler = default_error_handler
     };

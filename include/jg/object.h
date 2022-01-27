@@ -17,8 +17,6 @@
 
 #include <jg/value.h>
 
-static const size_t MAX_NAME_LENGTH = 256;
-
 typedef struct jg_module_s jg_module;
 typedef struct jg_class_s jg_class;
 typedef struct jg_member_s jg_member;
@@ -45,7 +43,7 @@ jg_module_definition* jg_module_new();
 
 jg_class_definition* jg_class_new(
     jg_module_definition* module,
-    const char* name,
+    const char* id,
     const char* parent,
     size_t size,
     size_t align
@@ -66,7 +64,7 @@ typedef void (*jg_setter_t)(void*, const jg_value);
  */
 void jg_class_add_property(
     jg_class_definition* class_,
-    const char* name,
+    const char* id,
     jg_getter_t getter,
     jg_setter_t setter
 );

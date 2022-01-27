@@ -21,17 +21,6 @@ typedef struct jg_arena jg_arena;
 jg_arena* jg_arena_new(size_t chunk_size);
 void* jg_arena_alloc(jg_arena* arena, size_t size, size_t align_size);
 void jg_arena_free(jg_arena* arena);
-
-// length_accumulate is used to grow the total memory needed to store strings, in order to allocate
-// the needed space when building modules. Length of the given string will be added to the pointed
-// size_t.
-char* jg_arena_strcpy(jg_arena* arena, const char* value, size_t max_length, size_t* length_accumulate);
-
-#define JG_ARENA_ALLOC_INIT(ARENA, TYPE, ...)\
-    (memcpy(\
-        jg_arena_alloc(ARENA, sizeof(TYPE), alignof(TYPE)),\
-        __VA_ARGS__,\
-        sizeof(TYPE)\
-    ))
+char* jg_arena_strcpy(jg_arena* arena, const char* value, size_t max_length);
 
 #endif

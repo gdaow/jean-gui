@@ -52,15 +52,13 @@ struct jg_template_s {
 static void parse_yaml(jg_template* template_, const char* source);
 jg_template* jg_template_from_string(const char* source, jg_module* module) {
     jg_arena* allocator = jg_arena_new(0);
-    jg_template* template = JG_ARENA_ALLOC_INIT(
-        allocator,
-        jg_template,
-        &(jg_template) {
-            .allocator = allocator,
-            .module = module,
-            .root_node = NULL
-        }
-    );
+    jg_template* template = jg_arena_alloc(allocator, sizeof(jg_template), alignof(jg_template));
+    *template = (jg_template) {
+        .allocator = allocator,
+        .module = module,
+        .root_node = NULL
+    };
+
     parse_yaml(template, source);
     return template;
 }
@@ -122,17 +120,16 @@ static jg_property_template* top_property(jg_template_builder* builder) {
 }
 
 static void start_object(jg_template_builder* builder, const char* tag) {
-    jg_node_template** top_node = jg_stack_peek(&builder->node_stack);
-    const jg_class* class_ = jg_class_get(builder->module, tag + 1);
-    jg_node_template* new_node = JG_ARENA_ALLOC_INIT(
-        builder->allocator,
-        jg_node_template,
-        &(jg_node_template) {
-            .first_property = NULL,
-            .class_ = class_
-        }
-    );
+    jg_arena* allocator = builder->allocator;
+    jg_node_template* new_node = jg_arena_alloc(allocator, sizeof(jg_node_template), alignof(jg_node_template));
 
+    const jg_class* class_ = jg_class_get(builder->module, tag + 1);
+    *new_node = (jg_node_template) {
+        .first_property = NULL,
+        .class_ = class_
+    };
+
+    jg_node_template** top_node = jg_stack_peek(&builder->node_stack);
     if(*top_node == NULL) {
         *top_node = new_node;
     }
@@ -148,16 +145,20 @@ static void start_object(jg_template_builder* builder, const char* tag) {
 
 static void start_property(jg_template_builder* builder, const char* tag) {
     jg_arena* allocator = builder->allocator;
-    jg_node_template* node = top_node(builder);
 
-    node->first_property = JG_ARENA_ALLOC_INIT(
+    jg_property_template* new_property = jg_arena_alloc(
         allocator,
-        jg_property_template,
-        &(jg_property_template) {
-            .name = jg_arena_strcpy(allocator, tag, 1024, NULL),
-            .next_property = node->first_property,
-        }
+        sizeof(jg_property_template),
+        alignof(jg_property_template)
     );
+
+    jg_node_template* node = top_node(builder);
+    *new_property = (jg_property_template) {
+        .name = jg_arena_strcpy(allocator, tag, 1024),
+        .next_property = node->first_property,
+    };
+
+    node->first_property = new_property;
     builder->state = JG_PROPERTY_STATE;
 }
 
@@ -176,7 +177,7 @@ static void scalar(jg_template_builder* builder, const char* value) {
     assert(builder->state == JG_PROPERTY_STATE);
     jg_property_template* property = top_property(builder);
     property->type = JG_TEMPLATE_PROPERTY_SCALAR;
-    property->value.scalar = jg_arena_strcpy(builder->allocator, value, 1024, NULL);
+    property->value.scalar = jg_arena_strcpy(builder->allocator, value, 1024);
 }
 
 static void end_element(jg_template_builder* builder) {
@@ -241,7 +242,7 @@ void yaml_scalar_event(
     else {
         // store the scalar value as the tag name for the next element
         strcpy(state->scalar_tag, (const char*)value);
-        state->has_previous_tag = NULL;
+        state->has_previous_tag = (const char*)1;
     }
 }
 
