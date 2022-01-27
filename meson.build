@@ -30,17 +30,17 @@ yaml = yaml_project.dependency('yaml')
 jg_includes = include_directories('include')
 
 jg_src = files(
-    'src/context.c',
-    'src/object.c',
-    'src/private/memory.c',
-    'src/private/misc.c',
-    'src/private/stack.c',
-    'src/template.c',
-    'src/value.c',
+    'src/jgui/context.c',
+    'src/jgui/object.c',
+    'src/jgui/private/memory.c',
+    'src/jgui/private/misc.c',
+    'src/jgui/private/stack.c',
+    'src/jgui/template.c',
+    'src/jgui/value.c',
 )
 
 jg_lib = static_library(
-    'jg',
+    'jgui',
     jg_src,
     dependencies: [wxc, yaml],
     include_directories: jg_includes,

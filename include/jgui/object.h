@@ -15,7 +15,7 @@
 
 #include <stddef.h>
 
-#include <jg/value.h>
+#include <jgui/value.h>
 
 typedef struct jg_module_s jg_module;
 typedef struct jg_class_s jg_class;

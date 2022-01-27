@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <jg/context.h>
+#include <jgui/context.h>
 
 #include "private/misc.h"
 

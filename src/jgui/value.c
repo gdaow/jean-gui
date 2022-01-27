@@ -7,7 +7,7 @@
  */
 #include <assert.h>
 
-#include "jg/value.h"
+#include "jgui/value.h"
 
 typedef enum {
     jg_BOOLEAN,

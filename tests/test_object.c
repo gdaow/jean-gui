@@ -11,7 +11,7 @@
 
 #include <minunit.h>
 
-#include <jg/object.h>
+#include <jgui/object.h>
 
 #include "fixtures/user_model.h"
 

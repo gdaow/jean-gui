@@ -8,9 +8,9 @@
 #include <assert.h>
 #include <stdalign.h>
 
-#include <jg/object.h>
+#include <jgui/object.h>
+#include <jgui/value.h>
 
-#include "jg/value.h"
 #include "user_model.h"
 
 const char* user_class_id = "User";

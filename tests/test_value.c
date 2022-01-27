@@ -11,8 +11,8 @@
 
 #include <minunit.h>
 
-#include <jg/value.h>
-#include <jg/object.h>
+#include <jgui/value.h>
+#include <jgui/object.h>
 
 #include "fixtures/user_model.h"
 

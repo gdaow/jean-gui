@@ -13,9 +13,9 @@
 
 #include <yaml.h>
 
-#include <jg/object.h>
-#include <jg/template.h>
-#include <jg/value.h>
+#include <jgui/object.h>
+#include <jgui/template.h>
+#include <jgui/value.h>
 
 #include "private/memory.h"
 #include "private/stack.h"

@@ -9,7 +9,7 @@
 #include <minunit.h>
 #include <stdlib.h>
 
-#include <jg/context.h>
+#include <jgui/context.h>
 
 jg_context* context = NULL;
 static char* last_error_message = NULL;

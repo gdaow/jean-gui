@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <jg/object.h>
+#include <jgui/object.h>
+#include <jgui/value.h>
 
-#include "jg/value.h"
 #include "private/memory.h"
 #include "private/misc.h"
 

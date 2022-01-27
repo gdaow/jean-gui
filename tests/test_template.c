@@ -8,8 +8,8 @@
 #include <string.h>
 #include <minunit.h>
 
-#include <jg/object.h>
-#include <jg/template.h>
+#include <jgui/object.h>
+#include <jgui/template.h>
 
 #include "fixtures/user_model.h"
 
