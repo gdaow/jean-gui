@@ -10,8 +10,8 @@
  * TODO: Finish documentation here.
  *
  */
-#ifndef INCLUDE_MEZO_OBJECT_H
-#define INCLUDE_MEZO_OBJECT_H
+#ifndef INCLUDE_JEAN_GUI_OBJECT_H
+#define INCLUDE_JEAN_GUI_OBJECT_H
 
 #include <stddef.h>
 

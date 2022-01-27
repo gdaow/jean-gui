@@ -8,8 +8,8 @@
  * Custom allocators & memory helpers.
  *
  */
-#ifndef MEZO_SRC_PRIVATE_MEMORY_H
-#define MEZO_SRC_PRIVATE_MEMORY_H
+#ifndef JEAN_GUI_SRC_PRIVATE_MEMORY_H
+#define JEAN_GUI_SRC_PRIVATE_MEMORY_H
 #include <stddef.h>
 
 static const size_t DEFAULT_CHUNK_SIZE = 0x1000;

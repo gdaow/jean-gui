@@ -13,8 +13,8 @@
  * TODO: detail this and the choice I made.
  *
  */
-#ifndef INCLUDE_MEZO_VALUE_H_
-#define INCLUDE_MEZO_VALUE_H_
+#ifndef INCLUDE_JEAN_GUI_VALUE_H_
+#define INCLUDE_JEAN_GUI_VALUE_H_
 #include <stdbool.h>
 
 /* This struct member's are not meant to be used directly, and are not guaranteed to stay stable.

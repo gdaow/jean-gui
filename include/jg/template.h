@@ -10,8 +10,8 @@
  * TODO: Finish documentation here.
  *
  */
- #ifndef INCLUDE_MEZO_TEMPLATE_H
- #define INCLUDE_MEZO_TEMPLATE_H
+ #ifndef INCLUDE_JEAN_GUI_TEMPLATE_H
+ #define INCLUDE_JEAN_GUI_TEMPLATE_H
 
 typedef struct jg_class_s jg_class;
 typedef struct jg_module_s jg_module;

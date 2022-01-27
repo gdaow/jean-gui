@@ -8,10 +8,24 @@
  * Miscelaneous helpers & utilities.
  *
  */
-#ifndef MEZO_SRC_PRIVATE_MISC_H
-#define MEZO_SRC_PRIVATE_MISC_H
+#ifndef JEAN_GUI_SRC_PRIVATE_MISC_H
+#define JEAN_GUI_SRC_PRIVATE_MISC_H
 
+#include <stdbool.h>
 #include <stddef.h>
+
+#ifndef NDEBUG
+void jg_assert_handler(
+    bool test,
+    const char* test_string,
+    const char* file,
+    int line
+);
+#   define JG_ASSERT(TEST)\
+        (jg_assert_handler(TEST, #TEST, __FILE__, __LINE__))
+#else
+#   define JG_ASSERT(message, ...)
+#endif
 
 size_t jg_strnlen(const char *s, size_t max_size);
 

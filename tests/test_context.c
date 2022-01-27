@@ -30,7 +30,7 @@ MU_TEST(test_error_handler) {
     assert(last_error_message == NULL);
     assert(last_error_code == JG_ERROR_NONE);
     jg_set_error_handler(context, error_handler);
-    jg_error(context, JG_ERROR_CLASS_UNDEFINED, "Jean-GUI drinks a %s", "coffee");
+    jg_error(context, JG_ERROR_CLASS_UNDEFINED, "Jean-GUI drinks a %s.", "coffee");
     assert(strcmp(last_error_message, "Jean-GUI drinks a coffee.") == 0);
     assert(last_error_code == JG_ERROR_CLASS_UNDEFINED);
 }

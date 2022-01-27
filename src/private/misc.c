@@ -10,9 +10,28 @@
  */
 #include <assert.h>
 #include <malloc.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "misc.h"
+
+#ifndef NDEBUG
+void jg_assert_handler(
+    bool test,
+    const char* test_string,
+    const char* file,
+    int line
+) {
+    if(test) {
+        return;
+    }
+
+    fprintf(stderr, "JEAN-GUI ASSERT FAILED:(%s:%i):%s", file, line, test_string);
+    abort();
+}
+#endif
 
 size_t jg_strnlen(const char *s, size_t max_size) {
     (void)s;

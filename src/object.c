@@ -231,7 +231,7 @@ void jg_object_set(void* object, const char* property_name, const jg_value value
         }
         class_ = class_->parent;
     }
-    assert(false);
+    JG_ASSERT(false);
 }
 
 // copies index keys to the given string pool. This is done after the indices are sorted,
@@ -261,11 +261,11 @@ static void build_members(
     // initialize the member index keys
     const jg_member_definition* current_member = class_definition->members;
     for(size_t i = 0; i < member_count; ++i) {
-        assert(current_member);
+        JG_ASSERT(current_member);
         member_keys[i] = current_member->name;
         current_member = current_member->next;
     }
-    assert(!current_member);
+    JG_ASSERT(!current_member);
 
     jg_index member_index = (jg_index) {
         .keys = member_keys,
@@ -284,7 +284,7 @@ static void build_members(
     current_member = class_definition->members;
     for(size_t i = 0; i < member_count; ++i) {
         int member_id = jg_index_search(&member_index, current_member->name);
-        assert(member_id >= 0 && (size_t)member_id < member_count);
+        JG_ASSERT(member_id >= 0 && (size_t)member_id < member_count);
 
         member_array[member_id] = (jg_member) {
             .getter = current_member->getter,
@@ -293,7 +293,7 @@ static void build_members(
         
         current_member = current_member->next;
     }
-    assert(!current_member);
+    JG_ASSERT(!current_member);
 
     class_->member_array = member_array;
     class_->member_index = member_index;
@@ -317,7 +317,7 @@ static void build_class(
     // in the depth-first hierarchy order.
     if(parent_name) {
         int parent_id = jg_index_search(index, parent_name);
-        assert(parent_id >= 0 && (size_t)parent_id < index->count);
+        JG_ASSERT(parent_id >= 0 && (size_t)parent_id < index->count);
         build_class(index, class_array, index_pool, member_pool, string_pool, sorted_definitions, (size_t)parent_id);
         parent = &class_array[parent_id];
     }
