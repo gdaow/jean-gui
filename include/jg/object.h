@@ -22,6 +22,9 @@ typedef struct jg_class_s jg_class;
 typedef struct jg_member_s jg_member;
 typedef struct jg_module_definition_s jg_module_definition;
 typedef struct jg_class_definition_s jg_class_definition;
+typedef struct jg_arguments_s jg_arguments;
+
+typedef jg_value (*jg_method)(jg_value* arguments, size_t argument_count);
 
 /**
  * Create a new module definition.
@@ -58,7 +61,7 @@ typedef void (*jg_setter_t)(void*, const jg_value);
 /**
  * Add a property to this class.
  * @param class_  Add a property to this class.
- * @param name    The name of the property.
+ * @param id    The id of the property.
  * @param setter  Callback that get the property value.
  * @param getter  Callback that set the property value.
  */
@@ -67,6 +70,19 @@ void jg_class_add_property(
     const char* id,
     jg_getter_t getter,
     jg_setter_t setter
+);
+
+/**
+ * Add or override a method for this class.
+ * @param class_  Add a property to this class.
+ * @param id    The id of the property.
+ * @param setter  Callback that get the property value.
+ * @param getter  Callback that set the property value.
+ */
+void jg_class_add_method(
+    jg_class_definition* class_,
+    const char* id,
+    jg_method method
 );
 
 /**
@@ -95,9 +111,9 @@ void jg_module_free(jg_module* module);
  * @return The newly created class.
  */
 
-const jg_class* jg_class_get(const jg_module* module, const char* name);
+const jg_class* jg_class_get(const jg_module* module, const char* id);
 
-#define jg_OBJECT "Object"
+#define jg_object_class_id "Object"
 
 /**
  * Create an object of the given class.
@@ -113,18 +129,32 @@ void jg_object_free(void* object);
  * Get a property from an object.
  *
  * @param object        The target object on which to set the property.
- * @param property_name Name of the property to set.
+ * @param property_id Name of the property to set.
  * @return              The property value.
  */
-jg_value jg_object_get(const void* object, const char* property_name);
+jg_value jg_object_get(const void* object, const char* property_id);
 
 /**
  * Set a property on an object.
  *
  * @param object        The target object on which to set the property.
- * @param property_name Name of the property to set.
+ * @param property_id Name of the property to set.
  * @param value         Value to set the property to.
  */
-void jg_object_set(void* object, const char* property_name, jg_value value);
+void jg_object_set(void* object, const char* property_id, jg_value value);
+
+/**
+ * Call a method on an object.
+ *
+ * @param object      The target object on which to set the property.
+ * @param property_id Name of the property to set.
+ * @return            The property value.
+ */
+jg_value jg_object_call(
+    const void* object,
+    const char* method_id,
+    jg_value* arguments,
+    size_t argument_count
+);
 
 #endif

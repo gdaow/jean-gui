@@ -92,7 +92,7 @@ MU_TEST(test_jg_value_raw) {
 /** jg_object, jg_is_object and jg_to_object should correctly handle boolean values. */
 MU_TEST(test_jg_value_object) {
     jg_module* module = user_model_module_new();
-    const jg_class* admin_class = jg_class_get(module, ADMIN);
+    const jg_class* admin_class = jg_class_get(module, admin_class_id);
     void* test_object = jg_object_new(admin_class); 
 
     jg_value value = jg_object(test_object);

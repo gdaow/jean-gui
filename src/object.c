@@ -12,6 +12,7 @@
 
 #include <jg/object.h>
 
+#include "jg/value.h"
 #include "private/memory.h"
 #include "private/misc.h"
 
@@ -138,6 +139,17 @@ void jg_class_add_property(jg_class_definition* class_, const char* id, jg_gette
     class_->first_member = new_member;
 }
 
+void jg_class_add_method(
+    jg_class_definition* class_,
+    const char* id,
+    jg_method method
+) {
+    (void)class_;
+    (void)id;
+    (void)method;
+
+}
+
 // build an index given a class or member definition
 static jg_index build_index(
     void* definition,
@@ -234,12 +246,12 @@ static void build_class(
     const jg_class_definition* class_definition = sorted_definitions[class_id];
     if(!class_definition) { return; } // class was already built
 
-    const char* parent_name = class_definition->parent;
+    const char* parent_string_id = class_definition->parent;
     const jg_class* parent = NULL;
     // if class has a parent, we build it first, so members and member keys are stored in the pools
     // in the depth-first hierarchy order.
-    if(parent_name) {
-        int parent_id = jg_index_search(index, parent_name);
+    if(parent_string_id) {
+        int parent_id = jg_index_search(index, parent_string_id);
         JG_ASSERT(parent_id >= 0 && (size_t)parent_id < index->count);
         build_class(index, class_array, index_pool, member_pool, string_pool, sorted_definitions, (size_t)parent_id);
         parent = &class_array[parent_id];
@@ -352,8 +364,8 @@ void jg_module_free(jg_module* module) {
     free(module);
 }
 
-const jg_class* jg_class_get(const jg_module* module, const char* name) {
-    int class_id = jg_index_search(&module->class_index, name);
+const jg_class* jg_class_get(const jg_module* module, const char* id) {
+    int class_id = jg_index_search(&module->class_index, id);
     if(class_id == -1) {
         return NULL;
     }
@@ -373,11 +385,11 @@ void jg_object_free(void* object) {
     free(header - 1);
 }
 
-jg_value jg_object_get(const void* object, const char* property_name) {
+jg_value jg_object_get(const void* object, const char* property_id) {
     const jg_object_header* header = (const jg_object_header*)object - 1;
     const jg_class* class_ = header->class_;
     while(class_) {
-        int member_id = jg_index_search(&(class_->member_index), property_name);
+        int member_id = jg_index_search(&(class_->member_index), property_id);
         if(member_id >= 0) {
             return class_->member_array[member_id].getter(object);
         }
@@ -387,11 +399,11 @@ jg_value jg_object_get(const void* object, const char* property_name) {
     return jg_bool(false); // TODO(corentin@ki-dour.org): handle error
 }
 
-void jg_object_set(void* object, const char* property_name, const jg_value value) {
+void jg_object_set(void* object, const char* property_id, const jg_value value) {
     const jg_object_header* header = (const jg_object_header*)object - 1;
     const jg_class* class_ = header->class_;
     while(class_) {
-        int member_id = jg_index_search(&(class_->member_index), property_name);
+        int member_id = jg_index_search(&(class_->member_index), property_id);
         if(member_id >= 0) {
             class_->member_array[member_id].setter(object, value);
             return;
@@ -399,4 +411,17 @@ void jg_object_set(void* object, const char* property_name, const jg_value value
         class_ = class_->parent;
     }
     JG_ASSERT(false);
+}
+
+jg_value jg_object_call(
+    const void* object,
+    const char* method_id,
+    jg_value* arguments,
+    size_t argument_count
+){
+    (void)object;
+    (void)method_id;
+    (void)arguments;
+    (void)argument_count;
+    return jg_bool(false);
 }

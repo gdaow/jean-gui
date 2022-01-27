@@ -15,8 +15,8 @@ typedef enum {
     jg_DOUBLE,
     jg_STRING,
     jg_RAW,
-    jg_OBJECT
-} jg_valueype;
+    jg_object_class_id
+} jg_value_type;
 
 jg_value jg_bool(bool value) {
     return (jg_value){
@@ -55,7 +55,7 @@ jg_value jg_raw(void* value) {
 
 jg_value jg_object(void* value) {
     return (jg_value){
-        ._type = jg_OBJECT,
+        ._type = jg_object_class_id,
         ._value._object = value
     };
 }
@@ -65,7 +65,7 @@ bool jg_is_int(jg_value value) { return value._type == jg_INTEGER; }
 bool jg_is_double(jg_value value) { return value._type == jg_DOUBLE; }
 bool jg_is_string(jg_value value) { return value._type == jg_STRING; }
 bool jg_is_raw(jg_value value) { return value._type == jg_RAW; }
-bool jg_is_object(jg_value value) { return value._type == jg_OBJECT; }
+bool jg_is_object(jg_value value) { return value._type == jg_object_class_id; }
 
 bool jg_to_bool(jg_value value) {
     assert(jg_is_bool(value));

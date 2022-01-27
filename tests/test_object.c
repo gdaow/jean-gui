@@ -26,10 +26,10 @@ void _dummy_type(jg_class_definition* class_) {
 /** jg_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
 MU_TEST(test_jg_class_get) {
-    const jg_class* user_class = jg_class_get(module, USER);
+    const jg_class* user_class = jg_class_get(module, user_class_id);
     mu_check(user_class != NULL);
 
-    const jg_class* admin_class = jg_class_get(module, ADMIN);
+    const jg_class* admin_class = jg_class_get(module, admin_class_id);
     mu_check(admin_class != NULL);
 
     mu_check(jg_class_get(module, "Dummy") == NULL);
@@ -37,7 +37,7 @@ MU_TEST(test_jg_class_get) {
 
 /** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
 MU_TEST(test_jg_object_get) {
-    admin_t* admin = jg_object_new(admin_class);
+    admin* admin = jg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
     admin->base.name = test_string;
     admin->role = test_string;
@@ -55,7 +55,7 @@ MU_TEST(test_jg_object_get) {
 
 /** jg_object_set should correctly set a property, be it declared on the type or on a parent. */
 MU_TEST(test_jg_object_set) {
-    admin_t* admin = jg_object_new(admin_class);
+    admin* admin = jg_object_new(admin_class);
     const char* test_string = "Jean-jean mi";
     jg_value test_value = jg_string(test_string);
 
@@ -67,10 +67,25 @@ MU_TEST(test_jg_object_set) {
     jg_object_free(admin);
 }
 
+/** dynamic method calls shoud call the correct override */
+MU_TEST(test_jg_object_call) {
+    user* user = jg_object_new(user_class);
+    admin* admin = jg_object_new(admin_class);
+    
+    mu_check(user_has_permission(user, PERM_LOGIN));
+    mu_check(user_has_permission(user, PERM_CHANGE_PASSWORD));
+    mu_check(!user_has_permission(user, PERM_CREATE_USER));
+    mu_check(!user_has_permission(user, PERM_DELETE_USER));
+    mu_check(user_has_permission(&admin->base, PERM_ALL));
+
+    jg_object_free(admin);
+    jg_object_free(user);
+}
+
 static void setup() {
     module = user_model_module_new();
-    user_class = jg_class_get(module, USER);
-    admin_class = jg_class_get(module, ADMIN);
+    user_class = jg_class_get(module, user_class_id);
+    admin_class = jg_class_get(module, admin_class_id);
 }
 
 static void teardown() {
@@ -85,4 +100,5 @@ MU_TEST_SUITE(object_suite) {
     MU_RUN_TEST(test_jg_class_get);
     MU_RUN_TEST(test_jg_object_get);
     MU_RUN_TEST(test_jg_object_set);
+    MU_RUN_TEST(test_jg_object_call);
 }

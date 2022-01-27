@@ -10,73 +10,126 @@
 
 #include <jg/object.h>
 
+#include "jg/value.h"
 #include "user_model.h"
 
-void register_user_type(jg_module_definition* module);
-void register_admin_type(jg_module_definition* module);
-void register_team_type(jg_module_definition* module);
+const char* user_class_id = "User";
+const char* admin_class_id = "Admin";
+const char* team_class_id = "Team";
+
+void register_user_class(jg_module_definition* module);
+void register_admin_class(jg_module_definition* module);
+void register_team_class(jg_module_definition* module);
 
 jg_module* user_model_module_new() {
     jg_module_definition* module = jg_module_new();
-    register_user_type(module);
-    register_admin_type(module);
-    register_team_type(module);
+    register_user_class(module);
+    register_admin_class(module);
+    register_team_class(module);
     return jg_module_build(module);
 }
+
 static jg_value user_get_name(const void* object) {
-    const user_t* user = object;
+    const user* user = object;
     return jg_string(user->name);
 }
 
 static void user_set_name(void* object, jg_value value) {
-    user_t* user = object;
+    user* user = object;
     user->name = jg_to_string(value);
 }
 
 static jg_value user_get_team(const void* object) {
-    const user_t* user = object;
-    team_t* team = user->team;
+    const user* user = object;
+    team* team = user->team;
     assert(team);
     return jg_object(user->team);
 }
 
 static void user_set_team(void* object, jg_value value) {
-    user_t* user = object;
+    user* user = object;
     user->team = jg_to_object(value);
 }
 
-void register_user_type(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(module, USER, jg_OBJECT, sizeof(user_t), alignof(user_t));
+static const char* user_has_permission_id = "has_permissions";
+
+bool user_has_permission(user* user, permission_flags flags) {
+    return jg_to_bool(
+        jg_object_call(
+            user,
+            user_has_permission_id,
+            (jg_value[]) { jg_int(flags) },
+            1
+        )
+    );
+}
+
+static jg_value user_has_permission_impl(jg_value* arguments, size_t argument_count) {
+    assert(argument_count == 1);
+    assert(jg_is_int(arguments[0]));
+
+    return jg_bool(jg_to_int(arguments[0]) & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
+}
+
+void register_user_class(jg_module_definition* module) {
+    jg_class_definition* class_ = jg_class_new(
+        module,
+        user_class_id,
+        jg_object_class_id,
+        sizeof(user),
+        alignof(user)
+    );
     jg_class_add_property(class_, "name", user_get_name, user_set_name);
     jg_class_add_property(class_, "team", user_get_team, user_set_team);
+    jg_class_add_method(class_, user_has_permission_id, user_has_permission_impl);
 }
 
 static jg_value admin_get_role(const void* object) {
-    const admin_t* admin = (void *)object;
+    const admin* admin = (void *)object;
     return jg_string(admin->role);
 }
 
 static void admin_set_role(void* object, jg_value value) {
-    admin_t* admin = object;
+    admin* admin = object;
     admin->role = jg_to_string(value);
 }
 
-void register_admin_type(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(module, ADMIN, USER, sizeof(admin_t), alignof(admin_t));
+static jg_value admin_has_permission(jg_value* arguments, size_t argument_count) {
+    assert(argument_count == 1);
+    assert(jg_is_int(arguments[0]));
+    return jg_bool(jg_to_int(arguments[0]) & PERM_ALL);
+}
+
+
+void register_admin_class(jg_module_definition* module) {
+    jg_class_definition* class_ = jg_class_new(
+        module,
+        admin_class_id,
+        user_class_id,
+        sizeof(admin),
+        alignof(admin)
+    );
     jg_class_add_property(class_, "role", admin_get_role, admin_set_role);
+    jg_class_add_method(class_, user_has_permission_id, admin_has_permission);
 }
 
 static void team_set_name(void* object, jg_value value) {
-    team_t* team = object;
+    team* team = object;
     team->name = jg_to_string(value);
 }
 
 static jg_value team_get_name(const void* object) {
-    const team_t* team = object;
+    const team* team = object;
     return jg_string(team->name);
 }
 
-void register_team_type(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(module, TEAM, jg_OBJECT, sizeof(team_t), alignof(team_t));
+void register_team_class(jg_module_definition* module) {
+    jg_class_definition* class_ = jg_class_new(
+        module,
+        team_class_id,
+        jg_object_class_id,
+        sizeof(team),
+        alignof(team)
+    );
     jg_class_add_property(class_, "name", team_get_name, team_set_name);
 }

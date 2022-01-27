@@ -25,11 +25,11 @@ MU_TEST(test_jg_template_scalar_property) {
         module
     );
 
-    admin_t* admin = (admin_t*)jg_template_instanciate(admin_template);
+    admin* admin = (struct admin_s*)jg_template_instanciate(admin_template);
     mu_assert_string_eq(admin->base.name, "Dr. Meeseeks");
 
     jg_object_free(admin);
-    jg_template_free(admin_template); // team_template will be freed by i's parent
+    jg_template_free(admin_template); // teamemplate will be freed by i's parent
 }
 
 static void setup() {
