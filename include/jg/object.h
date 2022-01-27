@@ -22,7 +22,6 @@ typedef struct jg_class_s jg_class;
 typedef struct jg_member_s jg_member;
 typedef struct jg_module_definition_s jg_module_definition;
 typedef struct jg_class_definition_s jg_class_definition;
-typedef struct jg_arguments_s jg_arguments;
 
 typedef jg_value (*jg_method)(jg_value* arguments, size_t argument_count);
 

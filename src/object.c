@@ -36,11 +36,24 @@ struct jg_class_definition_s {
     jg_member_definition* first_member;
 };
 
+typedef enum {
+    JG_MEMBER_PROPERTY,
+    JG_MEMBER_METHOD
+} jg_member_type;
+
+typedef union {
+    struct {
+        jg_getter_t getter;
+        jg_setter_t setter;
+    } property;
+    jg_method method;
+} jg_member_data;
+
 struct jg_member_definition_s {
     const char* id;
+    jg_member_type type;
+    jg_member_data data;
     jg_member_definition* next_member;
-    jg_getter_t getter;
-    jg_setter_t setter;
 };
 
 struct jg_module_s {
@@ -60,8 +73,8 @@ struct jg_class_s {
 };
 
 struct jg_member_s {
-    jg_getter_t getter;
-    jg_setter_t setter;
+    jg_member_type type;
+    jg_member_data data;
 };
 
 typedef struct jg_object_header_s {
@@ -122,21 +135,30 @@ jg_class_definition* jg_class_new(
     return new_class;
 }
 
-void jg_class_add_property(jg_class_definition* class_, const char* id, jg_getter_t getter, jg_setter_t setter) {
+
+static void add_member(
+    jg_class_definition* class_,
+    const char* id,
+    const jg_member_definition* member
+) {
     jg_member_definition* new_member = jg_arena_alloc(
         class_->arena,
         sizeof(jg_member_definition),
         alignof(jg_member_definition)
     );
 
-    *new_member =  (jg_member_definition) {
-        .id = copy_identifier(class_->arena, id),
-        .next_member = class_->first_member,
-        .getter = getter,
-        .setter = setter,
-    };
-
+    *new_member = *member;
+    new_member->id = copy_identifier(class_->arena, id);
+    new_member->next_member = class_->first_member;
     class_->first_member = new_member;
+}
+
+void jg_class_add_property(jg_class_definition* class_, const char* id, jg_getter_t getter, jg_setter_t setter) {
+    add_member(class_, id, &(jg_member_definition) {
+        .type = JG_MEMBER_PROPERTY,
+        .data.property.getter = getter,
+        .data.property.setter = setter
+    });
 }
 
 void jg_class_add_method(
@@ -144,10 +166,10 @@ void jg_class_add_method(
     const char* id,
     jg_method method
 ) {
-    (void)class_;
-    (void)id;
-    (void)method;
-
+    add_member(class_, id, &(jg_member_definition) {
+        .type = JG_MEMBER_METHOD,
+        .data.method = method
+    });
 }
 
 // build an index given a class or member definition
@@ -216,10 +238,10 @@ static void build_members(
         JG_ASSERT(member_id >= 0 && (size_t)member_id < member_index.count);
 
         member_array[member_id] = (jg_member) {
-            .getter = current_member->getter,
-            .setter = current_member->setter
+            .type = current_member->type,
+            .data = current_member->data
         };
-        
+
         current_member = current_member->next_member;
     }
 
@@ -385,32 +407,34 @@ void jg_object_free(void* object) {
     free(header - 1);
 }
 
-jg_value jg_object_get(const void* object, const char* property_id) {
+static jg_member* get_member(const void* object, const char* id, jg_member_type type) {
     const jg_object_header* header = (const jg_object_header*)object - 1;
     const jg_class* class_ = header->class_;
     while(class_) {
-        int member_id = jg_index_search(&(class_->member_index), property_id);
+        int member_id = jg_index_search(&(class_->member_index), id);
         if(member_id >= 0) {
-            return class_->member_array[member_id].getter(object);
+            jg_member* candidate = &(class_->member_array[member_id]);
+            if(candidate->type == type) {
+                return candidate;
+            }
+
+            JG_ASSERT(false);// TODO(corentin@ki-dour.org): handle error
         }
         class_ = class_->parent;
     }
 
-    return jg_bool(false); // TODO(corentin@ki-dour.org): handle error
+    JG_ASSERT(false);// TODO(corentin@ki-dour.org): handle error
+    return NULL;
+}
+
+jg_value jg_object_get(const void* object, const char* property_id) {
+    jg_member* member = get_member(object, property_id, JG_MEMBER_PROPERTY);
+    return member->data.property.getter(object);
 }
 
 void jg_object_set(void* object, const char* property_id, const jg_value value) {
-    const jg_object_header* header = (const jg_object_header*)object - 1;
-    const jg_class* class_ = header->class_;
-    while(class_) {
-        int member_id = jg_index_search(&(class_->member_index), property_id);
-        if(member_id >= 0) {
-            class_->member_array[member_id].setter(object, value);
-            return;
-        }
-        class_ = class_->parent;
-    }
-    JG_ASSERT(false);
+    jg_member* member = get_member(object, property_id, JG_MEMBER_PROPERTY);
+    member->data.property.setter(object, value);
 }
 
 jg_value jg_object_call(
@@ -419,9 +443,6 @@ jg_value jg_object_call(
     jg_value* arguments,
     size_t argument_count
 ){
-    (void)object;
-    (void)method_id;
-    (void)arguments;
-    (void)argument_count;
-    return jg_bool(false);
+    jg_member* member = get_member(object, method_id, JG_MEMBER_METHOD);
+    return member->data.method(arguments, argument_count);
 }

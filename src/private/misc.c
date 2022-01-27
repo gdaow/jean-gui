@@ -57,7 +57,7 @@ static int partition(
     const char* pivot = index[high];
     int i = (low - 1);
 
-    for (int j = low; j < high - 1; ++j) {
+    for (int j = low; j <= high - 1; ++j) {
         if (strcmp(index[j], pivot) < 0) {
             swap(&index[++i], &index[j]);
         }
