@@ -6,21 +6,24 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
- #include <stdlib.h>
- #include <string.h>
+#include <stdalign.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "common/debug.h"
 #include "class.h"
 
 typedef struct jg_object_header_s {
     const jg_class* class_;
+    alignas(max_align_t) void* object;
 } jg_object_header;
 
 const char* jg_object_class_id = "Object";
 
 void* jg_object_new(jg_class* class_) {
     JG_ASSERT(class_ != NULL);
-    size_t total_size = sizeof(jg_object_header) + class_->size; // TODO(corentin@ki-dour.rog): align
+    size_t total_size = sizeof(jg_object_header) + class_->size;
     jg_object_header* header = calloc(1, total_size);
     header->class_ = class_;
     JG_ASSERT(header != NULL); // TODO(corentin@ki-dour.org) handle error.
@@ -39,7 +42,6 @@ static const jg_class* get_class(const void* object);
 jg_value jg_object_get(const void* object, const char* property_id) {
     JG_ASSERT(object != NULL);
     JG_ASSERT(property_id != NULL && strlen(property_id) > 0);
-
 
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, property_id, JG_MEMBER_PROPERTY);
