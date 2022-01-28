@@ -5,7 +5,6 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdalign.h>
@@ -13,12 +12,15 @@
 
 #include <yaml.h>
 
+#include <jgui/module.h>
 #include <jgui/object.h>
 #include <jgui/template.h>
 #include <jgui/value.h>
 
-#include "private/memory.h"
-#include "private/stack.h"
+#include "common/arena.h"
+#include "common/constants.h"
+#include "common/debug.h"
+#include "common/stack.h"
 
 typedef struct jg_property_template_s jg_property_template;
 typedef struct jg_node_template_s jg_node_template;
@@ -88,7 +90,7 @@ static void* instanciate_node(const jg_node_template* node) {
                 }
                 break;
             default:
-                assert(false);
+                JG_ASSERT(false);
         }
         jg_object_set(object, property->name, property_value);
         property = property->next_property;
@@ -123,7 +125,7 @@ static void start_object(jg_template_builder* builder, const char* tag) {
     jg_arena* allocator = builder->allocator;
     jg_node_template* new_node = jg_arena_alloc(allocator, sizeof(jg_node_template), alignof(jg_node_template));
 
-    const jg_class* class_ = jg_class_get(builder->module, tag + 1);
+    const jg_class* class_ = jg_module_get_class(builder->module, tag + 1);
     *new_node = (jg_node_template) {
         .first_property = NULL,
         .class_ = class_
@@ -154,7 +156,7 @@ static void start_property(jg_template_builder* builder, const char* tag) {
 
     jg_node_template* node = top_node(builder);
     *new_property = (jg_property_template) {
-        .name = jg_arena_strcpy(allocator, tag, 1024),
+        .name = jg_arena_strcpy(allocator, tag, JG_MAX_IDENTIFIER_LENGTH),
         .next_property = node->first_property,
     };
 
@@ -174,7 +176,7 @@ static void start_element(jg_template_builder* builder, const char* tag) {
 }
 
 static void scalar(jg_template_builder* builder, const char* value) {
-    assert(builder->state == JG_PROPERTY_STATE);
+    JG_ASSERT(builder->state == JG_PROPERTY_STATE);
     jg_property_template* property = top_property(builder);
     property->type = JG_TEMPLATE_PROPERTY_SCALAR;
     property->value.scalar = jg_arena_strcpy(builder->allocator, value, 1024);
@@ -251,7 +253,7 @@ void yaml_end_event(jg_yaml_state* state) {
     jg_stack* tag_stack = &state->tag_stack;
     jg_template_builder* builder = state->builder;
 
-    assert(!state->has_previous_tag); // previous scalar value encountered, using it as tag
+    JG_ASSERT(!state->has_previous_tag); // previous scalar value encountered, using it as tag
 
     if(*(void**)jg_stack_pop(tag_stack)) {
         end_element(builder);

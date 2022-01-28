@@ -5,11 +5,12 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Global context containing loaded modules, error handlers...
- * 
- * TODO: Finish documentation here.
+ * TODO:
+ *  - document.
  *
  */
+#ifndef JGUI_PUBLIC_JGUI_CONTEXT_H
+#define JGUI_PUBLIC_JGUI_CONTEXT_H
 
 typedef enum {
     JG_ERROR_NONE,
@@ -41,3 +42,5 @@ void jg_error(const jg_context* context, jg_error_code error_code, const char* f
  * Set the error handler for the given context.
  */
 void jg_set_error_handler(jg_context* context, jg_error_handler handler);
+
+#endif

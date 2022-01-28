@@ -11,6 +11,7 @@
 
 #include <minunit.h>
 
+#include <jgui/module.h>
 #include <jgui/object.h>
 
 #include "fixtures/user_model.h"
@@ -26,13 +27,13 @@ void _dummy_type(jg_class_definition* class_) {
 /** jg_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
 MU_TEST(test_jg_class_get) {
-    const jg_class* user_class = jg_class_get(module, user_class_id);
+    const jg_class* user_class = jg_module_get_class(module, user_class_id);
     mu_check(user_class != NULL);
 
-    const jg_class* admin_class = jg_class_get(module, admin_class_id);
+    const jg_class* admin_class = jg_module_get_class(module, admin_class_id);
     mu_check(admin_class != NULL);
 
-    mu_check(jg_class_get(module, "Dummy") == NULL);
+    mu_check(jg_module_get_class(module, "Dummy") == NULL);
 }
 
 /** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
@@ -84,8 +85,8 @@ MU_TEST(test_jg_object_call) {
 
 static void setup() {
     module = user_model_module_new();
-    user_class = jg_class_get(module, user_class_id);
-    admin_class = jg_class_get(module, admin_class_id);
+    user_class = jg_module_get_class(module, user_class_id);
+    admin_class = jg_module_get_class(module, admin_class_id);
 }
 
 static void teardown() {

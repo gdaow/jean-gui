@@ -5,16 +5,18 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Miscelaneous helpers & utilities.
+ * TODO:
+ *  - document.
  *
  */
-#ifndef JEAN_GUI_SRC_PRIVATE_MISC_H
-#define JEAN_GUI_SRC_PRIVATE_MISC_H
+#ifndef JGUI_PRIVATE_COMMON_DEBUG_H
+#define JGUI_PRIVATE_COMMON_DEBUG_H
 
 #include <stdbool.h>
-#include <stddef.h>
 
-#ifndef NDEBUG
+#include "constants.h"
+
+#if JG_DEBUG
 void jg_assert_handler(
     bool test,
     const char* test_string,
@@ -26,15 +28,5 @@ void jg_assert_handler(
 #else
 #   define JG_ASSERT(message, ...)
 #endif
-
-size_t jg_strnlen(const char *s, size_t max_size);
-
-typedef struct jg_index_s {
-    const char** keys;
-    size_t count;
-} jg_index;
-
-void jg_index_sort(jg_index* index);
-int jg_index_search(const jg_index* index, const char* key);
 
 #endif

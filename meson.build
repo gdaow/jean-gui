@@ -27,16 +27,20 @@ yaml_project = cmake.subproject(
 )
 yaml = yaml_project.dependency('yaml')
 
-jg_includes = include_directories('include')
+jg_includes = include_directories('modules/jgui/public')
 
 jg_src = files(
-    'src/jgui/context.c',
-    'src/jgui/object.c',
-    'src/jgui/private/memory.c',
-    'src/jgui/private/misc.c',
-    'src/jgui/private/stack.c',
-    'src/jgui/template.c',
-    'src/jgui/value.c',
+    'modules/jgui/private/common/arena.c',
+    'modules/jgui/private/common/debug.c',
+    'modules/jgui/private/common/index.c',
+    'modules/jgui/private/common/stack.c',
+    'modules/jgui/private/common/string.c',
+    'modules/jgui/private/class.c',
+    'modules/jgui/private/context.c',
+    'modules/jgui/private/module.c',
+    'modules/jgui/private/object.c',
+    'modules/jgui/private/template.c',
+    'modules/jgui/private/value.c',
 )
 
 jg_lib = static_library(
@@ -55,12 +59,12 @@ jg_dep = declare_dependency(
 minunit_includes = include_directories('subprojects/minunit')
 
 jg_test_src = files(
-    'tests/fixtures/user_model.c',
-    'tests/main.c',
-    'tests/test_context.c',
-    'tests/test_object.c',
-    'tests/test_template.c',
-    'tests/test_value.c',
+    'modules/tests/fixtures/user_model.c',
+    'modules/tests/main.c',
+    'modules/tests/test_context.c',
+    'modules/tests/test_object.c',
+    'modules/tests/test_template.c',
+    'modules/tests/test_value.c',
 )
 
 executable(
@@ -70,7 +74,7 @@ executable(
     include_directories: [minunit_includes]
 )
 
-executable('jg-sample', 'src/samples/main.c', dependencies: [jg_dep])
+executable('jg-sample', 'modules/samples/main.c', dependencies: [jg_dep])
 
 clangtidy = find_program('clang-tidy', required: false)
 if clangtidy.found()

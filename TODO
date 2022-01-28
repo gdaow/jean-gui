@@ -9,5 +9,6 @@
    and data binding updates trigerred by calling event handlers. Only the binding system could access
    property getter / setters.
  * Handle OOM
- * Reflechir a la gestion d'erreur dans les get / set / method call...
+ * Design error handling in get / set / call...
+ * Make arena generic using an allocator function and a state object (could be usefull to override class allocator)
  

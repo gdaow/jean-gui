@@ -4,14 +4,13 @@
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
- * 
- * Templating allows to create a schema for a hierarchy of objects.
  *
- * TODO: Finish documentation here.
+ * TODO:
+ *  - document.
  *
  */
- #ifndef INCLUDE_JEAN_GUI_TEMPLATE_H
- #define INCLUDE_JEAN_GUI_TEMPLATE_H
+ #ifndef JGUI_PUBLIC_JGUI_TEMPLATE_H
+ #define JGUI_PUBLIC_JGUI_TEMPLATE_H
 
 typedef struct jg_class_s jg_class;
 typedef struct jg_module_s jg_module;

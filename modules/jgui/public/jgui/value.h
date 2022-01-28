@@ -5,16 +5,17 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Generic literal values wrapper.
- * TODO: Detail.
+ * TODO:
+ *   - document.
+ *   - explain choice made to wrap only int and double numerical types (see below)
  *
  * ui-ligi value wrapper only support int and double, and no ulong, float... because the combinatorial
  * of default conversion between supported types rapidly exploses, and with it the complexity.
- * TODO: detail this and the choice I made.
  *
  */
-#ifndef INCLUDE_JEAN_GUI_VALUE_H_
-#define INCLUDE_JEAN_GUI_VALUE_H_
+#ifndef JGUI_PUBLIC_JGUI_VALUE_H
+#define JGUI_PUBLIC_JGUI_VALUE_H
+
 #include <stdbool.h>
 
 /* This struct member's are not meant to be used directly, and are not guaranteed to stay stable.

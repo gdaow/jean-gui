@@ -5,22 +5,26 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Simple stack implementation.
+ * TODO:
+ *  - document.
  *
  */
+ #ifndef JGUI_PRIVATE_COMMON_STACK_H
+ #define JGUI_PRIVATE_COMMON_STACK_H
+
  #include <stddef.h>
 
-typedef struct jg_stack_s jg_stack;
-
-struct jg_stack_s {
+typedef struct jg_stack_s {
     char* top;
     char* base;
     size_t size;
     size_t element_size;
-};
+} jg_stack;
 
 void jg_stack_init(jg_stack* stack, size_t element_size);
 void jg_stack_clean(jg_stack* stack);
 void jg_stack_push(jg_stack* stack, void* element);
 void* jg_stack_peek(jg_stack* stack);
 void* jg_stack_pop(jg_stack* stack);
+
+#endif

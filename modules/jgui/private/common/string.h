@@ -5,12 +5,15 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
- * Global context containing loaded modules, error handlers...
- * 
- * TODO: Finish documentation here.
+ * TODO:
+ *  - document.
  *
  */
+#ifndef JGUI_PRIVATE_COMMON_STRING_H
+#define JGUI_PRIVATE_COMMON_STRING_H
 
-typedef struct jg_wx_app_s jg_wx_app;
+#include <stddef.h>
 
-void jg_wx_app_run(jg_wx_app* app);
+size_t jg_strnlen(const char *s, size_t max_size);
+
+#endif

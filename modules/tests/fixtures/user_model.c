@@ -9,8 +9,10 @@
 #include <stdalign.h>
 
 #include <jgui/object.h>
+#include <jgui/class.h>
 #include <jgui/value.h>
 
+#include "jgui/module.h"
 #include "user_model.h"
 
 const char* user_class_id = "User";
@@ -69,7 +71,7 @@ static jg_value user_has_permission_impl(jg_value* arguments) {
 }
 
 void register_user_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(
+    jg_class_definition* class_ = jg_module_add_class(
         module,
         user_class_id,
         jg_object_class_id,
@@ -99,7 +101,7 @@ static jg_value admin_has_permission(jg_value* arguments) {
 
 
 void register_admin_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(
+    jg_class_definition* class_ = jg_module_add_class(
         module,
         admin_class_id,
         user_class_id,
@@ -121,7 +123,7 @@ static jg_value team_get_name(const void* object) {
 }
 
 void register_team_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_class_new(
+    jg_class_definition* class_ = jg_module_add_class(
         module,
         team_class_id,
         jg_object_class_id,

@@ -8,6 +8,7 @@
 #include <string.h>
 #include <minunit.h>
 
+#include <jgui/module.h>
 #include <jgui/object.h>
 #include <jgui/template.h>
 

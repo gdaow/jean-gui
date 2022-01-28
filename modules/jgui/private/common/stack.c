@@ -4,22 +4,22 @@
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
- * 
- * Simple stack implementation.
  *
  */
- #include <assert.h>
- #include <stddef.h>
- #include <stdint.h>
  #include <stdlib.h>
  #include <string.h>
 
  #include "stack.h"
+ #include "debug.h"
 
 static const size_t GROW_SIZE = 0x10;
 
 void jg_stack_init(jg_stack* stack, size_t element_size) {
+    JG_ASSERT(stack != NULL);
+    JG_ASSERT(element_size > 0);
+
     void* base = calloc(GROW_SIZE, element_size);
+    JG_ASSERT(stack != NULL); // TODO(corentin@ki-dour.org) handle error.
     *stack = (jg_stack) {
         .top = base,
         .base = base,
@@ -29,11 +29,14 @@ void jg_stack_init(jg_stack* stack, size_t element_size) {
 }
 
 void jg_stack_clean(jg_stack* stack) {
+    JG_ASSERT(stack != NULL);
     free(stack->base);
 }
 
 void jg_stack_push(jg_stack* stack, void* element) {
-    assert(stack->base + stack->size >= stack->top);
+    JG_ASSERT(stack != NULL);
+    JG_ASSERT(stack->base + stack->size >= stack->top);
+
     if(stack->base + stack->size == stack->top) { 
         size_t old_size = stack->size;
         stack->size = old_size + GROW_SIZE * stack->element_size;
@@ -46,12 +49,15 @@ void jg_stack_push(jg_stack* stack, void* element) {
 }
 
 void* jg_stack_peek(jg_stack* stack) {
+    JG_ASSERT(stack != NULL);
+    JG_ASSERT(stack->base + stack->size >= stack->top);
     return stack->top - stack->element_size;
 }
 
-
 void* jg_stack_pop(jg_stack* stack) {
+    JG_ASSERT(stack != NULL);
+    JG_ASSERT(stack->base <= stack->top - stack->element_size);
+
     stack->top -= stack->element_size;
-    assert(stack->base <= stack->top);
     return stack->top;
 }
