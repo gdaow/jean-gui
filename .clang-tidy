@@ -1,18 +1,20 @@
 ---
 Checks: '
   *,
-  -altera-*,
   -abseil-*,
+  -altera-*,
   -android-*,
   -boost-*,
   -bugprone-easily-swappable-parameters,
-  -cppcoreguidelines-*,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  -cppcoreguidelines-*,
   -fuschia-*,
   -hicpp-*,
   -llvm*,
   -misc-no-recursion,
   -modernize-use-return-type,
+  -modernize-use-trailing-return-type,
+  -modernize-use-using,
   -objc-*,
   -zircon-*'
 WarningsAsErrors: 'true'
