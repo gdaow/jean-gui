@@ -14,6 +14,12 @@
             "env": {
                 "CK_FORK": "no"
             }
+        },
+        {
+            "type": "python",
+            "request": "launch",
+            "name": "Generate WX bindings",
+            "program": "${workspaceFolder}/tools/wx-bind/main.py"
         }
     ]
 }

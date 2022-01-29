@@ -13,7 +13,7 @@
 
 #include <jgui/wx/app.h>
 
-struct jwx_app_s : public wxApp {
+class jwx_app_s : public wxApp {
     ~jwx_app_s() override = default;
     bool OnInit() override;
 };

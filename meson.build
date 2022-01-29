@@ -9,6 +9,7 @@ subdir('modules/jgui')
 subdir('modules/jgui-wx')
 subdir('modules/samples')
 subdir('modules/tests')
+subdir('tools/wx-bind')
 
 clangtidy = find_program('clang-tidy', required: false)
 if clangtidy.found()
