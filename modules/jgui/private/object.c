@@ -17,7 +17,7 @@
 
 typedef struct jg_object_header_s {
     const jg_class* class_;
-    alignas(max_align_t) void* object;
+    max_align_t object[];
 } jg_object_header;
 
 const char* jg_object_class_id = "Object";
