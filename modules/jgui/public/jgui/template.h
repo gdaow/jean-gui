@@ -13,7 +13,7 @@
  #define JGUI_PUBLIC_JGUI_TEMPLATE_H
 
 typedef struct jg_class_s jg_class;
-typedef struct jg_module_s jg_module;
+typedef struct jg_context_s jg_context;
 typedef struct jg_template_s jg_template;
 
 /**
@@ -21,7 +21,7 @@ typedef struct jg_template_s jg_template;
  * 
  * @return jg_template* 
  */
-jg_template* jg_template_from_string(const char* source, jg_module* module);
+jg_template* jg_template_from_string(const char* source, jg_context* context);
 
 /**
  * @brief Destroy the given template_ node, and all of it's children.

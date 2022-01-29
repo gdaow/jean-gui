@@ -11,29 +11,26 @@
 
 #include <minunit.h>
 
-#include <jgui/module.h>
+#include <jgui/context.h>
 #include <jgui/object.h>
 
 #include "fixtures/user_model.h"
 
-static jg_module* module = NULL;
+static jg_context* context = NULL;
 static const jg_class* user_class = NULL;
 static const jg_class* admin_class = NULL;
-
-void _dummy_type(jg_class_definition* class_) {
-    (void)class_;
-}
 
 /** jg_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
 MU_TEST(test_jg_class_get) {
-    const jg_class* user_class = jg_module_get_class(module, user_class_id);
+    const jg_class* user_class = jg_context_get_class(context, user_model_ns, user_class_id);
     mu_check(user_class != NULL);
 
-    const jg_class* admin_class = jg_module_get_class(module, admin_class_id);
+    const jg_class* admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
     mu_check(admin_class != NULL);
 
-    mu_check(jg_module_get_class(module, "Dummy") == NULL);
+    mu_check(jg_context_get_class(context, user_model_ns, "DummyClass") == NULL);
+    mu_check(jg_context_get_class(context, "https://ki-dour.org/jg/dummy-ns", admin_class_id) == NULL);
 }
 
 static void test_constructors(const jg_class* class_, const char* expected_class_id) {
@@ -103,16 +100,19 @@ MU_TEST(test_jg_object_call) {
 }
 
 static void setup() {
-    module = user_model_module_new();
-    user_class = jg_module_get_class(module, user_class_id);
-    admin_class = jg_module_get_class(module, admin_class_id);
+    context = jg_context_load((jg_plugin[]) {
+        user_model_plugin,
+        NULL
+    });
+    user_class = jg_context_get_class(context, user_model_ns, user_class_id);
+    admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
 }
 
 static void teardown() {
     admin_class = NULL;
     user_class = NULL;
-    jg_module_free(module);
-    module = NULL;
+    jg_context_free(context);
+    context = NULL;
 }
 
 MU_TEST_SUITE(object_suite) {

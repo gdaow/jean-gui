@@ -9,14 +9,16 @@
  *
  */
 #pragma once
+#include "jgui/context.h"
 #include <stdbool.h>
 
-typedef struct jg_module_s jg_module;
+typedef struct jg_context_definition_s jg_context_definition;
 
 typedef struct admin_s admin;
 typedef struct team_s team;
 typedef struct user_s user;
 
+extern const char* user_model_ns;
 extern const char* user_class_id;
 extern const char* admin_class_id;
 extern const char* team_class_id;
@@ -45,6 +47,6 @@ struct team_s {
     const char* name;
 };
 
-jg_module* user_model_module_new();
+void user_model_plugin(jg_context_definition* context_definition);
 
 bool user_has_permission(user* user, permission_flags flags);

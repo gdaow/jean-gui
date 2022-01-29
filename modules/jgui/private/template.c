@@ -52,12 +52,14 @@ struct jg_template_s {
 };
 
 static void parse_yaml(jg_template* template_, const char* source);
-jg_template* jg_template_from_string(const char* source, jg_module* module) {
+jg_template* jg_template_from_string(const char* source, jg_context* context) {
+    (void)source;
+    (void)context;
     jg_arena* allocator = jg_arena_new(0);
     jg_template* template = jg_arena_alloc(allocator, sizeof(jg_template), alignof(jg_template));
     *template = (jg_template) {
         .allocator = allocator,
-        .module = module,
+        //.module = module,
         .root_node = NULL
     };
 

@@ -92,8 +92,8 @@ MU_TEST(test_jg_value_raw) {
 
 /** jg_object, jg_is_object and jg_to_object should correctly handle boolean values. */
 MU_TEST(test_jg_value_object) {
-    jg_module* module = user_model_module_new();
-    const jg_class* admin_class = jg_module_get_class(module, admin_class_id);
+    jg_context* context = jg_context_load((jg_plugin[]) { user_model_plugin, NULL });
+    const jg_class* admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
     void* test_object = jg_object_new(admin_class); 
 
     jg_value value = jg_object(test_object);
@@ -103,7 +103,7 @@ MU_TEST(test_jg_value_object) {
     mu_check(jg_to_object(value) == test_object);
 
     jg_object_free(test_object);
-    jg_module_free(module);
+    jg_context_free(context);
 }
 
 MU_TEST_SUITE(value_suite) {

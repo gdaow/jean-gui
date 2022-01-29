@@ -18,7 +18,19 @@ struct jg_context_s {
     jg_error_handler error_handler;
 };
 
+
 static void default_error_handler(jg_error_code error_code, const char* message);
+
+jg_context* jg_context_load(jg_plugin* plugins) {
+    (void)plugins;
+    return NULL;
+}
+
+jg_module_definition* jg_context_add_module(jg_context_definition* context_definition, const char* namespace) {
+    (void)context_definition;
+    (void)namespace;
+    return NULL;
+}
 
 jg_context* jg_context_new() {
     jg_context* new_context = malloc(sizeof(jg_context));
@@ -36,6 +48,13 @@ void jg_context_free(jg_context* context) {
     free(context);
 }
 
+jg_class* jg_context_get_class(jg_context* context, const char* namespace, const char* id) {
+    (void)context;
+    (void)namespace;
+    (void)id;
+    return NULL;
+}
+
 void jg_error(const jg_context* context, jg_error_code error_code, const char* format, ...) {
     JG_ASSERT(context != NULL);
     JG_ASSERT(context->error_handler != NULL);
@@ -50,12 +69,12 @@ void jg_error(const jg_context* context, jg_error_code error_code, const char* f
     context->error_handler(error_code, error_message);
 }
 
-void jg_set_error_handler(jg_context* context, jg_error_handler handler) {
-    JG_ASSERT(context != NULL);
+void jg_set_error_handler(jg_context_definition* context_definition, jg_error_handler handler) {
+    JG_ASSERT(context_definition != NULL);
     if(handler == NULL) {
         handler = default_error_handler;
     }
-    context->error_handler = handler;
+    //context->error_handler = handler;
 }
 
 static void default_error_handler(jg_error_code error_code, const char* message) {

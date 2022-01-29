@@ -208,6 +208,7 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
         .member_array = pool->members,
         .constructor = class_definition->constructor,
         .destructor = class_definition->destructor
+        
     };
 
     pool->members += new_class->member_index.count;

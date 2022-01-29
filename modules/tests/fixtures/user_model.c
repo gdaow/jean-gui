@@ -15,6 +15,7 @@
 #include "jgui/module.h"
 #include "user_model.h"
 
+const char* user_model_ns = "https://ki-dour.org/jg/tests/user-model";
 const char* user_class_id = "User";
 const char* admin_class_id = "Admin";
 const char* team_class_id = "Team";
@@ -23,12 +24,11 @@ void register_user_class(jg_module_definition* module);
 void register_admin_class(jg_module_definition* module);
 void register_team_class(jg_module_definition* module);
 
-jg_module* user_model_module_new() {
-    jg_module_definition* module = jg_module_new();
+void user_model_plugin(jg_context_definition* context_definition) {
+    jg_module_definition* module = jg_context_add_module(context_definition, user_model_ns);
     register_user_class(module);
     register_admin_class(module);
     register_team_class(module);
-    return jg_module_build(module);
 }
 
 static jg_value user_get_name(const void* object) {

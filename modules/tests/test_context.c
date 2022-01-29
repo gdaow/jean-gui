@@ -11,7 +11,6 @@
 
 #include <jgui/context.h>
 
-jg_context* context = NULL;
 static char* last_error_message = NULL;
 static jg_error_code last_error_code;
 
@@ -26,25 +25,24 @@ static void error_handler(jg_error_code error_code, const char* message) {
     last_error_code = error_code;
 }
 
+void error_handler_plugin(jg_context_definition* context_definition) {
+    jg_set_error_handler(context_definition, error_handler);
+}
+
+
 MU_TEST(test_error_handler) {
     assert(last_error_message == NULL);
     assert(last_error_code == JG_ERROR_NONE);
-    jg_set_error_handler(context, error_handler);
+
+    jg_context* context = jg_context_load((jg_plugin[]) { error_handler_plugin, NULL });
     jg_error(context, JG_ERROR_CLASS_UNDEFINED, "Jean-GUI drinks a %s.", "coffee");
     assert(strcmp(last_error_message, "Jean-GUI drinks a coffee.") == 0);
     assert(last_error_code == JG_ERROR_CLASS_UNDEFINED);
-}
 
-static void setup() {
-    context = jg_context_new();
-}
-
-static void teardown() {
     jg_context_free(context);
 }
 
 MU_TEST_SUITE(context_suite) {
-    MU_SUITE_CONFIGURE(setup, teardown);
     MU_RUN_TEST(test_error_handler);
 }
 

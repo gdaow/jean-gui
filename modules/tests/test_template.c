@@ -15,7 +15,7 @@
 #include "fixtures/user_model.h"
 
 
-jg_module* module = NULL;
+jg_context* context = NULL;
 
 MU_TEST(test_jg_template_scalar_property) {
     jg_template* admin_template = jg_template_from_string(
@@ -23,7 +23,7 @@ MU_TEST(test_jg_template_scalar_property) {
         "name: Dr. Meeseeks\n"
         "team: !Team\n"
         "  name: Team Meeseeks\n",
-        module
+        context
     );
 
     admin* admin = (struct admin_s*)jg_template_instanciate(admin_template);
@@ -34,12 +34,15 @@ MU_TEST(test_jg_template_scalar_property) {
 }
 
 static void setup() {
-    module = user_model_module_new();
+    context = jg_context_load((jg_plugin[]) {
+        user_model_plugin,
+        NULL
+    });
 }
 
 static void teardown() {
-    jg_module_free(module);
-    module = NULL;
+    jg_context_free(context);
+    context = NULL;
 }
 
 MU_TEST_SUITE(template_suite) {
