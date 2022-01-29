@@ -17,6 +17,9 @@
 typedef struct jg_class_definition_s jg_class_definition;
 typedef struct jg_class_s jg_class;
 
+typedef void (*jg_constructor)(void* object);
+typedef void (*jg_destructor)(void* object);
+
 typedef jg_value (*jg_method)(jg_value* arguments);
 
 /** Callback for voids property getter.*/
@@ -25,15 +28,12 @@ typedef jg_value (*jg_getter_t)(const void*);
 /** Callback for voids property setter.*/
 typedef void (*jg_setter_t)(void*, const jg_value);
 
+void jg_class_set_constructor(jg_class_definition* class_definition, jg_constructor constructor, jg_destructor destructor);
 
-void jg_class_add_method(
-    jg_class_definition* class_,
-    const char* id,
-    jg_method method
-);
+void jg_class_add_method(jg_class_definition* class_definition, const char* id, jg_method method);
 
 void jg_class_add_property(
-    jg_class_definition* class_,
+    jg_class_definition* class_definition,
     const char* id,
     jg_getter_t getter,
     jg_setter_t setter

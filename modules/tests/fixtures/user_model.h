@@ -32,6 +32,8 @@ typedef enum {
 struct user_s {
     const char* name;
     team* team;
+    const char* constructed_class_id;
+    const char** destructed_class_id;
 };
 
 struct admin_s {

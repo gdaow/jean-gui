@@ -13,6 +13,12 @@
 #include "class.h"
 #include "module.h"
 
+void jg_class_set_constructor(jg_class_definition* class_definition, jg_constructor constructor, jg_destructor destructor) {
+    (void)class_definition;
+    (void)constructor;
+    (void)destructor;
+}
+
 
 // Add a previously constructed member definition to a class definition.
 static void add_member(
@@ -21,11 +27,7 @@ static void add_member(
     const jg_member_definition* member_definition
 );
 
-void jg_class_add_method(
-    jg_class_definition* class_definition,
-    const char* id,
-    jg_method method
-) {
+void jg_class_add_method(jg_class_definition* class_definition, const char* id, jg_method method) {
     JG_ASSERT(class_definition != NULL);
     JG_ASSERT(id != NULL);
     JG_ASSERT(method != NULL);

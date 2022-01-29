@@ -55,6 +55,18 @@ static void user_set_team(void* object, jg_value value) {
 
 static const char* user_has_permission_id = "has_permissions";
 
+void user_constructor(void* object) {
+    user* user = object;
+    user->constructed_class_id = user_class_id;
+}
+
+void user_destructor(void* object) {
+    user* user = object;
+    if(user->destructed_class_id) {
+        *(user->destructed_class_id) = user_class_id;
+    }
+}
+
 bool user_has_permission(user* user, permission_flags flags) {
     return jg_to_bool(
         jg_object_call(user, user_has_permission_id, (jg_value[]) {
@@ -78,6 +90,7 @@ void register_user_class(jg_module_definition* module) {
         sizeof(user),
         alignof(user)
     );
+    jg_class_set_constructor(class_, user_constructor, user_destructor);
     jg_class_add_property(class_, "name", user_get_name, user_set_name);
     jg_class_add_property(class_, "team", user_get_team, user_set_team);
     jg_class_add_method(class_, user_has_permission_id, user_has_permission_impl);
@@ -91,6 +104,18 @@ static jg_value admin_get_role(const void* object) {
 static void admin_set_role(void* object, jg_value value) {
     admin* admin = object;
     admin->role = jg_to_string(value);
+}
+
+static void admin_constructor(void* object) {
+    admin* admin = object;
+    admin->base.constructed_class_id = admin_class_id;
+}
+
+static void admin_destructor(void* object) {
+    admin* admin = object;
+    if(admin->base.destructed_class_id) {
+        *(admin->base.destructed_class_id) = user_class_id;
+    }
 }
 
 static jg_value admin_has_permission(jg_value* arguments) {
@@ -108,6 +133,7 @@ void register_admin_class(jg_module_definition* module) {
         sizeof(admin),
         alignof(admin)
     );
+    jg_class_set_constructor(class_, admin_constructor, admin_destructor);
     jg_class_add_property(class_, "role", admin_get_role, admin_set_role);
     jg_class_add_method(class_, user_has_permission_id, admin_has_permission);
 }

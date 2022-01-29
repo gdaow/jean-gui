@@ -36,6 +36,25 @@ MU_TEST(test_jg_class_get) {
     mu_check(jg_module_get_class(module, "Dummy") == NULL);
 }
 
+static void test_constructors(const jg_class* class_, const char* expected_class_id) {
+    user* user = jg_object_new(class_);
+
+    mu_assert_string_eq(user->constructed_class_id, expected_class_id);
+
+    const char* destroyed_class_id;
+    mu_check(user->destructed_class_id == NULL);
+    user->destructed_class_id = &destroyed_class_id;
+
+    jg_object_free(user);
+    mu_assert_string_eq(destroyed_class_id, expected_class_id);
+}
+
+/** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
+MU_TEST(test_jg_object_constructor) {
+    test_constructors(user_class, user_class_id);
+    test_constructors(admin_class, admin_class_id);
+}
+
 /** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
 MU_TEST(test_jg_object_get) {
     admin* admin = jg_object_new(admin_class);
@@ -99,6 +118,7 @@ static void teardown() {
 MU_TEST_SUITE(object_suite) {
     MU_SUITE_CONFIGURE(setup, teardown);
     MU_RUN_TEST(test_jg_class_get);
+    MU_RUN_TEST(test_jg_object_constructor);
     MU_RUN_TEST(test_jg_object_get);
     MU_RUN_TEST(test_jg_object_set);
     MU_RUN_TEST(test_jg_object_call);
