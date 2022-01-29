@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Unit Tests",
-            "program": "${workspaceFolder}/.build/jg-tests",
+            "program": "${workspaceFolder}/.build/modules/tests/jg-tests",
             "args": [],
             "cwd": "${workspaceFolder}",
             "env": {

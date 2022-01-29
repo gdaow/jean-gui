@@ -13,6 +13,7 @@
 
 #include "common/debug.h"
 #include "class.h"
+#include "jgui/class.h"
 
 typedef struct jg_object_header_s {
     const jg_class* class_;
@@ -21,20 +22,44 @@ typedef struct jg_object_header_s {
 
 const char* jg_object_class_id = "Object";
 
-void* jg_object_new(jg_class* class_) {
+void* jg_object_new(const jg_class* class_) {
     JG_ASSERT(class_ != NULL);
+
     size_t total_size = sizeof(jg_object_header) + class_->size;
+
     jg_object_header* header = calloc(1, total_size);
-    header->class_ = class_;
     JG_ASSERT(header != NULL); // TODO(corentin@ki-dour.org) handle error.
-    return header + 1;
+
+    header->class_ = class_;
+    void* object = header + 1;
+
+    while(class_) {
+        jg_constructor constructor = class_->constructor;
+        if(constructor) {
+            constructor(object);
+            break;
+        }
+        class_ = class_->parent;
+    }
+
+    return object;
 }
 
 void jg_object_free(void* object) {
     JG_ASSERT(object != NULL);
+    jg_object_header* header = (jg_object_header*)object - 1;
+    const jg_class* class_ = header->class_;
 
-    jg_object_header* header = object;
-    free(header - 1);
+    while(class_) {
+        jg_destructor destructor = class_->destructor;
+        if(destructor) {
+            destructor(object);
+            break;
+        }
+        class_ = class_->parent;
+    }
+
+    free(header);
 }
 
 static const jg_class* get_class(const void* object);

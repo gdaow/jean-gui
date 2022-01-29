@@ -39,14 +39,14 @@ MU_TEST(test_jg_class_get) {
 static void test_constructors(const jg_class* class_, const char* expected_class_id) {
     user* user = jg_object_new(class_);
 
-    mu_assert_string_eq(user->constructed_class_id, expected_class_id);
+    mu_assert_string_eq(expected_class_id, user->constructed_class_id);
 
     const char* destroyed_class_id;
     mu_check(user->destructed_class_id == NULL);
     user->destructed_class_id = &destroyed_class_id;
 
     jg_object_free(user);
-    mu_assert_string_eq(destroyed_class_id, expected_class_id);
+    mu_assert_string_eq(expected_class_id, destroyed_class_id);
 }
 
 /** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */

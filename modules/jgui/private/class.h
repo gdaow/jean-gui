@@ -28,6 +28,8 @@ struct jg_class_definition_s {
     size_t align;
     jg_class_definition* next_class;
     jg_member_definition* first_member;
+    jg_constructor constructor;
+    jg_destructor destructor;
 };
 
 typedef enum {
@@ -59,6 +61,8 @@ struct jg_class_s {
     jg_index member_index;
     const jg_class* parent;
     jg_member* member_array;
+    jg_constructor constructor;
+    jg_destructor destructor;
     size_t size;
     size_t align;
 };

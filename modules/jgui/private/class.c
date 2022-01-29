@@ -14,9 +14,8 @@
 #include "module.h"
 
 void jg_class_set_constructor(jg_class_definition* class_definition, jg_constructor constructor, jg_destructor destructor) {
-    (void)class_definition;
-    (void)constructor;
-    (void)destructor;
+    class_definition->constructor = constructor;
+    class_definition->destructor = destructor;
 }
 
 
@@ -207,6 +206,8 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
         .align = class_definition->align,
         .member_index = build_member_index(class_definition->first_member, pool),
         .member_array = pool->members,
+        .constructor = class_definition->constructor,
+        .destructor = class_definition->destructor
     };
 
     pool->members += new_class->member_index.count;

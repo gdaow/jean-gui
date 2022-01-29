@@ -114,7 +114,7 @@ static void admin_constructor(void* object) {
 static void admin_destructor(void* object) {
     admin* admin = object;
     if(admin->base.destructed_class_id) {
-        *(admin->base.destructed_class_id) = user_class_id;
+        *(admin->base.destructed_class_id) = admin_class_id;
     }
 }
 
