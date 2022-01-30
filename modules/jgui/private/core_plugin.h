@@ -11,11 +11,11 @@
 #ifndef JGUI_PRIVATE_CORE_PLUGIN_H
 #define JGUI_PRIVATE_CORE_PLUGIN_H
 
-typedef struct jg_context_definition_s jg_context_definition;
+typedef struct jg_context_builder_s jg_context_builder;
 
 /**
  * Base functionalities of Jean GUI.
  */
-void jgui_core_plugin(jg_context_definition* context_definition);
+void jgui_core_plugin(jg_context_builder* context_builder);
 
 #endif

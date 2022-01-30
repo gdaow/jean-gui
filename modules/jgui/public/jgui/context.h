@@ -20,10 +20,10 @@ typedef enum {
 
 typedef struct jg_context_s jg_context;
 typedef struct jg_class_s jg_class;
-typedef struct jg_context_definition_s jg_context_definition;
-typedef struct jg_module_definition_s jg_module_definition;
+typedef struct jg_context_builder_s jg_context_builder;
+typedef struct jg_module_builder_s jg_module_builder;
 typedef void (*jg_error_handler)(jg_error_code error_code, const char* message);
-typedef void (*jg_plugin)(jg_context_definition*);
+typedef void (*jg_plugin)(jg_context_builder*);
 
 /**
  * Create a new context from a plugin array
@@ -33,7 +33,7 @@ jg_context* jg_context_load(jg_plugin* plugins);
 /**
  * Add a class module to a context, with the given namespace.
  */
-jg_module_definition* jg_context_add_module(jg_context_definition* context_definition, const char* namespace);
+jg_module_builder* jg_context_add_module(jg_context_builder* context_builder, const char* namespace);
 
 /**
  * Create a new context.
@@ -60,6 +60,6 @@ void jg_error(const jg_context* context, jg_error_code error_code, const char* f
 /**
  * Set the error handler for the given context.
  */
-void jg_set_error_handler(jg_context_definition* context_definition, jg_error_handler handler);
+void jg_set_error_handler(jg_context_builder* context_builder, jg_error_handler handler);
 
 #endif

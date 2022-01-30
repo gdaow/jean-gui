@@ -2,7 +2,7 @@ cmake = import('cmake')
 
 yaml_project = cmake.subproject(
     'libyaml',
-    default_options: [
+    override_options: [
         'warning_level=0',
         'werror=false',
     ]

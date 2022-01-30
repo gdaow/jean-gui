@@ -23,7 +23,7 @@ bool jwx_app_s::OnInit() {
     return true;
 }
 
-void jwx_app_class_register(jg_module_definition* module) {
+void jwx_app_class_register(jg_module_builder* module) {
     jg_module_add_class(
         module,
         jwx_app_class_id,

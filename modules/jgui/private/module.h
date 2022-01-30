@@ -14,17 +14,17 @@
 #include "common/index.h"
 
 typedef struct jg_allocator_s jg_allocator;
-typedef struct jg_class_definition_s jg_class_definition;
+typedef struct jg_class_builder_s jg_class_builder;
 typedef struct jg_class_s jg_class;
-typedef struct jg_module_definition_s jg_module_definition;
+typedef struct jg_module_builder_s jg_module_builder;
 typedef struct jg_module_s jg_module;
 typedef struct jg_pool_s jg_pool;
 
-struct jg_module_definition_s {
+struct jg_module_builder_s {
     jg_allocator* allocator;
     const char* namespace;
-    jg_class_definition* first_class;
-    jg_module_definition* next_module;
+    jg_class_builder* first_class;
+    jg_module_builder* next_module;
 };
 
 struct jg_module_s {
@@ -32,7 +32,7 @@ struct jg_module_s {
     jg_class* class_array;
 };
 
-jg_index jg_module_build_index(jg_module_definition* first_module_definition, jg_pool* pools);
+jg_index jg_module_build_index(jg_module_builder* first_module_builder, jg_pool* pools);
 
 jg_class* jg_module_get_class(jg_module* module, const char* id);
 

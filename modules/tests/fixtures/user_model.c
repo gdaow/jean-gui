@@ -21,12 +21,12 @@ const char* user_class_id = "User";
 const char* admin_class_id = "Admin";
 const char* team_class_id = "Team";
 
-void register_user_class(jg_module_definition* module);
-void register_admin_class(jg_module_definition* module);
-void register_team_class(jg_module_definition* module);
+void register_user_class(jg_module_builder* module);
+void register_admin_class(jg_module_builder* module);
+void register_team_class(jg_module_builder* module);
 
-void user_model_plugin(jg_context_definition* context_definition) {
-    jg_module_definition* module = jg_context_add_module(context_definition, user_model_ns);
+void user_model_plugin(jg_context_builder* context_builder) {
+    jg_module_builder* module = jg_context_add_module(context_builder, user_model_ns);
     register_user_class(module);
     register_admin_class(module);
     register_team_class(module);
@@ -83,8 +83,8 @@ static jg_value user_has_permission_impl(jg_value* arguments) {
     return jg_bool(jg_to_int(arguments[0]) & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
 }
 
-void register_user_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_module_add_class(
+void register_user_class(jg_module_builder* module) {
+    jg_class_builder* class_ = jg_module_add_class(
         module,
         user_class_id,
         jg_core_ns,
@@ -126,8 +126,8 @@ static jg_value admin_has_permission(jg_value* arguments) {
 }
 
 
-void register_admin_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_module_add_class(
+void register_admin_class(jg_module_builder* module) {
+    jg_class_builder* class_ = jg_module_add_class(
         module,
         admin_class_id,
         NULL,
@@ -149,8 +149,8 @@ static jg_value team_get_name(const void* object) {
     return jg_string(team->name);
 }
 
-void register_team_class(jg_module_definition* module) {
-    jg_class_definition* class_ = jg_module_add_class(
+void register_team_class(jg_module_builder* module) {
+    jg_class_builder* class_ = jg_module_add_class(
         module,
         team_class_id,
         jg_core_ns,

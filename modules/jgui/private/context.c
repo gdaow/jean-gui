@@ -30,63 +30,63 @@ struct jg_context_s {
     jg_index module_index;
 };
 
-typedef struct jg_context_definition_s {
+typedef struct jg_context_builder_s {
     jg_allocator* allocator;
-    jg_module_definition* first_module;
+    jg_module_builder* first_module;
     jg_error_handler error_handler;
-} jg_context_definition;
+} jg_context_builder;
 
 static void default_error_handler(jg_error_code error_code, const char* message);
 
-static jg_context* build_context(jg_context_definition* context_definition);
+static jg_context* build_context(jg_context_builder* context_builder);
 
 jg_context* jg_context_load(jg_plugin* plugins) {
     jg_allocator* allocator = jg_arena_new(0);
-    jg_context_definition* context_definition = jg_allocate_aligned(
+    jg_context_builder* context_builder = jg_allocate_aligned(
         allocator,
-        sizeof(jg_context_definition),
-        alignof(jg_context_definition)
+        sizeof(jg_context_builder),
+        alignof(jg_context_builder)
     );
 
-    JG_ASSERT(context_definition != NULL); // TODO(corentin@ki-dour.org) handle error.
+    JG_ASSERT(context_builder != NULL); // TODO(corentin@ki-dour.org) handle error.
 
-    *context_definition = (jg_context_definition) {
+    *context_builder = (jg_context_builder) {
         .allocator = allocator,
         .first_module = NULL
     };
 
-    jgui_core_plugin(context_definition);
+    jgui_core_plugin(context_builder);
     jg_plugin* current_plugin = plugins;
     while(*current_plugin) {
-        (**current_plugin)(context_definition);
+        (**current_plugin)(context_builder);
         ++current_plugin;
     }
 
-    return build_context(context_definition);
+    return build_context(context_builder);
 }
 
-jg_module_definition* jg_context_add_module(jg_context_definition* context_definition, const char* namespace) {
-    (void)context_definition;
+jg_module_builder* jg_context_add_module(jg_context_builder* context_builder, const char* namespace) {
+    (void)context_builder;
     (void)namespace;
     jg_allocator* allocator = jg_arena_new(0);
-    jg_module_definition* module_definition = jg_allocate_aligned(
+    jg_module_builder* module_builder = jg_allocate_aligned(
         allocator,
-        sizeof(jg_module_definition),
-        alignof(jg_module_definition)
+        sizeof(jg_module_builder),
+        alignof(jg_module_builder)
     );
 
-    JG_ASSERT(module_definition != NULL); // TODO(corentin@ki-dour.org) handle error.
+    JG_ASSERT(module_builder != NULL); // TODO(corentin@ki-dour.org) handle error.
 
-    *module_definition = (jg_module_definition) {
-        .allocator = context_definition->allocator,
+    *module_builder = (jg_module_builder) {
+        .allocator = context_builder->allocator,
         .namespace = jg_copy_identifier(allocator, namespace),
         .first_class = NULL,
-        .next_module = context_definition->first_module
+        .next_module = context_builder->first_module
     };
 
-    context_definition->first_module = module_definition;
+    context_builder->first_module = module_builder;
 
-    return module_definition;
+    return module_builder;
 }
 
 void jg_context_free(jg_context* context) {
@@ -120,12 +120,12 @@ void jg_error(const jg_context* context, jg_error_code error_code, const char* f
     context->error_handler(error_code, error_message);
 }
 
-void jg_set_error_handler(jg_context_definition* context_definition, jg_error_handler handler) {
-    JG_ASSERT(context_definition != NULL);
+void jg_set_error_handler(jg_context_builder* context_builder, jg_error_handler handler) {
+    JG_ASSERT(context_builder != NULL);
     if(handler == NULL) {
         handler = default_error_handler;
     }
-    context_definition->error_handler = handler;
+    context_builder->error_handler = handler;
 }
 
 static void default_error_handler(jg_error_code error_code, const char* message) {
@@ -133,37 +133,37 @@ static void default_error_handler(jg_error_code error_code, const char* message)
     printf("JG ERROR : %i : %s", error_code, message);
 }
 
-static jg_pool create_pool(jg_context_definition* context_definition) {
-    JG_ASSERT(context_definition != NULL);
+static jg_pool create_pool(jg_context_builder* context_builder) {
+    JG_ASSERT(context_builder != NULL);
 
     size_t module_count = 0;
     size_t class_count = 0;
     size_t member_count = 0;
     size_t id_length = 0;
 
-    jg_module_definition* module_definition = context_definition->first_module;
+    jg_module_builder* module_builder = context_builder->first_module;
 
-    while(module_definition) {
+    while(module_builder) {
         ++module_count;
-        id_length += strlen(module_definition->namespace) + 1; // for terminal \0
-        jg_class_definition* class_definition = module_definition->first_class;
+        id_length += strlen(module_builder->namespace) + 1; // for terminal \0
+        jg_class_builder* class_builder = module_builder->first_class;
 
-        while(class_definition) {
+        while(class_builder) {
             ++class_count;
-            JG_ASSERT(strlen(class_definition->id) < JG_MAX_IDENTIFIER_LENGTH);
-            id_length += strlen(class_definition->id) + 1; // for terminal \0
-            id_length += strlen(class_definition->id) + 1; // for terminal \0
-            jg_member_definition* member_definition = class_definition->first_member;
-            while(member_definition) {
+            JG_ASSERT(strlen(class_builder->id) < JG_MAX_IDENTIFIER_LENGTH);
+            id_length += strlen(class_builder->id) + 1; // for terminal \0
+            id_length += strlen(class_builder->id) + 1; // for terminal \0
+            jg_member_builder* member_builder = class_builder->first_member;
+            while(member_builder) {
                 ++member_count;
-                JG_ASSERT(strlen(member_definition->id) < JG_MAX_IDENTIFIER_LENGTH);
-                id_length += strlen(member_definition->id) + 1; // for terminal \0
-                member_definition = member_definition->next_member;
+                JG_ASSERT(strlen(member_builder->id) < JG_MAX_IDENTIFIER_LENGTH);
+                id_length += strlen(member_builder->id) + 1; // for terminal \0
+                member_builder = member_builder->next_member;
             }
-            class_definition = class_definition->next_class;
+            class_builder = class_builder->next_class;
         }
 
-        module_definition = module_definition->next_module;
+        module_builder = module_builder->next_module;
     }
 
     // TODO(corentin@ki-dour.org): handle errors. (Will crash if we try to create an empty module, or empty classes).
@@ -190,33 +190,33 @@ static jg_pool create_pool(jg_context_definition* context_definition) {
     return result;
 }
 
-static jg_context* build_context(jg_context_definition* context_definition) {
-    JG_ASSERT(context_definition != NULL);
+static jg_context* build_context(jg_context_builder* context_builder) {
+    JG_ASSERT(context_builder != NULL);
 
-    jg_pool pool = create_pool(context_definition);
+    jg_pool pool = create_pool(context_builder);
     jg_pool pool_copy = pool; // we keep the pool's buffers index copy, as jg_class_build_index will increment them.
 
-    jg_index module_index = jg_module_build_index(context_definition->first_module, &pool);
+    jg_index module_index = jg_module_build_index(context_builder->first_module, &pool);
 
     jg_context* context = malloc(sizeof(jg_context));
     JG_ASSERT(context != NULL); // TODO(corentin@ki-dour.org) handle error.
     *context = (jg_context) {
         .module_index = module_index,
         .pool = pool_copy,
-        .error_handler = context_definition->error_handler
+        .error_handler = context_builder->error_handler
     };
 
-    jg_module_definition* current_module = context_definition->first_module;
+    jg_module_builder* current_module = context_builder->first_module;
     while(current_module) {
         const char* child_namespace = current_module->namespace;
 
-        const jg_class_definition* current_definition = current_module->first_class;
-        while(current_definition) {
-            const char* parent_id = current_definition->parent_id;
+        const jg_class_builder* current_builder = current_module->first_class;
+        while(current_builder) {
+            const char* parent_id = current_builder->parent_id;
 
             if(parent_id != NULL) {
-                const char* parent_namespace = current_definition->parent_namespace;
-                const char* child_id = current_definition->id;
+                const char* parent_namespace = current_builder->parent_namespace;
+                const char* child_id = current_builder->id;
                 JG_ASSERT(parent_namespace != NULL);
 
                 jg_class* child = get_class(context, child_namespace, child_id);
@@ -227,13 +227,13 @@ static jg_context* build_context(jg_context_definition* context_definition) {
                 child->parent = parent;
             }
 
-            current_definition = current_definition->next_class;
+            current_builder = current_builder->next_class;
         }
 
         current_module = current_module->next_module;
     }
 
-    jg_arena_free(context_definition->allocator);
+    jg_arena_free(context_builder->allocator);
 
     return context;
 }

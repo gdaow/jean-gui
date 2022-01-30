@@ -15,41 +15,41 @@
 #include "class.h"
 #include "context.h"
 
-void jg_class_set_constructor(jg_class_definition* class_definition, jg_constructor constructor, jg_destructor destructor) {
-    class_definition->constructor = constructor;
-    class_definition->destructor = destructor;
+void jg_class_set_constructor(jg_class_builder* class_builder, jg_constructor constructor, jg_destructor destructor) {
+    class_builder->constructor = constructor;
+    class_builder->destructor = destructor;
 }
 
 // Add a previously constructed member definition to a class definition.
 static void add_member(
-    jg_class_definition* class_definition,
+    jg_class_builder* class_builder,
     const char* id,
-    const jg_member_definition* member_definition
+    const jg_member_builder* member_builder
 );
 
-void jg_class_add_method(jg_class_definition* class_definition, const char* id, jg_method method) {
-    JG_ASSERT(class_definition != NULL);
+void jg_class_add_method(jg_class_builder* class_builder, const char* id, jg_method method) {
+    JG_ASSERT(class_builder != NULL);
     JG_ASSERT(id != NULL);
     JG_ASSERT(method != NULL);
 
-    add_member(class_definition, id, &(jg_member_definition) {
+    add_member(class_builder, id, &(jg_member_builder) {
         .type = JG_MEMBER_METHOD,
         .data.method = method
     });
 }
 
 void jg_class_add_property(
-    jg_class_definition* class_definition,
+    jg_class_builder* class_builder,
     const char* id,
     jg_getter_t getter,
     jg_setter_t setter
 ) {
-    JG_ASSERT(class_definition != NULL);
+    JG_ASSERT(class_builder != NULL);
     JG_ASSERT(id != NULL);
     JG_ASSERT(getter != NULL);
     JG_ASSERT(setter != NULL);
 
-    add_member(class_definition, id, &(jg_member_definition) {
+    add_member(class_builder, id, &(jg_member_builder) {
         .type = JG_MEMBER_PROPERTY,
         .data.property.getter = getter,
         .data.property.setter = setter
@@ -59,12 +59,12 @@ void jg_class_add_property(
 static const char* get_class_id_and_next(const void** item);
 static void build_class(const void* item, int sorted_id, void* user_data);
 
-jg_index jg_class_build_index(const jg_class_definition* first_class_definition, jg_pool* pool) {
-    JG_ASSERT(first_class_definition != NULL);
+jg_index jg_class_build_index(const jg_class_builder* first_class_builder, jg_pool* pool) {
+    JG_ASSERT(first_class_builder != NULL);
     JG_ASSERT(pool != NULL);
 
     jg_index class_index = jg_index_build(
-        first_class_definition,
+        first_class_builder,
         get_class_id_and_next,
         build_class,
         &pool->indexes,
@@ -100,35 +100,35 @@ const jg_member* jg_class_get_member(const jg_class* class_, const char* id, jg_
 }
 
 static void add_member(
-    jg_class_definition* class_definition,
+    jg_class_builder* class_builder,
     const char* id,
-    const jg_member_definition* member_definition
+    const jg_member_builder* member_builder
 ) {
-    JG_ASSERT(class_definition != NULL);
+    JG_ASSERT(class_builder != NULL);
     JG_ASSERT(id != NULL);
-    JG_ASSERT(member_definition != NULL);
+    JG_ASSERT(member_builder != NULL);
 
-    jg_member_definition* new_member = jg_allocate_aligned(
-        class_definition->allocator,
-        sizeof(jg_member_definition),
-        alignof(jg_member_definition)
+    jg_member_builder* new_member = jg_allocate_aligned(
+        class_builder->allocator,
+        sizeof(jg_member_builder),
+        alignof(jg_member_builder)
     );
     JG_ASSERT(new_member != NULL); // TODO(corentin@ki-dour.org) handle error.
 
-    *new_member = *member_definition;
-    new_member->id = jg_copy_identifier(class_definition->allocator, id);
+    *new_member = *member_builder;
+    new_member->id = jg_copy_identifier(class_builder->allocator, id);
     JG_ASSERT(new_member->id != NULL); // TODO(corentin@ki-dour.org) handle error.
-    new_member->next_member = class_definition->first_member;
-    class_definition->first_member = new_member;
+    new_member->next_member = class_builder->first_member;
+    class_builder->first_member = new_member;
 }
 
 static const char* get_member_id_and_next(const void** item) {
     JG_ASSERT(item != NULL);
     JG_ASSERT(*item != NULL);
 
-    const jg_member_definition* member_definition = *item;
-    const char* id = member_definition->id;
-    *item = member_definition->next_member;
+    const jg_member_builder* member_builder = *item;
+    const char* id = member_builder->id;
+    *item = member_builder->next_member;
     return id;
 }
 
@@ -137,11 +137,11 @@ static void build_member(const void* item, int sorted_id, void* user_data) {
     JG_ASSERT(sorted_id >= 0);
     JG_ASSERT(user_data != NULL);
 
-    const jg_member_definition* member_definition = item;
+    const jg_member_builder* member_builder = item;
     jg_pool* pool = user_data;
     pool->members[sorted_id] = (jg_member) {
-        .type = member_definition->type,
-        .data = member_definition->data
+        .type = member_builder->type,
+        .data = member_builder->data
     };
 }
 
@@ -149,13 +149,13 @@ static const char* get_class_id_and_next(const void** item) {
     JG_ASSERT(item != NULL);
     JG_ASSERT(*item != NULL);
 
-    const jg_class_definition* class_definition = *item;
-    const char* id = class_definition->id;
-    *item = class_definition->next_class;
+    const jg_class_builder* class_builder = *item;
+    const char* id = class_builder->id;
+    *item = class_builder->next_class;
     return id;
 }
 
-static jg_index build_member_index(const jg_member_definition* first_member, jg_pool* pool) {
+static jg_index build_member_index(const jg_member_builder* first_member, jg_pool* pool) {
     JG_ASSERT(pool != NULL);
 
     return jg_index_build(
@@ -175,16 +175,16 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
 
     jg_pool* pool = user_data;
     jg_class* class_pool = pool->classes;
-    const jg_class_definition* class_definition = item;
+    const jg_class_builder* class_builder = item;
 
     jg_class* new_class = &class_pool[sorted_id];
 
     *new_class = (jg_class) {
-        .size = class_definition->size,
-        .member_index = build_member_index(class_definition->first_member, pool),
+        .size = class_builder->size,
+        .member_index = build_member_index(class_builder->first_member, pool),
         .member_array = pool->members,
-        .constructor = class_definition->constructor,
-        .destructor = class_definition->destructor
+        .constructor = class_builder->constructor,
+        .destructor = class_builder->destructor
     };
 
     pool->members += new_class->member_index.count;

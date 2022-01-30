@@ -11,14 +11,14 @@
 JWX_HEADER_START
 
 // forward declarations
-typedef struct jg_module_definition_s jg_module_definition;
+typedef struct jg_module_builder_s jg_module_builder;
 
 // jwx_app class declaration
 typedef struct jwx_app_s jwx_app;
 
 extern const char* jwx_app_class_id;
 
-void jwx_app_class_register(jg_module_definition* module);
+void jwx_app_class_register(jg_module_builder* module);
 
 // jwx_app methods
 void jwx_app_run(jwx_app* app);

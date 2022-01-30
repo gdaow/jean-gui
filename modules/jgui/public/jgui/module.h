@@ -14,8 +14,8 @@
 
 #include <stddef.h>
 
-typedef struct jg_module_definition_s jg_module_definition;
-typedef struct jg_class_definition_s jg_class_definition;
+typedef struct jg_module_builder_s jg_module_builder;
+typedef struct jg_class_builder_s jg_class_builder;
 typedef struct jg_module_s jg_module;
 typedef struct jg_class_s jg_class;
 
@@ -30,8 +30,8 @@ typedef struct jg_class_s jg_class;
  * @return The newly created class.
  */
 
-jg_class_definition* jg_module_add_class(
-    jg_module_definition* module,
+jg_class_builder* jg_module_add_class(
+    jg_module_builder* module,
     const char* id,
     const char* parent_namespace,
     const char* parent_id,
@@ -39,12 +39,12 @@ jg_class_definition* jg_module_add_class(
 );
 
 /**
- * Create a usable jg_module from a jg_module_definition
+ * Create a usable jg_module from a jg_module_builder
  * 
  * @param definition 
  * @return jg_module* 
  */
-jg_module* jg_module_build(jg_module_definition* module);
+jg_module* jg_module_build(jg_module_builder* module);
 
 /**
  * Destroy a jg_module, and all it's registered classes.

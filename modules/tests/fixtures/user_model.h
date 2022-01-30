@@ -12,7 +12,7 @@
 #include "jgui/context.h"
 #include <stdbool.h>
 
-typedef struct jg_context_definition_s jg_context_definition;
+typedef struct jg_context_builder_s jg_context_builder;
 
 typedef struct admin_s admin;
 typedef struct team_s team;
@@ -47,6 +47,6 @@ struct team_s {
     const char* name;
 };
 
-void user_model_plugin(jg_context_definition* context_definition);
+void user_model_plugin(jg_context_builder* context_builder);
 
 bool user_has_permission(user* user, permission_flags flags);

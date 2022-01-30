@@ -16,18 +16,18 @@
 #include "common/arena.h"
 #include "common/index.h"
 
-typedef struct jg_module_definition_s jg_module_definition;
-typedef struct jg_member_definition_s jg_member_definition;
+typedef struct jg_module_builder_s jg_module_builder;
+typedef struct jg_member_builder_s jg_member_builder;
 typedef struct jg_pool_s jg_pool;
 
-struct jg_class_definition_s {
+struct jg_class_builder_s {
     jg_allocator* allocator;
     const char* id;
     char* parent_id;
     const char* parent_namespace;
     size_t size;
-    jg_class_definition* next_class;
-    jg_member_definition* first_member;
+    jg_class_builder* next_class;
+    jg_member_builder* first_member;
     jg_constructor constructor;
     jg_destructor destructor;
 };
@@ -45,12 +45,12 @@ typedef union {
     jg_method method;
 } jg_member_data;
 
-typedef struct jg_member_definition_s {
+typedef struct jg_member_builder_s {
     const char* id;
     jg_member_type type;
     jg_member_data data;
-    jg_member_definition* next_member;
-} jg_member_definition;
+    jg_member_builder* next_member;
+} jg_member_builder;
 
 typedef struct jg_member_s {
     jg_member_type type;
@@ -66,7 +66,7 @@ struct jg_class_s {
     size_t size;
 };
 
-jg_index jg_class_build_index(const jg_class_definition* first_class, jg_pool* pool);
+jg_index jg_class_build_index(const jg_class_builder* first_class, jg_pool* pool);
 
 const jg_member* jg_class_get_member(const jg_class* class_, const char* id, jg_member_type type);
 

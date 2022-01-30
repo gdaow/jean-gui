@@ -25,8 +25,8 @@ static void error_handler(jg_error_code error_code, const char* message) {
     last_error_code = error_code;
 }
 
-void error_handler_plugin(jg_context_definition* context_definition) {
-    jg_set_error_handler(context_definition, error_handler);
+void error_handler_plugin(jg_context_builder* context_builder) {
+    jg_set_error_handler(context_builder, error_handler);
 }
 
 

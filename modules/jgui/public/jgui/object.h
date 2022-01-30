@@ -18,8 +18,8 @@
 typedef struct jg_module_s jg_module;
 typedef struct jg_class_s jg_class;
 typedef struct jg_member_s jg_member;
-typedef struct jg_module_definition_s jg_module_definition;
-typedef struct jg_class_definition_s jg_class_definition;
+typedef struct jg_module_builder_s jg_module_builder;
+typedef struct jg_class_builder_s jg_class_builder;
 
 typedef jg_value (*jg_method)(jg_value* arguments);
 
