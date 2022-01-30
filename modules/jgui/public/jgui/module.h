@@ -16,8 +16,6 @@
 
 typedef struct jg_module_builder_s jg_module_builder;
 typedef struct jg_class_builder_s jg_class_builder;
-typedef struct jg_module_s jg_module;
-typedef struct jg_class_s jg_class;
 
 /**
  * Register a class in the class module, using the given definition.
@@ -29,7 +27,6 @@ typedef struct jg_class_s jg_class;
  *
  * @return The newly created class.
  */
-
 jg_class_builder* jg_module_add_class(
     jg_module_builder* module,
     const char* id,
@@ -37,20 +34,5 @@ jg_class_builder* jg_module_add_class(
     const char* parent_id,
     size_t size
 );
-
-/**
- * Create a usable jg_module from a jg_module_builder
- * 
- * @param definition 
- * @return jg_module* 
- */
-jg_module* jg_module_build(jg_module_builder* module);
-
-/**
- * Destroy a jg_module, and all it's registered classes.
- *
- * @param module The module to destroy.
- */
-void jg_module_free(jg_module* module);
 
 #endif
