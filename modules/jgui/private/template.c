@@ -15,12 +15,16 @@
 #include <jgui/module.h>
 #include <jgui/object.h>
 #include <jgui/template.h>
+#include <jgui/context.h>
 #include <jgui/value.h>
 
 #include "common/arena.h"
 #include "common/constants.h"
 #include "common/debug.h"
+#include "common/memory.h"
 #include "common/stack.h"
+#include "common/string.h"
+#include "module.h"
 
 typedef struct jg_property_template_s jg_property_template;
 typedef struct jg_node_template_s jg_node_template;
@@ -46,8 +50,8 @@ struct jg_node_template_s {
 };
 
 struct jg_template_s {
-    jg_arena* allocator;
-    jg_module* module;
+    jg_allocator* allocator;
+    jg_context* context;
     jg_node_template* root_node;
 };
 
@@ -55,11 +59,11 @@ static void parse_yaml(jg_template* template_, const char* source);
 jg_template* jg_template_from_string(const char* source, jg_context* context) {
     (void)source;
     (void)context;
-    jg_arena* allocator = jg_arena_new(0);
-    jg_template* template = jg_arena_alloc(allocator, sizeof(jg_template), alignof(jg_template));
+    jg_allocator* allocator = jg_arena_new(0);
+    jg_template* template = jg_allocate_aligned(allocator, sizeof(jg_template), alignof(jg_template));
     *template = (jg_template) {
         .allocator = allocator,
-        //.module = module,
+        .context = context,
         .root_node = NULL
     };
 
@@ -68,7 +72,7 @@ jg_template* jg_template_from_string(const char* source, jg_context* context) {
 }
 
 void jg_template_free(jg_template* template_) {
-    free(template_->allocator);
+    jg_arena_free(template_->allocator);
 }
 
 static void* instanciate_node(const jg_node_template* node);
@@ -108,8 +112,8 @@ typedef struct jg_template_builder_s {
         JG_PROPERTY_STATE,
     } state;
     jg_stack node_stack;
-    jg_arena* allocator;
-    jg_module* module;
+    jg_allocator* allocator;
+    jg_context* context;
 } jg_template_builder;
 
 
@@ -124,10 +128,17 @@ static jg_property_template* top_property(jg_template_builder* builder) {
 }
 
 static void start_object(jg_template_builder* builder, const char* tag) {
-    jg_arena* allocator = builder->allocator;
-    jg_node_template* new_node = jg_arena_alloc(allocator, sizeof(jg_node_template), alignof(jg_node_template));
+    jg_allocator* allocator = builder->allocator;
+    jg_node_template* new_node = jg_allocate_aligned(allocator, sizeof(jg_node_template), alignof(jg_node_template));
+    char tag_buffer[(JG_MAX_IDENTIFIER_LENGTH + 1)*2];
+    strcpy(tag_buffer, tag);
+    const char* namespace = tag_buffer;
+    char* class_id = strrchr(tag_buffer, ':');
+    JG_ASSERT(class_id);
+    *class_id = '\0';
+    ++class_id;
 
-    const jg_class* class_ = jg_module_get_class(builder->module, tag + 1);
+    const jg_class* class_ = jg_context_get_class(builder->context, namespace, class_id);
     *new_node = (jg_node_template) {
         .first_property = NULL,
         .class_ = class_
@@ -148,9 +159,9 @@ static void start_object(jg_template_builder* builder, const char* tag) {
 }
 
 static void start_property(jg_template_builder* builder, const char* tag) {
-    jg_arena* allocator = builder->allocator;
+    jg_allocator* allocator = builder->allocator;
 
-    jg_property_template* new_property = jg_arena_alloc(
+    jg_property_template* new_property = jg_allocate_aligned(
         allocator,
         sizeof(jg_property_template),
         alignof(jg_property_template)
@@ -158,7 +169,7 @@ static void start_property(jg_template_builder* builder, const char* tag) {
 
     jg_node_template* node = top_node(builder);
     *new_property = (jg_property_template) {
-        .name = jg_arena_strcpy(allocator, tag, JG_MAX_IDENTIFIER_LENGTH),
+        .name = jg_copy_identifier(allocator, tag),
         .next_property = node->first_property,
     };
 
@@ -181,7 +192,7 @@ static void scalar(jg_template_builder* builder, const char* value) {
     JG_ASSERT(builder->state == JG_PROPERTY_STATE);
     jg_property_template* property = top_property(builder);
     property->type = JG_TEMPLATE_PROPERTY_SCALAR;
-    property->value.scalar = jg_arena_strcpy(builder->allocator, value, 1024);
+    property->value.scalar = jg_copy_string(builder->allocator, value, 1024);
 }
 
 static void end_element(jg_template_builder* builder) {
@@ -274,7 +285,7 @@ static void parse_yaml(jg_template* template_, const char* source) {
 
     jg_template_builder builder = {
         .allocator = template_->allocator,
-        .module = template_->module,
+        .context = template_->context,
         .state = JG_PROPERTY_STATE
     };
     jg_stack_init(&builder.node_stack, sizeof(jg_node_template*));

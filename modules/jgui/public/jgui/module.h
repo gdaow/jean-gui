@@ -20,13 +20,6 @@ typedef struct jg_module_s jg_module;
 typedef struct jg_class_s jg_class;
 
 /**
- * Create a new module definition.
- *
- * @return The newly created class module.
- */
-jg_module_definition* jg_module_new();
-
-/**
  * Register a class in the class module, using the given definition.
  *
  * It will assert if the class is already registered in the module.
@@ -40,9 +33,9 @@ jg_module_definition* jg_module_new();
 jg_class_definition* jg_module_add_class(
     jg_module_definition* module,
     const char* id,
+    const char* parent_namespace,
     const char* parent_id,
-    size_t size,
-    size_t align
+    size_t size
 );
 
 /**
@@ -59,18 +52,5 @@ jg_module* jg_module_build(jg_module_definition* module);
  * @param module The module to destroy.
  */
 void jg_module_free(jg_module* module);
-
-/**
- * Get a class using it's definition as a key.
- *
- * If the class wasn't registered, the function will return NULL.
- *
- * @param module   A previously created jg_module.
- * @param definition A class definition callback.
- *
- * @return The newly created class.
- */
-
-const jg_class* jg_module_get_class(const jg_module* module, const char* id);
 
 #endif

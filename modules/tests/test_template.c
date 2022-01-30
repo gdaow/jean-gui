@@ -19,6 +19,8 @@ jg_context* context = NULL;
 
 MU_TEST(test_jg_template_scalar_property) {
     jg_template* admin_template = jg_template_from_string(
+        "%TAG ! http://ki-dour.org/jean-gui/tests/user-model:\n"
+        "---\n"
         "!Admin\n"
         "name: Dr. Meeseeks\n"
         "team: !Team\n"

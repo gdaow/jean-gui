@@ -21,11 +21,11 @@ typedef struct jg_member_definition_s jg_member_definition;
 typedef struct jg_pool_s jg_pool;
 
 struct jg_class_definition_s {
-    jg_arena* arena;
+    jg_allocator* allocator;
     const char* id;
     char* parent_id;
+    const char* parent_namespace;
     size_t size;
-    size_t align;
     jg_class_definition* next_class;
     jg_member_definition* first_member;
     jg_constructor constructor;
@@ -64,7 +64,6 @@ struct jg_class_s {
     jg_constructor constructor;
     jg_destructor destructor;
     size_t size;
-    size_t align;
 };
 
 jg_index jg_class_build_index(const jg_class_definition* first_class, jg_pool* pool);

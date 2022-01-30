@@ -11,21 +11,29 @@
 #ifndef JGUI_PRIVATE_MODULE_H
 #define JGUI_PRIVATE_MODULE_H
 
-typedef struct jg_arena_s jg_arena;
+#include "common/index.h"
+
+typedef struct jg_allocator_s jg_allocator;
 typedef struct jg_class_definition_s jg_class_definition;
 typedef struct jg_class_s jg_class;
-typedef struct jg_member_s jg_member;
+typedef struct jg_module_definition_s jg_module_definition;
+typedef struct jg_module_s jg_module;
+typedef struct jg_pool_s jg_pool;
 
 struct jg_module_definition_s {
-    jg_arena* arena;
+    jg_allocator* allocator;
+    const char* namespace;
     jg_class_definition* first_class;
+    jg_module_definition* next_module;
 };
 
-typedef struct jg_pool_s {
-    jg_class* classes;
-    const char** indexes;
-    jg_member* members;
-    char* ids;
-} jg_pool;
+struct jg_module_s {
+    jg_index class_index;
+    jg_class* class_array;
+};
+
+jg_index jg_module_build_index(jg_module_definition* first_module_definition, jg_pool* pools);
+
+jg_class* jg_module_get_class(jg_module* module, const char* id);
 
 #endif

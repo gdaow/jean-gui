@@ -10,10 +10,11 @@
 
 #include <jgui/module.h>
 #include <jgui/object.h>
+#include <jgui/core.h>
 
 #include <jgui/wx/app.h>
 
-class jwx_app_s : public wxApp {
+struct jwx_app_s : public wxApp {
     ~jwx_app_s() override = default;
     bool OnInit() override;
 };
@@ -26,9 +27,9 @@ void jwx_app_class_register(jg_module_definition* module) {
     jg_module_add_class(
         module,
         jwx_app_class_id,
+        jg_core_ns,
         jg_object_class_id,
-        sizeof(jwx_app),
-        alignof(jwx_app)
+        sizeof(jwx_app)
     );
 }
 

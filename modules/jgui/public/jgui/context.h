@@ -50,7 +50,7 @@ void jg_context_free(jg_context* context);
 /**
  * Get a class from it's tag and namespace.
  */
-jg_class* jg_context_get_class(jg_context* context, const char* namespace, const char* id);
+const jg_class* jg_context_get_class(const jg_context* context, const char* namespace, const char* id);
 
 /**
  * Report an error.

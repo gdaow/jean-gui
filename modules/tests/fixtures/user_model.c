@@ -9,13 +9,14 @@
 #include <stdalign.h>
 
 #include <jgui/object.h>
+#include <jgui/core.h>
 #include <jgui/class.h>
 #include <jgui/value.h>
 
 #include "jgui/module.h"
 #include "user_model.h"
 
-const char* user_model_ns = "https://ki-dour.org/jg/tests/user-model";
+const char* user_model_ns = "http://ki-dour.org/jean-gui/tests/user-model";
 const char* user_class_id = "User";
 const char* admin_class_id = "Admin";
 const char* team_class_id = "Team";
@@ -86,9 +87,9 @@ void register_user_class(jg_module_definition* module) {
     jg_class_definition* class_ = jg_module_add_class(
         module,
         user_class_id,
+        jg_core_ns,
         jg_object_class_id,
-        sizeof(user),
-        alignof(user)
+        sizeof(user)
     );
     jg_class_set_constructor(class_, user_constructor, user_destructor);
     jg_class_add_property(class_, "name", user_get_name, user_set_name);
@@ -129,9 +130,9 @@ void register_admin_class(jg_module_definition* module) {
     jg_class_definition* class_ = jg_module_add_class(
         module,
         admin_class_id,
+        NULL,
         user_class_id,
-        sizeof(admin),
-        alignof(admin)
+        sizeof(admin)
     );
     jg_class_set_constructor(class_, admin_constructor, admin_destructor);
     jg_class_add_property(class_, "role", admin_get_role, admin_set_role);
@@ -152,9 +153,9 @@ void register_team_class(jg_module_definition* module) {
     jg_class_definition* class_ = jg_module_add_class(
         module,
         team_class_id,
+        jg_core_ns,
         jg_object_class_id,
-        sizeof(team),
-        alignof(team)
+        sizeof(team)
     );
     jg_class_add_property(class_, "name", team_get_name, team_set_name);
 }

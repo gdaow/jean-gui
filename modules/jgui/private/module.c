@@ -14,64 +14,52 @@
 #include "common/arena.h"
 #include "common/debug.h"
 #include "common/index.h"
-#include "module.h"
+#include "common/memory.h"
+#include "common/string.h"
 #include "class.h"
-
-struct jg_module_s {
-    jg_index class_index;
-    jg_pool pool;
-};
-
-jg_module_definition* jg_module_new() {
-    jg_arena* arena = jg_arena_new(0);
-    jg_module_definition* new_module = jg_arena_alloc(
-        arena,
-        sizeof(jg_module_definition),
-        alignof(jg_module_definition)
-    );
-
-    JG_ASSERT(new_module != NULL); // TODO(corentin@ki-dour.org) handle error.
-
-    *new_module = (jg_module_definition) { 0 };
-    new_module->arena = arena;
-    jg_module_add_class(new_module, "Object", NULL, 0, 1);
-
-    return new_module;
-}
+#include "context.h"
+#include "module.h"
 
 jg_class_definition* jg_module_add_class(
     jg_module_definition* module_definition,
     const char* id,
+    const char* parent_namespace,
     const char* parent_id,
-    size_t size,
-    size_t align
+    size_t size
 ) {
     JG_ASSERT(module_definition != NULL);
     JG_ASSERT(id != NULL && strlen(id) > 0);
     JG_ASSERT(parent_id == NULL || strlen(parent_id) > 0);
-    JG_ASSERT(align > 0);
 
-    jg_arena* arena = module_definition->arena;
+    jg_allocator* allocator = module_definition->allocator;
     char* parent_id_copy = NULL;
+    char* parent_namespace_copy = NULL;
     
     if(parent_id) {
-        parent_id_copy = jg_copy_identifier(arena, parent_id);
+        parent_id_copy = jg_copy_identifier(allocator, parent_id);
+        if(parent_namespace == NULL) {
+            // Use current module namespace if none is provided.
+            parent_namespace = module_definition->namespace;
+        }
+        parent_namespace_copy = jg_copy_identifier(allocator, parent_namespace);
+
         JG_ASSERT(parent_id_copy != NULL); // TODO(corentin@ki-dour.org) handle error.
     }
 
-    jg_class_definition* new_class = jg_arena_alloc(
-        arena,
+    jg_class_definition* new_class = jg_allocate_aligned(
+        allocator,
         sizeof(jg_class_definition),
         alignof(jg_class_definition)
     );
+
     JG_ASSERT(new_class != NULL); // TODO(corentin@ki-dour.org) handle error.
     
     *new_class = (jg_class_definition) {
-        .arena = module_definition->arena,
-        .id = jg_copy_identifier(arena, id),
+        .allocator = module_definition->allocator,
+        .id = jg_copy_identifier(allocator, id),
         .parent_id = parent_id_copy,
+        .parent_namespace = parent_namespace_copy,
         .size = size,
-        .align = align,
         .next_class = module_definition->first_class,
         .first_member = 0
     };
@@ -81,39 +69,28 @@ jg_class_definition* jg_module_add_class(
     return new_class;
 }
 
-static jg_pool create_pool(jg_module_definition* module_definition);
+static const char* get_module_id_and_next(const void** item);
+static void build_module(const void* item, int sorted_id, void* user_data);
 
-jg_module* jg_module_build(jg_module_definition* module_definition) {
-    JG_ASSERT(module_definition != NULL);
+jg_index jg_module_build_index(jg_module_definition* first_module_definition, jg_pool* pool) {
+    JG_ASSERT(first_module_definition != NULL);
+    JG_ASSERT(pool != NULL);
 
-    jg_pool pool = create_pool(module_definition);
-    jg_pool pool_copy = pool; // we keep the pool's buffers index copy, as jg_class_build_index will increment them.
+    jg_index module_index = jg_index_build(
+        first_module_definition,
+        get_module_id_and_next,
+        build_module,
+        &pool->indexes,
+        &pool->ids,
+        pool
+    );
 
-    jg_index class_index = jg_class_build_index(module_definition->first_class, &pool);
+    pool->modules += module_index.count;
 
-    jg_arena_free(module_definition->arena);
-
-    jg_module* result = malloc(sizeof(jg_module));
-    JG_ASSERT(result != NULL); // TODO(corentin@ki-dour.org) handle error.
-    *result = (jg_module) {
-        .class_index = class_index,
-        .pool = pool_copy
-    };
-
-    return result;
+    return module_index;
 }
 
-void jg_module_free(jg_module* module) {
-    JG_ASSERT(module != NULL);
-
-    free(module->pool.classes);
-    free(module->pool.indexes);
-    free(module->pool.members);
-    free(module->pool.ids);
-    free(module);
-}
-
-const jg_class* jg_module_get_class(const jg_module* module, const char* id) {
+jg_class* jg_module_get_class(jg_module* module, const char* id) {
     JG_ASSERT(module != NULL);
     JG_ASSERT(id != NULL && strlen(id) > 0);
 
@@ -122,46 +99,33 @@ const jg_class* jg_module_get_class(const jg_module* module, const char* id) {
         return NULL;
     }
 
-    return &(module->pool.classes[class_id]);
+    return &(module->class_array[class_id]);
 }
 
-static jg_pool create_pool(jg_module_definition* module) {
-    JG_ASSERT(module != NULL);
+static const char* get_module_id_and_next(const void** item) {
+    JG_ASSERT(item != NULL);
+    JG_ASSERT(*item != NULL);
 
-    jg_class_definition* class_ = module->first_class;
-    size_t class_count = 0;
-    size_t member_count = 0;
-    size_t id_length = 0;
+    const jg_module_definition* module_definition = *item;
+    const char* id = module_definition->namespace;
+    *item = module_definition->next_module;
+    return id;
+}
 
-    while(class_) {
-        ++class_count;
-        id_length += strlen(class_->id) + 1; // for terminal \0
-        jg_member_definition* member = class_->first_member;
-        while(member) {
-            ++member_count;
-            id_length += strlen(member->id) + 1; // for terminal \0
-            member = member->next_member;
-        }
-        class_ = class_->next_class;
-    }
+static void build_module(const void* item, int sorted_id, void* user_data) {
+    JG_ASSERT(item != NULL);
+    JG_ASSERT(sorted_id >= 0);
+    JG_ASSERT(user_data != NULL);
 
-    // TODO(corentin@ki-dour.org): handle errors. (Will crash if we try to create an empty module, or empty classes).
-    JG_ASSERT(class_count > 0);
-    JG_ASSERT(member_count > 0);
-    JG_ASSERT(id_length > 0);
+    jg_pool* pool = user_data;
+    jg_module* module_pool = pool->modules;
+    const jg_module_definition* module_definition = item;
 
-    jg_pool result = {
-        .classes = calloc(class_count, sizeof(jg_class)),
-        .indexes = calloc(class_count + member_count, sizeof(char*)),
-        .members = calloc(member_count, sizeof(jg_member)),
-        .ids = calloc(id_length, sizeof(char))
+    jg_module* new_module = &module_pool[sorted_id];
+    jg_class* class_array = pool->classes;
+
+    *new_module = (jg_module) {
+        .class_index = jg_class_build_index(module_definition->first_class, pool),
+        .class_array = class_array
     };
-
-    // TODO(corentin@ki-dour.org): handle error.
-    JG_ASSERT(result.classes != NULL);
-    JG_ASSERT(result.indexes != NULL);
-    JG_ASSERT(result.members != NULL);
-    JG_ASSERT(result.ids != NULL);
-
-    return result;
 }

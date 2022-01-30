@@ -14,6 +14,12 @@
 
 #include <stddef.h>
 
+typedef struct jg_allocator_s jg_allocator;
+
 size_t jg_strnlen(const char *s, size_t max_size);
+
+char* jg_copy_string(jg_allocator* allocator, const char* value, size_t max_length);
+
+char* jg_copy_identifier(jg_allocator* allocator, const char* value);
 
 #endif

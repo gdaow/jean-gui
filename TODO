@@ -10,5 +10,8 @@
    property getter / setters.
  * Handle OOM
  * Design error handling in get / set / call...
- * Make arena generic using an allocator function and a state object (could be usefull to override class allocator)
+ * Move jg_pool to another file than context.h
+ * Use standard method (initialize / cleanup) for constructors / destructors.
+ * Allow to switch between allocators to allow valgrind checks & benchmarks.
+ * Use a struct for class ids to ease declaration.
  

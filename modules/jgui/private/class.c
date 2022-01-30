@@ -10,14 +10,15 @@
 #include "common/constants.h"
 #include "common/debug.h"
 #include "common/index.h"
+#include "common/memory.h"
+#include "common/string.h"
 #include "class.h"
-#include "module.h"
+#include "context.h"
 
 void jg_class_set_constructor(jg_class_definition* class_definition, jg_constructor constructor, jg_destructor destructor) {
     class_definition->constructor = constructor;
     class_definition->destructor = destructor;
 }
-
 
 // Add a previously constructed member definition to a class definition.
 static void add_member(
@@ -71,29 +72,6 @@ jg_index jg_class_build_index(const jg_class_definition* first_class_definition,
         pool
     );
 
-    jg_class* class_array = pool->classes;
-    size_t class_count = class_index.count;
-
-    // resolve hierarchy
-    const jg_class_definition* current_definition = first_class_definition;
-    while(current_definition) {
-        const char* parent_string_id = current_definition->parent_id;
-
-        if(parent_string_id != NULL) {
-            int child_id = jg_index_search(&class_index, current_definition->id);
-            JG_ASSERT(child_id >= 0 && (size_t)child_id < class_count);
-
-            int parent_id = jg_index_search(&class_index, parent_string_id);
-
-            //TODO(corentin@ki-dour.org) handle error (parent class not found)
-            JG_ASSERT(parent_id >= 0 && (size_t)parent_id < class_count);
-            
-            class_array[child_id].parent = &class_array[parent_id];
-        }
-
-        current_definition = current_definition->next_class;
-    }
-
     pool->classes += class_index.count;
 
     return class_index;
@@ -130,15 +108,15 @@ static void add_member(
     JG_ASSERT(id != NULL);
     JG_ASSERT(member_definition != NULL);
 
-    jg_member_definition* new_member = jg_arena_alloc(
-        class_definition->arena,
+    jg_member_definition* new_member = jg_allocate_aligned(
+        class_definition->allocator,
         sizeof(jg_member_definition),
         alignof(jg_member_definition)
     );
     JG_ASSERT(new_member != NULL); // TODO(corentin@ki-dour.org) handle error.
 
     *new_member = *member_definition;
-    new_member->id = jg_copy_identifier(class_definition->arena, id);
+    new_member->id = jg_copy_identifier(class_definition->allocator, id);
     JG_ASSERT(new_member->id != NULL); // TODO(corentin@ki-dour.org) handle error.
     new_member->next_member = class_definition->first_member;
     class_definition->first_member = new_member;
@@ -203,12 +181,10 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
 
     *new_class = (jg_class) {
         .size = class_definition->size,
-        .align = class_definition->align,
         .member_index = build_member_index(class_definition->first_member, pool),
         .member_array = pool->members,
         .constructor = class_definition->constructor,
         .destructor = class_definition->destructor
-        
     };
 
     pool->members += new_class->member_index.count;
