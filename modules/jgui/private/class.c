@@ -7,6 +7,9 @@
  */
 #include <stdalign.h>
 
+#include <jgui/context.h>
+#include <stdbool.h>
+
 #include "common/constants.h"
 #include "common/debug.h"
 #include "common/index.h"
@@ -14,6 +17,7 @@
 #include "common/string.h"
 #include "class.h"
 #include "context.h"
+#include "jgui/value.h"
 
 void jg_class_set_constructor(jg_class_builder* class_builder, jg_constructor constructor, jg_destructor destructor) {
     class_builder->constructor = constructor;
@@ -56,39 +60,85 @@ void jg_class_add_property(
     });
 }
 
+static jg_value pop(jg_arguments* arguments, bool (*check_type)(jg_value)) {
+    jg_value* argument = arguments->start;
+    if(argument == arguments->end) {
+        jg_error(
+            arguments->context,
+            JG_ERROR_MISSING_ARGUMENT,
+            "Missing argument when calling method %s", arguments->method_name
+        );
+        arguments->has_error = true;
+        return jg_none();
+    }
+
+    if(!check_type(*argument)) {
+        //TODO(corentin@ki-dour.org) Improve error feedback by giving expected and actual
+        //argument.
+        jg_error(
+            arguments->context,
+            JG_ERROR_UNEXPECTED_ARGUMENT,
+            "Got argument of the wrong type when calling method %s", arguments->method_name
+        );
+        arguments->has_error = true;
+        return jg_none();
+    }
+
+    ++arguments->start;
+
+    return *argument;
+}
+
 bool jg_pop_bool(jg_arguments* arguments) {
-    (void)arguments;
-    return false;
+    jg_value arg = pop(arguments, jg_is_bool);
+    if(jg_is_none(arg)) {
+        return false;
+    }
+    return jg_to_bool(arg);
 }
 
 int jg_pop_int(jg_arguments* arguments) {
-    (void)arguments;
-    return 0;
+    jg_value arg = pop(arguments, jg_is_int);
+    if(jg_is_none(arg)) {
+        return 0;
+    }
+    return jg_to_int(arg);
 }
 
 double jg_pop_double(jg_arguments* arguments) {
-    (void)arguments;
-    return .0;
+    jg_value arg = pop(arguments, jg_is_double);
+    if(jg_is_none(arg)) {
+        return .0;
+    }
+    return jg_to_double(arg);
 }
 
 const char* jg_pop_string(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+    jg_value arg = pop(arguments, jg_is_string);
+    if(jg_is_none(arg)) {
+        return NULL;
+    }
+    return jg_to_string(arg);
 }
 
 const void* jg_pop_raw(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+    jg_value arg = pop(arguments, jg_is_raw);
+    if(jg_is_none(arg)) {
+        return NULL;
+    }
+    return jg_to_raw(arg);
 }
 
 void* jg_pop_object(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+    jg_value arg = pop(arguments, jg_is_object);
+    if(jg_is_none(arg)) {
+        return NULL;
+    }
+    return jg_to_object(arg);
 }
 
 bool jg_arguments_error(jg_arguments* arguments) {
-    (void)arguments;
-    return false;
+    return arguments->has_error;
 }
 
 static const char* get_class_id_and_next(const void** item);

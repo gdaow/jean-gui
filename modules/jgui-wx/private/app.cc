@@ -6,6 +6,7 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
  */
+#include "jgui/class.h"
 #include <wx/wx.h>
 
 #include <jgui/module.h>
@@ -23,14 +24,29 @@ bool jwx_app_s::OnInit() {
     return true;
 }
 
+static jg_value initialize(jg_arguments* args) {
+    void* object = jg_pop_object(args);
+    new (object) jwx_app_s();
+    return jg_none();
+}
+
+static jg_value cleanup(jg_arguments* args) {
+    auto* app = static_cast<jwx_app_s*>(jg_pop_object(args));
+    app->~jwx_app_s();
+    return jg_none();
+}
+
 void jwx_app_class_register(jg_module_builder* module) {
-    jg_module_add_class(
+    jg_class_builder* class_ = jg_module_add_class(
         module,
         jwx_app_class_id,
         jg_core_ns,
         jg_object_class_id,
         sizeof(jwx_app)
     );
+
+    jg_class_add_method(class_, "initialize", initialize);
+    jg_class_add_method(class_, "cleanup", cleanup);
 }
 
 static jwx_app* g_app;

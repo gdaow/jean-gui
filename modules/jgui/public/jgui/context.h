@@ -15,6 +15,10 @@
 typedef enum {
     JG_ERROR_NONE,
     JG_ERROR_CLASS_UNDEFINED,
+
+    JG_ERROR_MISSING_ARGUMENT,
+    JG_ERROR_UNEXPECTED_ARGUMENT,
+
     JG_ERROR_LAST
 } jg_error_code;
 

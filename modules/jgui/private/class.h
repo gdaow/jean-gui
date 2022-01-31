@@ -16,6 +16,7 @@
 #include "common/arena.h"
 #include "common/index.h"
 
+typedef struct jg_context_s jg_context;
 typedef struct jg_module_builder_s jg_module_builder;
 typedef struct jg_member_builder_s jg_member_builder;
 typedef struct jg_pool_s jg_pool;
@@ -64,6 +65,14 @@ struct jg_class_s {
     jg_constructor constructor;
     jg_destructor destructor;
     size_t size;
+};
+
+struct jg_arguments_s {
+    jg_context* context;
+    const char* method_name;
+    jg_value* start;
+    jg_value* end;
+    bool has_error;
 };
 
 jg_index jg_class_build_index(const jg_class_builder* first_class, jg_pool* pool);

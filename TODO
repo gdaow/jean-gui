@@ -9,9 +9,12 @@
    and data binding updates trigerred by calling event handlers. Only the binding system could access
    property getter / setters.
  * Handle OOM
- * Design error handling in get / set / call...
  * Move jg_pool to another file than context.h
  * Use standard method (initialize / cleanup) for constructors / destructors.
  * Allow to switch between allocators to allow valgrind checks & benchmarks.
  * Use a struct for class ids to ease declaration.
+ * Test jg_arguments, could be renamed to jg_call_context actually, and we could provide
+   methods to call error on it. Maybe push the function result in it too.
+ * Rename jg_module_add_class to jg_add_class, jg_class_add_method to jg_add_method.
+ 
  

@@ -7,6 +7,7 @@
  *
  */
 #include <stdalign.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +15,7 @@
 #include "common/debug.h"
 #include "class.h"
 #include "jgui/class.h"
+#include "jgui/value.h"
 
 typedef struct jg_object_header_s {
     const jg_class* class_;
@@ -92,7 +94,19 @@ jg_value jg_object_call(const void* object, const char* method_id, jg_value* arg
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, method_id, JG_MEMBER_METHOD);
     JG_ASSERT(member != NULL); // TODO(corentin@ki-dour.org) handle error.
-    return member->data.method(NULL);
+
+    jg_value* end = arguments;
+    while(!jg_is_none(*end)) {
+        ++end;
+    }
+
+    return member->data.method(&(jg_arguments) {
+        .has_error = false,
+        .method_name = method_id,
+        .context = NULL, //TODO(corentin@ki-dour.org) Find a way to assign this.
+        .start = arguments,
+        .end = end
+    });
 }
 
 static const jg_class* get_class(const void* object) {
