@@ -17,6 +17,6 @@
    methods to call error on it. Maybe push the function result in it too.
  * Rename jg_module_add_class to jg_add_class, jg_class_add_method to jg_add_method.
  * Switch unit tests to CMocka
- * Redefine assert macro rather than using JG_ASSERT
+ * Redefine assert macro rather than using assert
  * Plug cmokca allocator when running unit tests.
  

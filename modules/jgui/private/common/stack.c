@@ -9,17 +9,17 @@
  #include <stdlib.h>
  #include <string.h>
 
+ #include <jgui/debug.h>
  #include "stack.h"
- #include "debug.h"
 
 static const size_t GROW_SIZE = 0x10;
 
 void jg_stack_init(jg_stack* stack, size_t element_size) {
-    JG_ASSERT(stack != NULL);
-    JG_ASSERT(element_size > 0);
+    assert(stack != NULL);
+    assert(element_size > 0);
 
     void* base = calloc(GROW_SIZE, element_size);
-    JG_ASSERT(stack != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(stack != NULL); // TODO(corentin@ki-dour.org) handle error.
     *stack = (jg_stack) {
         .top = base,
         .base = base,
@@ -29,13 +29,13 @@ void jg_stack_init(jg_stack* stack, size_t element_size) {
 }
 
 void jg_stack_clean(jg_stack* stack) {
-    JG_ASSERT(stack != NULL);
+    assert(stack != NULL);
     free(stack->base);
 }
 
 void jg_stack_push(jg_stack* stack, void* element) {
-    JG_ASSERT(stack != NULL);
-    JG_ASSERT(stack->base + stack->size >= stack->top);
+    assert(stack != NULL);
+    assert(stack->base + stack->size >= stack->top);
 
     if(stack->base + stack->size == stack->top) { 
         size_t old_size = stack->size;
@@ -49,14 +49,14 @@ void jg_stack_push(jg_stack* stack, void* element) {
 }
 
 void* jg_stack_peek(jg_stack* stack) {
-    JG_ASSERT(stack != NULL);
-    JG_ASSERT(stack->base + stack->size >= stack->top);
+    assert(stack != NULL);
+    assert(stack->base + stack->size >= stack->top);
     return stack->top - stack->element_size;
 }
 
 void* jg_stack_pop(jg_stack* stack) {
-    JG_ASSERT(stack != NULL);
-    JG_ASSERT(stack->base <= stack->top - stack->element_size);
+    assert(stack != NULL);
+    assert(stack->base <= stack->top - stack->element_size);
 
     stack->top -= stack->element_size;
     return stack->top;

@@ -17,10 +17,10 @@
 #include <jgui/template.h>
 #include <jgui/context.h>
 #include <jgui/value.h>
+#include <jgui/debug.h>
 
 #include "common/arena.h"
 #include "common/constants.h"
-#include "common/debug.h"
 #include "common/memory.h"
 #include "common/stack.h"
 #include "common/string.h"
@@ -96,7 +96,7 @@ static void* instanciate_node(const jg_node_template* node) {
                 }
                 break;
             default:
-                JG_ASSERT(false);
+                assert(false);
         }
         jg_object_set(object, property->name, property_value);
         property = property->next_property;
@@ -134,7 +134,7 @@ static void start_object(jg_template_builder* builder, const char* tag) {
     strcpy(tag_buffer, tag);
     const char* namespace = tag_buffer;
     char* class_id = strrchr(tag_buffer, ':');
-    JG_ASSERT(class_id);
+    assert(class_id);
     *class_id = '\0';
     ++class_id;
 
@@ -189,7 +189,7 @@ static void start_element(jg_template_builder* builder, const char* tag) {
 }
 
 static void scalar(jg_template_builder* builder, const char* value) {
-    JG_ASSERT(builder->state == JG_PROPERTY_STATE);
+    assert(builder->state == JG_PROPERTY_STATE);
     jg_property_template* property = top_property(builder);
     property->type = JG_TEMPLATE_PROPERTY_SCALAR;
     property->value.scalar = jg_copy_string(builder->allocator, value, 1024);
@@ -266,7 +266,7 @@ void yaml_end_event(jg_yaml_state* state) {
     jg_stack* tag_stack = &state->tag_stack;
     jg_template_builder* builder = state->builder;
 
-    JG_ASSERT(!state->has_previous_tag); // previous scalar value encountered, using it as tag
+    assert(!state->has_previous_tag); // previous scalar value encountered, using it as tag
 
     if(*(void**)jg_stack_pop(tag_stack)) {
         end_element(builder);

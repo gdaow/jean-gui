@@ -12,6 +12,9 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <setjmp.h>
+#include <stddef.h>
 #include <cmocka.h>
+
+#include <jgui/debug.h>
 
 #endif

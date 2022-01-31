@@ -16,10 +16,4 @@
 static const size_t JG_MAX_IDENTIFIER_LENGTH = 256;
 static const size_t JG_MAX_ERROR_MESSAGE_LENGTH = 1024;
 
-#ifdef NDEBUG
-#   define JG_DEBUG 0
-#else
-#   define JG_DEBUG 1
-#endif
-
 #endif

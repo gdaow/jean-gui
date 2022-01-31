@@ -10,9 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <jgui/debug.h>
+
 #include "arena.h"
 #include "constants.h"
-#include "debug.h"
 #include "memory.h"
 #include "string.h"
 
@@ -38,7 +39,7 @@ jg_allocator* jg_arena_new(size_t chunk_size) {
     }
 
     jg_arena* new_arena = malloc(sizeof(jg_arena));
-    JG_ASSERT(new_arena != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(new_arena != NULL); // TODO(corentin@ki-dour.org) handle error.
 
     *new_arena = (jg_arena) {
         .allocator = (jg_allocator) {
@@ -54,7 +55,7 @@ jg_allocator* jg_arena_new(size_t chunk_size) {
 }
 
 void jg_arena_free(jg_allocator* allocator) {
-    JG_ASSERT(allocator != NULL);
+    assert(allocator != NULL);
     jg_arena* arena = allocator->user_data;
     jg_arena_chunk* chunk = arena->first_chunk;
     while(chunk) {
@@ -67,10 +68,10 @@ void jg_arena_free(jg_allocator* allocator) {
 }
 
 static jg_arena_chunk* new_chunk(jg_arena* arena) {
-    JG_ASSERT(arena != NULL);
+    assert(arena != NULL);
 
     jg_arena_chunk* chunk = malloc(sizeof(jg_arena_chunk) + arena->chunk_size);
-    JG_ASSERT(chunk != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(chunk != NULL); // TODO(corentin@ki-dour.org) handle error.
     chunk->next_chunk = arena->first_chunk;
     chunk->offset = 0;
     arena->first_chunk = chunk;
@@ -78,9 +79,9 @@ static jg_arena_chunk* new_chunk(jg_arena* arena) {
 }
 
 static void* chunk_alloc(jg_arena_chunk* chunk, size_t chunk_size, size_t size, size_t align) {
-    JG_ASSERT(chunk != NULL);
-    JG_ASSERT(chunk_size > 0);
-    JG_ASSERT(align > 0);
+    assert(chunk != NULL);
+    assert(chunk_size > 0);
+    assert(align > 0);
 
     void* base = chunk + 1;
     size_t offset = chunk->offset;
@@ -102,9 +103,9 @@ static void* chunk_alloc(jg_arena_chunk* chunk, size_t chunk_size, size_t size, 
 }
 
 static void* arena_alloc(size_t size, size_t align, void* user_data) {
-    JG_ASSERT(size > 0);
-    JG_ASSERT(align > 0);
-    JG_ASSERT(user_data != NULL);
+    assert(size > 0);
+    assert(align > 0);
+    assert(user_data != NULL);
     jg_arena* arena = user_data;
 
     jg_arena_chunk* chunk = arena->first_chunk;
@@ -125,7 +126,7 @@ static void* arena_alloc(size_t size, size_t align, void* user_data) {
     // everyhing is full, we create a new chunk
     chunk = new_chunk(arena);
     result = chunk_alloc(chunk, chunk_size, size, align);
-    JG_ASSERT(result != NULL); // alignment and size requirements don't fit in chunk_size
+    assert(result != NULL); // alignment and size requirements don't fit in chunk_size
 
     return result;
 }

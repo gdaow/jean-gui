@@ -5,10 +5,10 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <jgui/debug.h>
 #include <jgui/context.h>
 #include <jgui/object.h>
 

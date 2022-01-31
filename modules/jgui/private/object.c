@@ -12,10 +12,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "common/debug.h"
+#include <jgui/class.h>
+#include <jgui/debug.h>
+#include <jgui/value.h>
+
 #include "class.h"
-#include "jgui/class.h"
-#include "jgui/value.h"
 
 typedef struct jg_object_header_s {
     const jg_class* class_;
@@ -25,12 +26,12 @@ typedef struct jg_object_header_s {
 const char* jg_object_class_id = "Object";
 
 void* jg_object_new(const jg_class* class_) {
-    JG_ASSERT(class_ != NULL);
+    assert(class_ != NULL);
 
     size_t total_size = sizeof(jg_object_header) + class_->size;
 
     jg_object_header* header = calloc(1, total_size);
-    JG_ASSERT(header != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(header != NULL); // TODO(corentin@ki-dour.org) handle error.
 
     header->class_ = class_;
     void* object = header + 1;
@@ -48,7 +49,7 @@ void* jg_object_new(const jg_class* class_) {
 }
 
 void jg_object_free(void* object) {
-    JG_ASSERT(object != NULL);
+    assert(object != NULL);
     jg_object_header* header = (jg_object_header*)object - 1;
     const jg_class* class_ = header->class_;
 
@@ -67,33 +68,33 @@ void jg_object_free(void* object) {
 static const jg_class* get_class(const void* object);
 
 jg_value jg_object_get(const void* object, const char* property_id) {
-    JG_ASSERT(object != NULL);
-    JG_ASSERT(property_id != NULL && strlen(property_id) > 0);
+    assert(object != NULL);
+    assert(property_id != NULL && strlen(property_id) > 0);
 
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, property_id, JG_MEMBER_PROPERTY);
-    JG_ASSERT(member != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(member != NULL); // TODO(corentin@ki-dour.org) handle error.
     return member->data.property.getter(object);
 }
 
 void jg_object_set(void* object, const char* property_id, const jg_value value) {
-    JG_ASSERT(object != NULL);
-    JG_ASSERT(property_id != NULL && strlen(property_id) > 0);
+    assert(object != NULL);
+    assert(property_id != NULL && strlen(property_id) > 0);
 
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, property_id, JG_MEMBER_PROPERTY);
-    JG_ASSERT(member != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(member != NULL); // TODO(corentin@ki-dour.org) handle error.
     member->data.property.setter(object, value);
 }
 
 jg_value jg_object_call(const void* object, const char* method_id, jg_value* arguments) {
-    JG_ASSERT(object != NULL);
-    JG_ASSERT(method_id != NULL && strlen(method_id) > 0);
-    JG_ASSERT(arguments != NULL);
+    assert(object != NULL);
+    assert(method_id != NULL && strlen(method_id) > 0);
+    assert(arguments != NULL);
 
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, method_id, JG_MEMBER_METHOD);
-    JG_ASSERT(member != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(member != NULL); // TODO(corentin@ki-dour.org) handle error.
 
     jg_value* end = arguments;
     while(!jg_is_none(*end)) {

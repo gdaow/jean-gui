@@ -9,20 +9,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
+#include <jgui/debug.h>
 
 #if JG_DEBUG
-void jg_assert_handler(
-    bool test,
-    const char* test_string,
-    const char* file,
-    int line
-) {
-    if(test) {
-        return;
-    }
 
-    fprintf(stderr, "JEAN-GUI ASSERT FAILED:(%s:%i):%s", file, line, test_string);
+static void default_assert_handler(const char* expression, const char* file, int line);
+
+static jg_assert_handler assert_handler = default_assert_handler;
+
+void jg_set_assert_handler(jg_assert_handler handler) {
+    assert_handler = handler;
+}
+
+void jg_assert(bool test, const char* expression, const char* file, int line) {
+    if(!test) {
+        assert_handler(expression, file, line);
+    }
+}
+
+static void default_assert_handler(const char* expression, const char* file, int line) {
+    fprintf(stderr, "JEAN-GUI ASSERT FAILED:(%s:%i):%s", file, line, expression);
     abort();
 }
 

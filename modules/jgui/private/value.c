@@ -5,9 +5,9 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include <assert.h>
 
-#include "jgui/value.h"
+#include <jgui/debug.h>
+#include <jgui/value.h>
 
 typedef enum {
     JG_NONE,

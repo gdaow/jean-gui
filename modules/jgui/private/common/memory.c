@@ -8,25 +8,25 @@
  */
 #include <stdalign.h>
 
+#include <jgui/debug.h>
 #include "memory.h"
-#include "debug.h"
 
 
 void* jg_allocate(jg_allocator* allocator, size_t count) {
-    JG_ASSERT(allocator != NULL);
-    JG_ASSERT(count > 0);
+    assert(allocator != NULL);
+    assert(count > 0);
     return allocator->allocate(count, alignof(max_align_t), allocator->user_data);
 }
 
 void* jg_allocate_aligned(jg_allocator* allocator, size_t count, size_t align) {
-    JG_ASSERT(allocator != NULL);
-    JG_ASSERT(count > 0);
-    JG_ASSERT(align > 0);
+    assert(allocator != NULL);
+    assert(count > 0);
+    assert(align > 0);
     return allocator->allocate(count, align, allocator->user_data);
 }
 
 void jg_free(jg_allocator* allocator, void* pointer) {
-    JG_ASSERT(allocator != NULL);
-    JG_ASSERT(pointer != NULL);
+    assert(allocator != NULL);
+    assert(pointer != NULL);
     allocator->free(pointer, allocator->user_data);
 }

@@ -8,7 +8,8 @@
  */
 #include <string.h>
 
-#include "debug.h"
+#include <jgui/debug.h>
+
 #include "index.h"
 
 static void index_sort(jg_index* index);
@@ -21,9 +22,9 @@ jg_index jg_index_build(
     char** string_pool,
     void* user_data
  ) {
-     JG_ASSERT(get_id_and_next != NULL);
-     JG_ASSERT(build_item != NULL);
-     JG_ASSERT(index_pool != NULL);
+     assert(get_id_and_next != NULL);
+     assert(build_item != NULL);
+     assert(index_pool != NULL);
 
     const char** keys = *index_pool;
     const void* current_item = first_item;
@@ -33,7 +34,7 @@ jg_index jg_index_build(
         *((*index_pool)++) = get_id_and_next(&current_item);
     }
 
-    JG_ASSERT(*index_pool >= keys);
+    assert(*index_pool >= keys);
     size_t count = (size_t)(*index_pool - keys); // total of allocated slots
  
     jg_index result = (jg_index) {
@@ -57,7 +58,7 @@ jg_index jg_index_build(
         const void* next_item = current_item;
         const char* id = get_id_and_next(&next_item);
         int sorted_id = jg_index_search(&result, id);
-        JG_ASSERT(sorted_id >= 0 && (size_t)sorted_id < count);
+        assert(sorted_id >= 0 && (size_t)sorted_id < count);
         build_item(current_item, sorted_id, user_data);
         current_item = next_item;
     }
@@ -67,21 +68,21 @@ jg_index jg_index_build(
 
 static int binary_search(const char** index, const char* key, int low, int high, int current_char_index);
 int jg_index_search(const jg_index* index, const char* key) {
-    JG_ASSERT(index != NULL);
-    JG_ASSERT(key != NULL);
+    assert(index != NULL);
+    assert(key != NULL);
 
     if(!index->count) {
         return -1;
     }
 
     int result = binary_search(index->keys, key, 0, (int)index->count - 1, 0);
-    JG_ASSERT(result == -1 || (result >= 0 && (size_t)result < index->count));
+    assert(result == -1 || (result >= 0 && (size_t)result < index->count));
     return result;
 }
 
 static void swap(const char** a, const char**b) {
-    JG_ASSERT(a != NULL);
-    JG_ASSERT(b != NULL);
+    assert(a != NULL);
+    assert(b != NULL);
     const char* tmp = *a;
     *a = *b;
     *b = tmp;
@@ -92,8 +93,8 @@ static int partition(
     int low,
     int high
 ) {
-    JG_ASSERT(index != NULL);
-    JG_ASSERT(low < high);
+    assert(index != NULL);
+    assert(low < high);
 
     const char* pivot = index[high];
     int i = (low - 1);
@@ -110,7 +111,7 @@ static int partition(
 }
 
 static void quick_sort(const char** index, int low, int high) {
-    JG_ASSERT(index != NULL);
+    assert(index != NULL);
     if (low < high)
     { 
         int pivot_index = partition(index, low, high);
@@ -120,9 +121,9 @@ static void quick_sort(const char** index, int low, int high) {
 }
 
 static int binary_search(const char** index, const char* key, int low, int high, int current_char_index) {
-    JG_ASSERT(index != NULL);
-    JG_ASSERT(key != NULL);
-    JG_ASSERT(current_char_index >= 0 && (size_t)current_char_index <= strlen(key));
+    assert(index != NULL);
+    assert(key != NULL);
+    assert(current_char_index >= 0 && (size_t)current_char_index <= strlen(key));
 
     if(low > high) {
         return -1;
@@ -131,7 +132,7 @@ static int binary_search(const char** index, const char* key, int low, int high,
     int search_id = low + (high - low) / 2;
     const char* candidate = index[search_id];
     //TODO(corentin@ki-dour.org) I think their's a bug here, we can search in the index keys past them ends.
-    JG_ASSERT(current_char_index >= 0 && (size_t)current_char_index <= strlen(candidate));
+    assert(current_char_index >= 0 && (size_t)current_char_index <= strlen(candidate));
 
     while(1) {
         int diff = candidate[current_char_index] - key[current_char_index];
@@ -152,7 +153,7 @@ static int binary_search(const char** index, const char* key, int low, int high,
 }
 
 static void index_sort(jg_index* index) {
-    JG_ASSERT(index != NULL);
+    assert(index != NULL);
 
     if(index->count == 0) {
         return;
@@ -162,7 +163,7 @@ static void index_sort(jg_index* index) {
     #if JG_DEBUG
         const char** keys = index->keys;
         for(size_t i = 0; i < index->count - 1; ++i) {
-            JG_ASSERT(strcmp(keys[i], keys[i+1]) < 0);
+            assert(strcmp(keys[i], keys[i+1]) < 0);
         }
     #endif
 }

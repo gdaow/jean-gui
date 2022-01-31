@@ -6,10 +6,10 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <jgui/debug.h>
 #include <jgui/context.h>
 
 #include "common.h"

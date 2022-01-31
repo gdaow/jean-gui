@@ -9,37 +9,39 @@
 #include <stdalign.h>
 #include <string.h>
 
-#include "debug.h"
+#include <jgui/debug.h>
+
+#include "constants.h"
 #include "memory.h"
 #include "string.h"
 
 size_t jg_strnlen(const char *s, size_t max_size) {
-    JG_ASSERT(s != NULL);
+    assert(s != NULL);
 
     const char* end = memchr(s, '\0', max_size);
     if (end == NULL) {
         return max_size;
     }
 
-    JG_ASSERT(end >= s);
+    assert(end >= s);
     return (size_t)(end - s);
 }
 
 char* jg_copy_string(jg_allocator* allocator, const char* value, size_t max_length) {
-    JG_ASSERT(allocator != NULL);
-    JG_ASSERT(value != NULL);
+    assert(allocator != NULL);
+    assert(value != NULL);
 
     size_t length = jg_strnlen(value, max_length) + 1;
     char* copy = jg_allocate_aligned(allocator, length, alignof(char));
-    JG_ASSERT(copy != NULL); //TODO(corentin@ki-dour.org) handle error.
+    assert(copy != NULL); //TODO(corentin@ki-dour.org) handle error.
     memcpy(copy, value, length);
     copy[length] = '\0';
     return copy;
 }
 
 char* jg_copy_identifier(jg_allocator* allocator, const char* value) {
-    JG_ASSERT(allocator != NULL);
-    JG_ASSERT(value != NULL);
+    assert(allocator != NULL);
+    assert(value != NULL);
 
     return jg_copy_string(allocator, value, JG_MAX_IDENTIFIER_LENGTH);
 }

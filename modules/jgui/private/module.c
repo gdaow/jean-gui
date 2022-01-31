@@ -9,10 +9,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <jgui/debug.h>
 #include <jgui/module.h>
 
 #include "common/arena.h"
-#include "common/debug.h"
 #include "common/index.h"
 #include "common/memory.h"
 #include "common/string.h"
@@ -27,9 +27,9 @@ jg_class_builder* jg_module_add_class(
     const char* parent_id,
     size_t size
 ) {
-    JG_ASSERT(module_builder != NULL);
-    JG_ASSERT(id != NULL && strlen(id) > 0);
-    JG_ASSERT(parent_id == NULL || strlen(parent_id) > 0);
+    assert(module_builder != NULL);
+    assert(id != NULL && strlen(id) > 0);
+    assert(parent_id == NULL || strlen(parent_id) > 0);
 
     jg_allocator* allocator = module_builder->allocator;
     char* parent_id_copy = NULL;
@@ -43,7 +43,7 @@ jg_class_builder* jg_module_add_class(
         }
         parent_namespace_copy = jg_copy_identifier(allocator, parent_namespace);
 
-        JG_ASSERT(parent_id_copy != NULL); // TODO(corentin@ki-dour.org) handle error.
+        assert(parent_id_copy != NULL); // TODO(corentin@ki-dour.org) handle error.
     }
 
     jg_class_builder* new_class = jg_allocate_aligned(
@@ -52,7 +52,7 @@ jg_class_builder* jg_module_add_class(
         alignof(jg_class_builder)
     );
 
-    JG_ASSERT(new_class != NULL); // TODO(corentin@ki-dour.org) handle error.
+    assert(new_class != NULL); // TODO(corentin@ki-dour.org) handle error.
     
     *new_class = (jg_class_builder) {
         .allocator = module_builder->allocator,
@@ -73,8 +73,8 @@ static const char* get_module_id_and_next(const void** item);
 static void build_module(const void* item, int sorted_id, void* user_data);
 
 jg_index jg_module_build_index(jg_module_builder* first_module_builder, jg_pool* pool) {
-    JG_ASSERT(first_module_builder != NULL);
-    JG_ASSERT(pool != NULL);
+    assert(first_module_builder != NULL);
+    assert(pool != NULL);
 
     jg_index module_index = jg_index_build(
         first_module_builder,
@@ -91,8 +91,8 @@ jg_index jg_module_build_index(jg_module_builder* first_module_builder, jg_pool*
 }
 
 jg_class* jg_module_get_class(jg_module* module, const char* id) {
-    JG_ASSERT(module != NULL);
-    JG_ASSERT(id != NULL && strlen(id) > 0);
+    assert(module != NULL);
+    assert(id != NULL && strlen(id) > 0);
 
     int class_id = jg_index_search(&module->class_index, id);
     if(class_id == -1) {
@@ -103,8 +103,8 @@ jg_class* jg_module_get_class(jg_module* module, const char* id) {
 }
 
 static const char* get_module_id_and_next(const void** item) {
-    JG_ASSERT(item != NULL);
-    JG_ASSERT(*item != NULL);
+    assert(item != NULL);
+    assert(*item != NULL);
 
     const jg_module_builder* module_builder = *item;
     const char* id = module_builder->namespace;
@@ -113,9 +113,9 @@ static const char* get_module_id_and_next(const void** item) {
 }
 
 static void build_module(const void* item, int sorted_id, void* user_data) {
-    JG_ASSERT(item != NULL);
-    JG_ASSERT(sorted_id >= 0);
-    JG_ASSERT(user_data != NULL);
+    assert(item != NULL);
+    assert(sorted_id >= 0);
+    assert(user_data != NULL);
 
     jg_pool* pool = user_data;
     jg_module* module_pool = pool->modules;

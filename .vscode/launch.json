@@ -11,9 +11,6 @@
             "program": "${workspaceFolder}/.build/modules/tests/jg-tests",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "env": {
-                "CMOCKA_MESSAGE_OUTPUT": "subunit"
-            }
         },
         {
             "type": "python",
