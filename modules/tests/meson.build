@@ -1,4 +1,5 @@
-minunit_includes = include_directories('../../subprojects/minunit')
+cmocka_project = subproject('cmocka')
+cmocka_dep = cmocka_project.get_variable('cmocka_dep')
 
 jg_test_src = files(
     'fixtures/user_model.c',
@@ -12,6 +13,5 @@ jg_test_src = files(
 executable(
     'jg-tests',
     jg_test_src,
-    dependencies: [jg_dep],
-    include_directories: [minunit_includes]
+    dependencies: [jg_dep, cmocka_dep]
 )

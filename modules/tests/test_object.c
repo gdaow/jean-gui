@@ -9,30 +9,73 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <minunit.h>
-
 #include <jgui/context.h>
 #include <jgui/object.h>
 
 #include "fixtures/user_model.h"
+#include "common.h"
 
-static jg_context* context = NULL;
-static const jg_class* user_class = NULL;
-static const jg_class* admin_class = NULL;
+/** Common fixture for all object tests. */
+typedef struct fixture_s {
+    jg_context* context;
+    const jg_class* user_class;
+    const jg_class* admin_class;
+} fixture;
+
+static int setup(void** state) {
+    jg_context* context = jg_context_load((jg_plugin[]) {
+        user_model_plugin,
+        NULL
+    });
+
+    *state = malloc(sizeof(fixture));
+    if(!*state) {
+        return -1;
+    }
+    
+    memcpy(
+        *state,
+        &(fixture) {
+            .context = context,
+            .user_class = jg_context_get_class(context, user_model_ns, user_class_id),
+            .admin_class = jg_context_get_class(context, user_model_ns, admin_class_id)
+        },
+        sizeof(fixture)
+    );
+
+    return 0;
+}
+
+static int teardown(void** state) {
+    jg_context_free((*(fixture**)state)->context);
+    return 0;
+}
 
 /** jg_class_get should return the class object given a class name and return NULL if the class was not
  *  registered in the module. */
-MU_TEST(test_jg_class_get) {
+static void test_jg_class_get(void** state) {
+    fixture* fixture = *state;
+    jg_context* context = fixture->context;
+
     const jg_class* user_class = jg_context_get_class(context, user_model_ns, user_class_id);
-    mu_check(user_class != NULL);
+    assert_non_null(user_class);
 
     const jg_class* admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
-    mu_check(admin_class != NULL);
+    assert_non_null(admin_class);
 
-    mu_check(jg_context_get_class(context, user_model_ns, "DummyClass") == NULL);
-    mu_check(jg_context_get_class(context, "https://ki-dour.org/jg/dummy-ns", admin_class_id) == NULL);
+    const jg_class* wrong_class_name = jg_context_get_class(context, user_model_ns, "DummyClass");
+    assert_null(wrong_class_name);
+
+    const jg_class* wrong_namespace = jg_context_get_class(
+        context,
+        "https://ki-dour.org/jg/dummy-ns",
+        admin_class_id
+    );
+
+    assert_null(wrong_namespace);
 }
 
+/*
 static void test_constructors(const jg_class* class_, const char* expected_class_id) {
     user* user = jg_object_new(class_);
 
@@ -46,15 +89,16 @@ static void test_constructors(const jg_class* class_, const char* expected_class
     mu_assert_string_eq(expected_class_id, destroyed_class_id);
 }
 
-/** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
 MU_TEST(test_jg_object_constructor) {
     test_constructors(user_class, user_class_id);
     test_constructors(admin_class, admin_class_id);
 }
+*/
 
 /** jg_object_get should correctly retrieve a property, be it declared on the type or on a parent. */
-MU_TEST(test_jg_object_get) {
-    admin* admin = jg_object_new(admin_class);
+static void test_jg_object_get(void** state) {
+    fixture* fixture = *state;
+    admin* admin = jg_object_new(fixture->admin_class);
     const char* test_string = "Jean-jean mi";
     admin->base.name = test_string;
     admin->role = test_string;
@@ -62,64 +106,55 @@ MU_TEST(test_jg_object_get) {
     jg_value property;
     
     property = jg_object_get(admin, "name");
-    mu_assert_string_eq(test_string, jg_to_string(property));
+    assert_string_equal(test_string, jg_to_string(property));
 
     property = jg_object_get(admin, "role");
-    mu_assert_string_eq(test_string, jg_to_string(property));
+    assert_string_equal(test_string, jg_to_string(property));
 
     jg_object_free(admin);
 }
 
 /** jg_object_set should correctly set a property, be it declared on the type or on a parent. */
-MU_TEST(test_jg_object_set) {
-    admin* admin = jg_object_new(admin_class);
+static void test_jg_object_set(void** state) {
+    fixture* fixture = *state;
+
+    admin* admin = jg_object_new(fixture->admin_class);
     const char* test_string = "Jean-jean mi";
     jg_value test_value = jg_string(test_string);
 
     jg_object_set(admin, "name", test_value);
     jg_object_set(admin, "role", test_value);
-    mu_assert_string_eq(test_string, admin->base.name);
-    mu_assert_string_eq(test_string, admin->role);
+    assert_string_equal(test_string, admin->base.name);
+    assert_string_equal(test_string, admin->role);
 
     jg_object_free(admin);
 }
 
 /** dynamic method calls shoud call the correct override */
-MU_TEST(test_jg_object_call) {
-    user* user = jg_object_new(user_class);
-    admin* admin = jg_object_new(admin_class);
+static void test_jg_object_call(void** state) {
+    fixture* fixture = *state;
+
+    user* user = jg_object_new(fixture->user_class);
+    admin* admin = jg_object_new(fixture->admin_class);
     
-    mu_check(user_has_permission(user, PERM_LOGIN));
-    mu_check(user_has_permission(user, PERM_CHANGE_PASSWORD));
-    mu_check(!user_has_permission(user, PERM_CREATE_USER));
-    mu_check(!user_has_permission(user, PERM_DELETE_USER));
-    mu_check(user_has_permission(&admin->base, PERM_ALL));
+    assert(user_has_permission(user, PERM_LOGIN));
+    assert(user_has_permission(user, PERM_CHANGE_PASSWORD));
+    assert(!user_has_permission(user, PERM_CREATE_USER));
+    assert(!user_has_permission(user, PERM_DELETE_USER));
+    assert(user_has_permission(&admin->base, PERM_ALL));
 
     jg_object_free(admin);
     jg_object_free(user);
 }
 
-static void setup() {
-    context = jg_context_load((jg_plugin[]) {
-        user_model_plugin,
-        NULL
-    });
-    user_class = jg_context_get_class(context, user_model_ns, user_class_id);
-    admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
-}
+void run_object_suite() {
+    const struct CMUnitTest test_object[] = {
+        cmocka_unit_test(test_jg_class_get),
+        //cmocka_unit_test(test_jg_object_constructor),
+        cmocka_unit_test(test_jg_object_get),
+        cmocka_unit_test(test_jg_object_set),
+        cmocka_unit_test(test_jg_object_call)
+    };
 
-static void teardown() {
-    admin_class = NULL;
-    user_class = NULL;
-    jg_context_free(context);
-    context = NULL;
-}
-
-MU_TEST_SUITE(object_suite) {
-    MU_SUITE_CONFIGURE(setup, teardown);
-    MU_RUN_TEST(test_jg_class_get);
-    MU_RUN_TEST(test_jg_object_constructor);
-    MU_RUN_TEST(test_jg_object_get);
-    MU_RUN_TEST(test_jg_object_set);
-    MU_RUN_TEST(test_jg_object_call);
+    cmocka_run_group_tests(test_object, setup, teardown);
 }

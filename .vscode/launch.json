@@ -12,7 +12,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "env": {
-                "CK_FORK": "no"
+                "CMOCKA_MESSAGE_OUTPUT": "subunit"
             }
         },
         {

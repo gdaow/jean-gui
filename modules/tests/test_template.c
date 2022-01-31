@@ -6,18 +6,17 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 #include <string.h>
-#include <minunit.h>
 
 #include <jgui/module.h>
 #include <jgui/object.h>
 #include <jgui/template.h>
 
 #include "fixtures/user_model.h"
+#include "common.h"
 
 
-jg_context* context = NULL;
-
-MU_TEST(test_jg_template_scalar_property) {
+void test_jg_template_scalar_property(void** state) {
+    jg_context* context = *state;
     jg_template* admin_template = jg_template_from_string(
         "%TAG ! http://ki-dour.org/jean-gui/tests/user-model:\n"
         "---\n"
@@ -29,25 +28,34 @@ MU_TEST(test_jg_template_scalar_property) {
     );
 
     admin* admin = (struct admin_s*)jg_template_instanciate(admin_template);
-    mu_assert_string_eq(admin->base.name, "Dr. Meeseeks");
+    assert_string_equal(admin->base.name, "Dr. Meeseeks");
 
     jg_object_free(admin);
     jg_template_free(admin_template); // teamemplate will be freed by i's parent
 }
 
-static void setup() {
-    context = jg_context_load((jg_plugin[]) {
+static int setup(void** state) {
+    *state = jg_context_load((jg_plugin[]) {
         user_model_plugin,
         NULL
     });
+    
+    if(!*state) {
+        return -1;
+    }
+
+    return 0;
 }
 
-static void teardown() {
-    jg_context_free(context);
-    context = NULL;
+static int teardown(void** state) {
+    jg_context_free(*state);
+    return 0;
 }
 
-MU_TEST_SUITE(template_suite) {
-    MU_SUITE_CONFIGURE(setup, teardown);
-    MU_RUN_TEST(test_jg_template_scalar_property);
+void run_template_suite() {
+    const struct CMUnitTest template_tests[] = {
+        cmocka_unit_test(test_jg_template_scalar_property),
+    };
+
+    cmocka_run_group_tests(template_tests, setup, teardown);
 }

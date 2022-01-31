@@ -16,5 +16,7 @@
  * Test jg_arguments, could be renamed to jg_call_context actually, and we could provide
    methods to call error on it. Maybe push the function result in it too.
  * Rename jg_module_add_class to jg_add_class, jg_class_add_method to jg_add_method.
- 
+ * Switch unit tests to CMocka
+ * Redefine assert macro rather than using JG_ASSERT
+ * Plug cmokca allocator when running unit tests.
  
