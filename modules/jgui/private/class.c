@@ -56,6 +56,41 @@ void jg_class_add_property(
     });
 }
 
+bool jg_pop_bool(jg_arguments* arguments) {
+    (void)arguments;
+    return false;
+}
+
+int jg_pop_int(jg_arguments* arguments) {
+    (void)arguments;
+    return 0;
+}
+
+double jg_pop_double(jg_arguments* arguments) {
+    (void)arguments;
+    return .0;
+}
+
+const char* jg_pop_string(jg_arguments* arguments) {
+    (void)arguments;
+    return NULL;
+}
+
+const void* jg_pop_raw(jg_arguments* arguments) {
+    (void)arguments;
+    return NULL;
+}
+
+void* jg_pop_object(jg_arguments* arguments) {
+    (void)arguments;
+    return NULL;
+}
+
+bool jg_arguments_error(jg_arguments* arguments) {
+    (void)arguments;
+    return false;
+}
+
 static const char* get_class_id_and_next(const void** item);
 static void build_class(const void* item, int sorted_id, void* user_data);
 

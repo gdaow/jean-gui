@@ -16,11 +16,13 @@
 
 typedef struct jg_class_builder_s jg_class_builder;
 typedef struct jg_class_s jg_class;
+typedef struct jg_arguments_s jg_arguments;
+
 
 typedef void (*jg_constructor)(void* object);
 typedef void (*jg_destructor)(void* object);
 
-typedef jg_value (*jg_method)(jg_value* arguments);
+typedef jg_value (*jg_method)(jg_arguments*);
 
 /** Callback for voids property getter.*/
 typedef jg_value (*jg_getter_t)(const void*);
@@ -38,5 +40,13 @@ void jg_class_add_property(
     jg_getter_t getter,
     jg_setter_t setter
 );
+
+bool jg_pop_bool(jg_arguments* arguments);
+int jg_pop_int(jg_arguments* arguments);
+double jg_pop_double(jg_arguments* arguments);
+const char* jg_pop_string(jg_arguments* arguments);
+const void* jg_pop_raw(jg_arguments* arguments);
+void* jg_pop_object(jg_arguments* arguments);
+bool jg_arguments_error(jg_arguments* arguments);
 
 #endif

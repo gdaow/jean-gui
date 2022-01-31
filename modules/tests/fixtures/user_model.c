@@ -76,11 +76,14 @@ bool user_has_permission(user* user, permission_flags flags) {
     );
 }
 
-static jg_value user_has_permission_impl(jg_value* arguments) {
-    assert(jg_is_int(arguments[0]));
-    assert(jg_is_none(arguments[1]));
+static jg_value user_has_permission_impl(jg_arguments* args) {
+    int flags = jg_pop_int(args);
 
-    return jg_bool(jg_to_int(arguments[0]) & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
+    if(jg_arguments_error(args)) {
+        return jg_none();
+    }
+
+    return jg_bool(flags & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
 }
 
 void register_user_class(jg_module_builder* module) {
@@ -119,10 +122,13 @@ static void admin_destructor(void* object) {
     }
 }
 
-static jg_value admin_has_permission(jg_value* arguments) {
-    assert(jg_is_int(arguments[0]));
-    assert(jg_is_none(arguments[1]));
-    return jg_bool(jg_to_int(arguments[0]) & PERM_ALL);
+static jg_value admin_has_permission(jg_arguments* args) {
+    int flags = jg_pop_int(args);
+    if(jg_arguments_error(args)) {
+        return jg_none();
+    }
+
+    return jg_bool(flags & PERM_ALL);
 }
 
 

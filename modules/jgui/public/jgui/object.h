@@ -21,9 +21,6 @@ typedef struct jg_member_s jg_member;
 typedef struct jg_module_builder_s jg_module_builder;
 typedef struct jg_class_builder_s jg_class_builder;
 
-typedef jg_value (*jg_method)(jg_value* arguments);
-
-
 extern const char* jg_object_class_id;
 
 /**

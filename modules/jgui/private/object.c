@@ -92,7 +92,7 @@ jg_value jg_object_call(const void* object, const char* method_id, jg_value* arg
     const jg_class* class_ = get_class(object);
     const jg_member* member = jg_class_get_member(class_, method_id, JG_MEMBER_METHOD);
     JG_ASSERT(member != NULL); // TODO(corentin@ki-dour.org) handle error.
-    return member->data.method(arguments);
+    return member->data.method(NULL);
 }
 
 static const jg_class* get_class(const void* object) {

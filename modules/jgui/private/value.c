@@ -80,7 +80,7 @@ bool jg_to_bool(jg_value value) {
     return value._value._bool;
 }
 
-long jg_to_int(jg_value value) {
+int jg_to_int(jg_value value) {
     assert(jg_is_int(value));
     return value._value._int;
 }

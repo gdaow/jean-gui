@@ -49,7 +49,7 @@ bool jg_is_raw(jg_value value);
 bool jg_is_object(jg_value value);
 
 bool jg_to_bool(jg_value value);
-long jg_to_int(jg_value value);
+int jg_to_int(jg_value value);
 double jg_to_double(jg_value value);
 const char* jg_to_string(jg_value value);
 const void* jg_to_raw(jg_value value);
