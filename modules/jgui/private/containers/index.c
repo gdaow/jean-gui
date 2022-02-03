@@ -11,6 +11,7 @@
 #include <string.h>
 #include <limits.h>
 
+#include "jgui/private/memory/alloc.h"
 #include "jgui/private/misc/assert.h"
 #include "jgui/private/misc/utils.h"
 
@@ -28,8 +29,19 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
 }
 
 void* jg_index_add(jg_index* index, const char* key) {
+    assert(index != NULL);
+    (void)key;
+    /*
+    size_t count = 
+    if(index->count == index->size) {
+        index->size += (index->size + 1) * 2;
+        index->items = jg_realloc(index, index->size * index->item_size);
+        index->keys = jg_realloc(index->keys, index->size * sizeof(const char*));
+    }
+    index->
     (void)index;
     (void)key;
+    */
     return NULL;
 }
 

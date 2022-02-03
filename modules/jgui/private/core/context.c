@@ -71,6 +71,7 @@ jg_class* jg_context_add_class(jg_context* context, jg_id id, jg_id parent_id, s
     jg_module* module = jg_index_get(module_index, id.namespace);
     if(module == NULL) {
         module = jg_index_add(module_index, id.namespace);
+        assert(module != NULL);
         jg_module_init(module);
     }
 

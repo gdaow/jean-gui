@@ -16,6 +16,7 @@ jg_private_includes = include_directories('..')
 jg_src = files(
     'private/containers/index.c',
     'private/containers/stack.c',
+    'private/containers/vector.c',
     'private/core/context.c',
     'private/core/core_plugin.c',
     'private/memory/alloc.c',

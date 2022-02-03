@@ -6,24 +6,22 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 
-#include "common.h"
+#include "jgui/private/containers/vector.h"
 
-/*
-void jg_assert_handler(const char* expression, const char* file, int line) {
-    mock_assert(0, expression, file, line);
-}
-*/
+#include "tests/common/cmocka.h"
 
-void run_context_suite();
-void run_object_suite();
-void run_template_suite();
-void run_value_suite();
+void test_containers(jg_vector* tests);
 
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
-    run_context_suite();
-    run_object_suite();
-    run_template_suite();
-    run_value_suite();
+    jg_vector tests = jg_vector_of(struct CMUnitTest);
+    test_containers(&tests);
+    return _cmocka_run_group_tests(
+        "JGui Tests",
+        jg_vector_front(&tests),
+        jg_vector_size(&tests),
+        NULL,
+        NULL
+    );
 }

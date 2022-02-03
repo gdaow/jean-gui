@@ -6,8 +6,8 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
-#ifndef JGUI_TESTS_COMMON_H
-#define JGUI_TESTS_COMMON_H
+#ifndef JGUI_TESTS_COMMON_CMOCKA_H
+#define JGUI_TESTS_COMMON_CMOCKA_H
 
 #include <stdarg.h>
 #include <stdint.h>
