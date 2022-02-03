@@ -6,15 +6,11 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
-#ifndef JGUI_TESTS_COMMON_H
-#define JGUI_TESTS_COMMON_H
+#include "jgui/private/memory/fixed_pool.h"
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <stddef.h>
-#include <cmocka.h>
+#include <jgui/static_config.h>
 
-#include "jgui/private/misc/assert.h"
-
+#if JG_MEMORY_DEBUG
+static const char disabled_fixed_pool_location;
+const void* disabled_fixed_pool = &disabled_fixed_pool_location;
 #endif

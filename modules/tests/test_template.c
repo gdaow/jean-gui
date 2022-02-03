@@ -7,8 +7,7 @@
  */
 #include <string.h>
 
-#include <jgui/module.h>
-#include <jgui/object.h>
+#include <jgui/object-model/object.h>
 #include <jgui/template.h>
 
 #include "fixtures/user_model.h"

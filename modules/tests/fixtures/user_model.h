@@ -9,19 +9,12 @@
  *
  */
 #pragma once
-#include "jgui/context.h"
+#include <jgui/core/context.h>
 #include <stdbool.h>
-
-typedef struct jg_context_builder_s jg_context_builder;
 
 typedef struct admin_s admin;
 typedef struct team_s team;
 typedef struct user_s user;
-
-extern const char* user_model_ns;
-extern const char* user_class_id;
-extern const char* admin_class_id;
-extern const char* team_class_id;
 
 typedef enum {
     PERM_LOGIN = 1,
@@ -34,8 +27,8 @@ typedef enum {
 struct user_s {
     const char* name;
     team* team;
-    const char* constructed_class_id;
-    const char** destructed_class_id;
+    jg_id constructed_class_id;
+    jg_id* destructed_class_id;
 };
 
 struct admin_s {
@@ -47,6 +40,10 @@ struct team_s {
     const char* name;
 };
 
-void user_model_plugin(jg_context_builder* context_builder);
+jg_id user_class_id();
+jg_id admin_class_id();
+jg_id team_class_id();
+
+void user_model_plugin(jg_context* context);
 
 bool user_has_permission(user* user, permission_flags flags);

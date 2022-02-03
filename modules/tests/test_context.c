@@ -9,8 +9,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <jgui/debug.h>
-#include <jgui/context.h>
+#include <jgui/core/context.h>
+#include <jgui/core/error_code.h>
+
+#include "jgui/private/misc/assert.h"
 
 #include "common.h"
 
@@ -23,8 +25,8 @@ static void error_handler(jg_error_code error_code, const char* message) {
     function_called();
 }
 
-static void error_handler_plugin(jg_context_builder* context_builder) {
-    jg_set_error_handler(context_builder, error_handler);
+static void error_handler_plugin(jg_context* context) {
+    jg_set_error_handler(context, error_handler);
 }
 
 static void test_error_handler(void **state) {

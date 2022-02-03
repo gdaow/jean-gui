@@ -5,16 +5,12 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
+ * TODO:
+ *  - document.
  */
-#ifndef JGUI_TESTS_COMMON_H
-#define JGUI_TESTS_COMMON_H
+#ifndef JGUI_PRIVATE_CORE_CONTEXT_H
+#define JGUI_PRIVATE_CORE_CONTEXT_H
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <stddef.h>
-#include <cmocka.h>
-
-#include "jgui/private/misc/assert.h"
+#include <jgui/core/context.h>
 
 #endif

@@ -8,7 +8,7 @@
  * Custom allocators.
  *
  */
- #include <jgui/object.h>
+#include <jgui/object-model/object.h>
 #include <jgui/template.h>
 
 int main(int argc, char** argv) {

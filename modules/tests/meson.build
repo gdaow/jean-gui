@@ -13,5 +13,6 @@ jg_test_src = files(
 executable(
     'jg-tests',
     jg_test_src,
-    dependencies: [jg_dep, cmocka_dep]
+    dependencies: [jg_dep, cmocka_dep],
+    include_directories: ['..']
 )

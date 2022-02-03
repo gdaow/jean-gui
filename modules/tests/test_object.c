@@ -8,10 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <jgui/debug.h>
-#include <jgui/context.h>
-#include <jgui/object.h>
+#include <jgui/core/context.h>
+#include <jgui/object-model/object.h>
 
+#include "jgui/private/misc/assert.h"
 #include "fixtures/user_model.h"
 #include "common.h"
 
@@ -37,8 +37,8 @@ static int setup(void** state) {
         *state,
         &(fixture) {
             .context = context,
-            .user_class = jg_context_get_class(context, user_model_ns, user_class_id),
-            .admin_class = jg_context_get_class(context, user_model_ns, admin_class_id)
+            .user_class = jg_context_get_class(context, user_class_id()),
+            .admin_class = jg_context_get_class(context, admin_class_id())
         },
         sizeof(fixture)
     );
@@ -57,19 +57,15 @@ static void test_jg_class_get(void** state) {
     fixture* fixture = *state;
     jg_context* context = fixture->context;
 
-    const jg_class* user_class = jg_context_get_class(context, user_model_ns, user_class_id);
+    const jg_class* user_class = jg_context_get_class(context, user_class_id());
     assert_non_null(user_class);
 
-    const jg_class* admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
+    const jg_class* admin_class = jg_context_get_class(context, admin_class_id());
     assert_non_null(admin_class);
-
-    const jg_class* wrong_class_name = jg_context_get_class(context, user_model_ns, "DummyClass");
-    assert_null(wrong_class_name);
 
     const jg_class* wrong_namespace = jg_context_get_class(
         context,
-        "https://ki-dour.org/jg/dummy-ns",
-        admin_class_id
+        jg_id_new("https://ki-dour.org/jg/dummy-ns", "Admin")
     );
 
     assert_null(wrong_namespace);

@@ -8,28 +8,30 @@
 #include <assert.h>
 #include <stdalign.h>
 
-#include <jgui/object.h>
-#include <jgui/core.h>
-#include <jgui/class.h>
-#include <jgui/value.h>
+#include <jgui/object-model/object.h>
+#include <jgui/core/core.h>
+#include <jgui/core/context.h>
+#include <jgui/object-model/class.h>
+#include <jgui/object-model/value.h>
 
-#include "jgui/module.h"
 #include "user_model.h"
 
-const char* user_model_ns = "http://ki-dour.org/jean-gui/tests/user-model";
-const char* user_class_id = "User";
-const char* admin_class_id = "Admin";
-const char* team_class_id = "Team";
+static void register_user_class(jg_context* module);
+static void register_admin_class(jg_context* module);
+static void register_team_class(jg_context* module);
 
-void register_user_class(jg_module_builder* module);
-void register_admin_class(jg_module_builder* module);
-void register_team_class(jg_module_builder* module);
+jg_id user_model_class_id(const char* name) {
+    return jg_id_new("http://ki-dour.org/jean-gui/tests/user-model", name);
+}
 
-void user_model_plugin(jg_context_builder* context_builder) {
-    jg_module_builder* module = jg_context_add_module(context_builder, user_model_ns);
-    register_user_class(module);
-    register_admin_class(module);
-    register_team_class(module);
+jg_id user_class_id() { return user_model_class_id("User"); }
+jg_id admin_class_id() { return user_model_class_id("Admin"); }
+jg_id team_class_id() { return user_model_class_id("Team"); }
+
+void user_model_plugin(jg_context* context) {
+    register_user_class(context);
+    register_admin_class(context);
+    register_team_class(context);
 }
 
 static jg_value user_get_name(const void* object) {
@@ -58,13 +60,13 @@ static const char* user_has_permission_id = "has_permissions";
 
 void user_constructor(void* object) {
     user* user = object;
-    user->constructed_class_id = user_class_id;
+    user->constructed_class_id = user_class_id();
 }
 
 void user_destructor(void* object) {
     user* user = object;
     if(user->destructed_class_id) {
-        *(user->destructed_class_id) = user_class_id;
+        *(user->destructed_class_id) = user_class_id();
     }
 }
 
@@ -77,6 +79,8 @@ bool user_has_permission(user* user, permission_flags flags) {
 }
 
 static jg_value user_has_permission_impl(jg_arguments* args) {
+    (void)args;
+    /*
     int flags = jg_pop_int(args);
 
     if(jg_arguments_error(args)) {
@@ -84,17 +88,17 @@ static jg_value user_has_permission_impl(jg_arguments* args) {
     }
 
     return jg_bool(flags & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
+    */
+    return jg_none();
 }
 
-void register_user_class(jg_module_builder* module) {
-    jg_class_builder* class_ = jg_module_add_class(
-        module,
-        user_class_id,
-        jg_core_ns,
-        jg_object_class_id,
+void register_user_class(jg_context* context) {
+    jg_class* class_ = jg_context_add_class(
+        context,
+        user_class_id(),
+        jg_object_class_id(),
         sizeof(user)
     );
-    jg_class_set_constructor(class_, user_constructor, user_destructor);
     jg_class_add_property(class_, "name", user_get_name, user_set_name);
     jg_class_add_property(class_, "team", user_get_team, user_set_team);
     jg_class_add_method(class_, user_has_permission_id, user_has_permission_impl);
@@ -110,37 +114,41 @@ static void admin_set_role(void* object, jg_value value) {
     admin->role = jg_to_string(value);
 }
 
+/*
 static void admin_constructor(void* object) {
     admin* admin = object;
-    admin->base.constructed_class_id = admin_class_id;
+    admin->base.constructed_class_id = admin_class_id();
 }
 
 static void admin_destructor(void* object) {
     admin* admin = object;
     if(admin->base.destructed_class_id) {
-        *(admin->base.destructed_class_id) = admin_class_id;
+        *(admin->base.destructed_class_id) = admin_class_id();
     }
 }
+*/
 
 static jg_value admin_has_permission(jg_arguments* args) {
+    (void)args;
+    /*
     int flags = jg_pop_int(args);
     if(jg_arguments_error(args)) {
         return jg_none();
     }
 
     return jg_bool(flags & PERM_ALL);
+    */
+    return jg_none();
 }
 
 
-void register_admin_class(jg_module_builder* module) {
-    jg_class_builder* class_ = jg_module_add_class(
-        module,
-        admin_class_id,
-        NULL,
-        user_class_id,
+void register_admin_class(jg_context* context) {
+    jg_class* class_ = jg_context_add_class(
+        context,
+        admin_class_id(),
+        user_class_id(),
         sizeof(admin)
     );
-    jg_class_set_constructor(class_, admin_constructor, admin_destructor);
     jg_class_add_property(class_, "role", admin_get_role, admin_set_role);
     jg_class_add_method(class_, user_has_permission_id, admin_has_permission);
 }
@@ -155,12 +163,11 @@ static jg_value team_get_name(const void* object) {
     return jg_string(team->name);
 }
 
-void register_team_class(jg_module_builder* module) {
-    jg_class_builder* class_ = jg_module_add_class(
-        module,
-        team_class_id,
-        jg_core_ns,
-        jg_object_class_id,
+void register_team_class(jg_context* context) {
+    jg_class* class_ = jg_context_add_class(
+        context,
+        team_class_id(),
+        jg_object_class_id(),
         sizeof(team)
     );
     jg_class_add_property(class_, "name", team_get_name, team_set_name);

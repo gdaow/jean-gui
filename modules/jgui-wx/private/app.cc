@@ -6,9 +6,9 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  * 
  */
-#include "jgui/class.h"
 #include <wx/wx.h>
 
+/*
 #include <jgui/module.h>
 #include <jgui/object.h>
 #include <jgui/core.h>
@@ -64,3 +64,4 @@ void wxc_app_run(jwx_app* app) {
     argv[0][2] = 0;
     wxEntry(argc, argv);
 }
+*/

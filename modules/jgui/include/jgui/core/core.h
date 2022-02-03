@@ -4,17 +4,18 @@
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
+ * 
+ * TODO:
+ *  - document.
  *
  */
-#ifndef JGUI_TESTS_COMMON_H
-#define JGUI_TESTS_COMMON_H
+#ifndef JGUI_INCLUDE_JGUI_CORE_H
+#define JGUI_INCLUDE_JGUI_CORE_H
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <stddef.h>
-#include <cmocka.h>
+#include <jgui/core/id.h>
 
-#include "jgui/private/misc/assert.h"
+jg_id jg_core_class_id(const char* class_name);
+
+jg_id jg_object_class_id();
 
 #endif

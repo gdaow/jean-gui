@@ -4,17 +4,22 @@
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
+ * 
+ * TODO:
+ *  - document.
  *
  */
-#ifndef JGUI_TESTS_COMMON_H
-#define JGUI_TESTS_COMMON_H
+#ifndef JGUI_INCLUDE_JGUI_ERROR_CODE_H
+#define JGUI_INCLUDE_JGUI_ERROR_CODE_H
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <stddef.h>
-#include <cmocka.h>
+typedef enum {
+    JG_ERROR_NONE,
+    JG_ERROR_CLASS_UNDEFINED,
 
-#include "jgui/private/misc/assert.h"
+    JG_ERROR_MISSING_ARGUMENT,
+    JG_ERROR_UNEXPECTED_ARGUMENT,
+
+    JG_ERROR_LAST
+} jg_error_code;
 
 #endif

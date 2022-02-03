@@ -9,9 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <jgui/module.h>
-#include <jgui/object.h>
-#include <jgui/value.h>
+#include <jgui/object-model/object.h>
+#include <jgui/object-model/value.h>
 
 #include "fixtures/user_model.h"
 #include "common.h"
@@ -105,7 +104,7 @@ void test_jg_value_raw(void** state) {
 void test_jg_value_object(void** state) {
     (void)state;
     jg_context* context = jg_context_load((jg_plugin[]) { user_model_plugin, NULL });
-    const jg_class* admin_class = jg_context_get_class(context, user_model_ns, admin_class_id);
+    const jg_class* admin_class = jg_context_get_class(context, admin_class_id());
     void* test_object = jg_object_new(admin_class); 
 
     jg_value value = jg_object(test_object);
