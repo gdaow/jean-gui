@@ -11,28 +11,29 @@
 
 #include <stddef.h>
 
+#include <jgui/misc/utils.h>
 #include <jgui/static_config.h>
 
 #if JG_MEMORY_DEBUG
-    void* jg_malloc_(size_t size, const char* file, int line);
-    void* jg_calloc_(size_t nb_elts, size_t elt_size, const char* file, int line);
-    void* jg_realloc_(void* ptr, size_t size, const char* file, int line);
-    void jg_free_(void* ptr, const char* file, int line);
+    void* JG_WEAK jg_malloc_impl(size_t size, const char* file, int line);
+    void* JG_WEAK jg_calloc_impl(size_t nb_elts, size_t elt_size, const char* file, int line);
+    void* JG_WEAK jg_realloc_impl(void* ptr, size_t size, const char* file, int line);
+    void JG_WEAK jg_free_impl(void* ptr, const char* file, int line);
 
-    #define jg_malloc(size) jg_malloc_(size, __FILE__, __LINE__)
-    #define jg_calloc(nb_elt, elt_size) jg_calloc_(nb_elt, elt_size, __FILE__, __LINE__)
-    #define jg_realloc(ptr, size) jg_realloc_(ptr, size, __FILE__, __LINE__)
-    #define jg_free(ptr) jg_free_(ptr, __FILE__, __LINE__)
+    #define jg_malloc(size) jg_malloc_impl(size, __FILE__, __LINE__)
+    #define jg_calloc(nb_elt, elt_size) jg_calloc_impl(nb_elt, elt_size, __FILE__, __LINE__)
+    #define jg_realloc(ptr, size) jg_realloc_impl(ptr, size, __FILE__, __LINE__)
+    #define jg_free(ptr) jg_free_impl(ptr, __FILE__, __LINE__)
 #else
-    void* jg_malloc_(size_t size);
-    void* jg_calloc_(size_t nb_elts, size_t elt_size);
-    void* jg_realloc_(void* ptr, size_t size);
-    void jg_free_(void* ptr);
+    void* JG_WEAK jg_malloc_impl(size_t size);
+    void* JG_WEAK jg_calloc_impl(size_t nb_elts, size_t elt_size);
+    void* JG_WEAK jg_realloc_impl(void* ptr, size_t size);
+    void JG_WEAK jg_free_impl(void* ptr);
 
-    #define jg_malloc(size) jg_alloc(size)
-    #define jg_calloc(nb_elts, elt_size) jg_alloc(nb_elt, elt_size)
-    #define jg_realloc(ptr, size) jg_realloc(ptr, size)
-    #define jg_free(ptr) jg_free(ptr)
+    #define jg_malloc(size) jg_alloc_impl(size)
+    #define jg_calloc(nb_elts, elt_size) jg_calloc_impl(nb_elt, elt_size)
+    #define jg_realloc(ptr, size) jg_realloc_impl(ptr, size)
+    #define jg_free(ptr) jg_free_impl(ptr)
 #endif
 
 #endif

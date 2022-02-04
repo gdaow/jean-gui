@@ -15,4 +15,5 @@
 #define jg_forward_declare(type)\
     typedef struct type##_s type;
 
+#define JG_WEAK __attribute__((weak))
 #endif

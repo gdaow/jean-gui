@@ -10,6 +10,22 @@
 
 #include "tests/common/cmocka.h"
 
+void* jg_malloc_(size_t size, const char* file, int line) {
+    return _test_malloc(size, file, line);
+}
+
+void* jg_realloc_(void* ptr, size_t size, const char* file, int line) {
+    return _test_realloc(ptr, size, file, line);
+}
+
+void* jg_calloc_(size_t nb_elt, size_t size, const char* file, int line) {
+    return _test_calloc(nb_elt, size, file, line);
+}
+
+void jg_free_(void* ptr, const char* file, int line) {
+    _test_free(ptr, file, line);
+}
+
 void test_containers(jg_vector* tests);
 
 int main(int argc, char** argv) {

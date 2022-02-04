@@ -107,7 +107,7 @@ char* jg_arena_copy_identifier(jg_arena* arena, const char* value) {
 #if JG_MEMORY_DEBUG
 void* jg_arena_alloc_(jg_arena* arena, size_t size, const char* file, int line) {
     if(arena == &disabled_arena) {
-        return jg_malloc_(size, file, line);
+        return jg_malloc_impl(size, file, line);
     }
 
     return arena_alloc(arena, size, alignof(max_align_t));
@@ -115,7 +115,7 @@ void* jg_arena_alloc_(jg_arena* arena, size_t size, const char* file, int line) 
 
 void jg_arena_free_(jg_arena* arena, void* ptr, const char* file, int line) {
     if(arena == &disabled_arena) {
-        jg_free_(ptr, file, line);
+        jg_free_impl(ptr, file, line);
     }
 
     // no-op : free will occur when destroying the whole arena

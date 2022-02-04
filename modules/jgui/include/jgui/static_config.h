@@ -7,7 +7,8 @@
  * 
  * TODO:
  *  - document.
- *
+ *  - rename to config.h, runtime config is gone
+ *  - maybe merge with the lonely utils.h ?
  */
 #ifndef JGUI_PUBLIC_JGUI_STATIC_CONFIG_H
 #define JGUI_PUBLIC_JGUI_STATIC_CONFIG_H
