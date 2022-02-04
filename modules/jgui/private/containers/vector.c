@@ -41,8 +41,8 @@ void jg_vector_push(jg_vector* vector, const void* item) {
     size_t item_size = vector->_item_size;
 
     if(capacity == size) {
-        capacity = vector->_capacity = (size + 1) * 2 * item_size;
-        vector->_data = jg_realloc(vector->_data, capacity);
+        capacity = vector->_capacity = (size + 1) * 2;
+        vector->_data = jg_realloc(vector->_data, capacity * item_size);
     }
 
     assert(vector->_capacity > vector->_size);

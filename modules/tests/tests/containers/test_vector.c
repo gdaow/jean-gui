@@ -32,6 +32,8 @@ void test_vector_size(void** state) {
         assert_int_equal(jg_vector_size(&vector), i);
         jg_vector_push(&vector, test_item_1);
     }
+
+    jg_vector_cleanup(&vector);
 }
 
 void test_vector(jg_vector* vector) {
