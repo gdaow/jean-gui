@@ -14,11 +14,12 @@
 #include <stdbool.h>
 
 #include <jgui/static_config.h>
+#include <jgui/misc/utils.h>
 
 #if JG_ENABLE_ASSERTS
-#   define assert(TEST) (jg_assert(TEST, #TEST, __FILE__, __LINE__))
+#   define assert(TEST) (jg_assert_impl(TEST, #TEST, __FILE__, __LINE__))
 
-    void jg_assert(bool test, const char* expression, const char* file, int line);
+    void jg_assert_impl(bool test_result, const char* test_expression, const char* file, int line);
 
 #else
 #   define assert(TEST)
