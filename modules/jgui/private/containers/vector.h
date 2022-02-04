@@ -69,6 +69,16 @@ void jg_vector_append(jg_vector* vector, const void* items, size_t item_count);
 const void* jg_vector_front(const jg_vector* vector);
 
 /**
+  * Get the item at the given index in this vector.
+  * If index is not in the bounds of the underlying array, the behavior is undefined.
+  *
+  * @param index Get the item at this index.
+  *
+  * @return Pointer to the item at the given index in this vector.
+  */
+const void* jg_vector_at(const jg_vector* vector, size_t index);
+
+/**
   * Get the last item of this vector.
   *
   * @return Pointer to the last item of this vector.

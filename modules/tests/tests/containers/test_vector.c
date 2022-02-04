@@ -10,27 +10,43 @@
 
 #include "tests/common/cmocka.h"
 
-#define test_item_size 53
-typedef const char test_item[test_item_size];
-static const char test_item_1[53] = "Le Congrès considère que cette déclaration est une";
-/*
-static const char test_item_2[53] = "reconnaissance de la lutte de classe, qui oppose sur";
-static const char test_item_3[53] = "le terrain économique, les travailleurs en révolte ";
-static const char test_item_4[53] = "contre toutes les formes d'exploitation et ";
-static const char test_item_5[53] = "d'oppression, tant matérielles que morales, mises ";
-static const char test_item_6[53] = "en oeuvre par la classe capitaliste contre la classe";
-static const char test_item_7[53] = "ouvrière.";
-*/
+#define test_item_size 54
+typedef const char item[test_item_size];
+static const item items[7] = {
+    "Le Congrès considère que cette déclaration est une\0",
+    "reconnaissance de la lutte de classe, qui oppose sur\0",
+    "le terrain économique, les travailleurs en révolte \0",
+    "contre toutes les formes d'exploitation et \0",
+    "d'oppression, tant matérielles que morales, mises \0",
+    "en oeuvre par la classe capitaliste contre la classe\0",
+    "ouvrière."
+};
+
+static const size_t item_count = sizeof(items) / sizeof(item);
+
+void test_vector_push(void** state) {
+    (void)state;
+    jg_vector vector = jg_vector_of(item);
+    assert_int_equal(jg_vector_size(&vector), 0);
+
+    for(size_t i = 0; i < item_count; ++i) {
+        jg_vector_push(&vector, items[i]);
+        assert_int_equal(jg_vector_size(&vector), i + 1);
+        assert_string_equal(jg_vector_back(&vector), items[i]);
+    }
+
+    jg_vector_cleanup(&vector);
+}
 
 void test_vector_size(void** state) {
     (void)state;
-    jg_vector vector = jg_vector_of(test_item);
+    jg_vector vector = jg_vector_of(item);
     assert_int_equal(jg_vector_size(&vector), 0);
 
     const size_t number_pushes = 64;
     for(size_t i = 0; i < number_pushes; ++i) {
         assert_int_equal(jg_vector_size(&vector), i);
-        jg_vector_push(&vector, test_item_1);
+        jg_vector_push(&vector, items[0]);
     }
 
     jg_vector_cleanup(&vector);
@@ -38,6 +54,7 @@ void test_vector_size(void** state) {
 
 void test_vector(jg_vector* vector) {
     struct CMUnitTest vector_tests[] = {
+        cmocka_unit_test(test_vector_push),
         cmocka_unit_test(test_vector_size),
     };
     jg_vector_append(vector, vector_tests, sizeof(vector_tests) / sizeof(struct CMUnitTest));

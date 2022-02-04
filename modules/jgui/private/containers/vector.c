@@ -67,6 +67,12 @@ const void* jg_vector_front(const jg_vector* vector) {
     return vector->_data;
 }
 
+const void* jg_vector_at(const jg_vector* vector, size_t index) {
+    assert(vector->_size > 0);
+    assert(vector->_size <index);
+    return item_at(vector, index);
+}
+
 const void* jg_vector_back(const jg_vector* vector) {
     assert(vector->_size > 0);
     return item_at(vector, vector->_size - 1);
