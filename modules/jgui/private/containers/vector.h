@@ -19,7 +19,7 @@
 jg_forward_declare(jg_vector)
 
 /**
-  * Initialize a new vector on the stack.
+  * Initialize this vector.
   *
   * @param vector    Pointer on the vector to initialize.
   * @param item_size Size of an item in the array. Generally use sizeof(stored_type).

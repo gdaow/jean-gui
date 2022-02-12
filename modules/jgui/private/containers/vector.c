@@ -15,16 +15,15 @@
 
 /* static utilities */
 char* item_at(const jg_vector* vector, size_t item_index) {
+    assert(item_index < vector->_size);
     return vector->_data + vector->_item_size * item_index;
 }
 
 jg_vector jg_vector_init(size_t item_size) {
     assert(item_size > 0);
     return (jg_vector) {
-        ._data = NULL,
-        ._item_size = item_size,
-        ._size = 0,
-        ._capacity = 0,
+        0,
+        ._item_size = item_size
     };
 }
 
@@ -39,21 +38,23 @@ void jg_vector_push(jg_vector* vector, const void* item) {
     size_t size  = vector->_size;
     size_t capacity = vector->_capacity;
     size_t item_size = vector->_item_size;
+    assert(size <= capacity);
 
     if(capacity == size) {
-        capacity = vector->_capacity = (size + 1) * 2;
+        capacity = vector->_capacity = (capacity + 1) * 2;
         vector->_data = jg_realloc(vector->_data, capacity * item_size);
     }
 
-    assert(vector->_capacity > vector->_size);
+    ++vector->_size;
+    assert(vector->_size <= vector->_capacity);
 
     memcpy(item_at(vector, size), item, item_size);
-    ++vector->_size;
 }
 
 void jg_vector_append(jg_vector* vector, const void* items, size_t item_count) {
     assert(vector != NULL);
     assert(items != NULL);
+    // TODO(corentin@ki-dour.org) : Set capacity here.
 
     const char* items_data = items;
     for(size_t i = 0; i < item_count; ++i) {
@@ -69,7 +70,7 @@ const void* jg_vector_front(const jg_vector* vector) {
 
 const void* jg_vector_at(const jg_vector* vector, size_t index) {
     assert(vector->_size > 0);
-    assert(vector->_size <index);
+    assert(vector->_size > index);
     return item_at(vector, index);
 }
 

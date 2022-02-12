@@ -1,0 +1,19 @@
+{
+  "configurations": {
+    "Vim - run a test": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "type":    "cppdbg",
+        "request": "launch",
+        "program": "${workspaceRoot}/.build/modules/tests/jg-tests",
+        "cwd": "${workspaceRoot}",
+        "externalConsole": true,
+        "stopAtEntry": false,
+        "MIMode": "gdb",
+        "logging": {
+          "engineLogging": false
+        }
+      }
+    }
+  }
+}

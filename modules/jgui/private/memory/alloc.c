@@ -14,25 +14,25 @@
 
 #if JG_MEMORY_DEBUG
 
-void* jg_malloc_impl(size_t size, const char* file, int line) {
+void* JG_WEAK jg_malloc_impl(size_t size, const char* file, int line) {
     (void)file;
     (void)line;
     return malloc(size);
 }
 
-void* jg_calloc_impl(size_t nb_elts, size_t elt_size, const char* file, int line) {
+void* JG_WEAK jg_calloc_impl(size_t nb_elts, size_t elt_size, const char* file, int line) {
     (void)file;
     (void)line;
     return calloc(nb_elts, elt_size);
 }
 
-void* jg_realloc_impl(void* ptr, size_t size, const char* file, int line) {
+void* JG_WEAK jg_realloc_impl(void* ptr, size_t size, const char* file, int line) {
     (void)file;
     (void)line;
     return realloc(ptr, size);
 }
 
-void jg_free_impl(void* ptr, const char* file, int line) {
+void JG_WEAK jg_free_impl(void* ptr, const char* file, int line) {
     (void)file;
     (void)line;
     free(ptr);
@@ -40,19 +40,19 @@ void jg_free_impl(void* ptr, const char* file, int line) {
 
 #else
 
-void* jg_malloc_impl(size_t size) {
+void* JG_WEAK jg_malloc_impl(size_t size) {
     return malloc(size);
 }
 
-void* jg_calloc_impl(size_t nb_elts, size_t elt_size) {
+void* JG_WEAK jg_calloc_impl(size_t nb_elts, size_t elt_size) {
     return calloc(nb_elts, elt_size);
 }
 
-void* jg_realloc_impl(void* ptr, size_t size) {
+void* JG_WEAK jg_realloc_impl(void* ptr, size_t size) {
     return realloc(ptr, size);
 }
 
-void jg_free_impl(void* ptr) {
+void JG_WEAK jg_free_impl(void* ptr) {
     free(ptr);
 }
 

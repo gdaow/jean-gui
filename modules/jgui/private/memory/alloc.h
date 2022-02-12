@@ -15,10 +15,10 @@
 #include <jgui/static_config.h>
 
 #if JG_MEMORY_DEBUG
-    void* JG_WEAK jg_malloc_impl(size_t size, const char* file, int line);
-    void* JG_WEAK jg_calloc_impl(size_t nb_elts, size_t elt_size, const char* file, int line);
+    void* jg_malloc_impl(size_t size, const char* file, int line);
+    void* jg_calloc_impl(size_t nb_elts, size_t elt_size, const char* file, int line);
     void* jg_realloc_impl(void* ptr, size_t size, const char* file, int line);
-    void JG_WEAK jg_free_impl(void* ptr, const char* file, int line);
+    void jg_free_impl(void* ptr, const char* file, int line);
 
     #define jg_malloc(size) jg_malloc_impl(size, __FILE__, __LINE__)
     #define jg_calloc(nb_elt, elt_size) jg_calloc_impl(nb_elt, elt_size, __FILE__, __LINE__)
