@@ -31,11 +31,12 @@ static const size_t item_count = sizeof(items) / sizeof(item);
 static void test_vector_push(void** state) {
     jg_vector* vector = *state;
 
-    for(size_t i = 0; i < 1; ++i) {
+    for(size_t i = 0; i < item_count; ++i) {
         jg_vector_push(vector, items[i]);
         assert_int_equal(jg_vector_size(vector), i + 1);
         assert_string_equal(jg_vector_back(vector), items[i]);
     }
+    jg_vector_cleanup(vector);
 }
 
 void test_vector_append(void** state) {
@@ -46,6 +47,7 @@ void test_vector_append(void** state) {
     for(size_t i = 0; i < item_count; ++i) {
         assert_string_equal(jg_vector_at(vector, i), items[i]);
     }
+    jg_vector_cleanup(vector);
 }
 
 void test_vector_front_at_back(void** state) {
@@ -62,6 +64,7 @@ void test_vector_size(void** state) {
         assert_int_equal(jg_vector_size(vector), i);
         jg_vector_push(vector, items[0]);
     }
+    jg_vector_cleanup(vector);
 }
 
 static int setup(void **state) {
@@ -76,7 +79,6 @@ static int setup(void **state) {
 }
 
 static int teardown(void **state) {
-    jg_vector_cleanup(*state);
     jg_free(*state);
     return 0;
 }
@@ -85,6 +87,9 @@ void test_vector(jg_vector* vector) {
     (void)vector;
     struct CMUnitTest vector_tests[] = {
         cmocka_unit_test_setup_teardown(test_vector_push, setup, teardown),
+        cmocka_unit_test_setup_teardown(test_vector_append, setup, teardown),
+        cmocka_unit_test_setup_teardown(test_vector_front_at_back, setup, teardown),
+        cmocka_unit_test_setup_teardown(test_vector_size, setup, teardown),
     };
     cmocka_run_group_tests(vector_tests, NULL, NULL);
 }

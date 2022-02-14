@@ -64,7 +64,6 @@ void jg_vector_append(jg_vector* vector, const void* items, size_t item_count) {
 }
 
 const void* jg_vector_front(const jg_vector* vector) {
-    assert(vector->_size > 0);
     return vector->_data;
 }
 

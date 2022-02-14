@@ -1,12 +1,10 @@
 cmake = import('cmake')
 
-yaml_project = cmake.subproject(
-    'libyaml',
-    default_options: [
-        'warning_level=0',
-        'werror=false',
-    ]
-)
+opt_var = cmake.subproject_options()
+opt_var.set_override_option('warning_level', '0')
+opt_var.set_override_option('werror', 'false')
+
+yaml_project = cmake.subproject('libyaml')
 
 yaml = yaml_project.dependency('yaml', include_type: 'system')
 
@@ -36,7 +34,11 @@ jg_lib = static_library(
     jg_src,
     dependencies: [yaml],
     include_directories: [jg_includes, jg_private_includes],
-    c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing']
+    c_args: ['-Wall', '-Wextra', '-Wpedantic', '-Wconversion',  '-fno-strict-aliasing'],
+    override_options: [
+      'warning_level=3',
+      'werror=true',
+    ]
 )
 
 jg_dep = declare_dependency(

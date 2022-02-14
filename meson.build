@@ -1,6 +1,4 @@
 project('jg', 'c', 'cpp', default_options: [
-    'warning_level=3',
-    'werror=true',
     'c_std=c2x',
     'cpp_std=c++2a'
 ])
