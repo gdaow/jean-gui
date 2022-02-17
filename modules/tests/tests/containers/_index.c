@@ -15,3 +15,4 @@ void test_vector(jg_vector* tests);
 void test_containers(jg_vector* tests) {
     test_vector(tests);
 }
+
