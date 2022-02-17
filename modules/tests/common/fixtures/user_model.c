@@ -16,9 +16,9 @@
 
 #include "user_model.h"
 
-static void register_user_class(jg_context* module);
-static void register_admin_class(jg_context* module);
-static void register_team_class(jg_context* module);
+static void register_user_class(jg_context* context);
+static void register_admin_class(jg_context* context);
+static void register_team_class(jg_context* context);
 
 jg_id user_model_class_id(const char* name) {
     return jg_id_new("http://ki-dour.org/jean-gui/tests/user-model", name);
@@ -172,3 +172,4 @@ void register_team_class(jg_context* context) {
     );
     jg_class_add_property(class_, "name", team_get_name, team_set_name);
 }
+
