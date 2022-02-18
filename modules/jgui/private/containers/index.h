@@ -25,9 +25,9 @@ typedef struct jg_index_s {
 
 void jg_index_init(jg_index* index, size_t item_size);
 
-void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*));
+void jg_index_cleanup(jg_index *index, void (*item_cleanup)(void *));
 
-void* jg_index_add(jg_index* index, const char* key);
+void* jg_index_add(jg_index* index, const char* key, const void* item);
 
 void jg_index_build(jg_index* index);
 

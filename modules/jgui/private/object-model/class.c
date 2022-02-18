@@ -31,7 +31,7 @@ void jg_class_add_method(jg_class* class_, const char* name, jg_method method) {
 
     //TODO(corentin@ki-dour.org) : handle case where member of the same name is already
     //registered
-    jg_member* member = jg_index_add(&class_->member_index, name);
+    jg_member* member = jg_index_add(&class_->member_index, name, NULL);
     jg_method_init(member, method);
 }
 
@@ -43,7 +43,7 @@ void jg_class_add_property(jg_class* class_, const char* name, jg_getter getter,
 
     //TODO(corentin@ki-dour.org) : handle case where member of the same name is already
     //registered
-    jg_member* member = jg_index_add(&class_->member_index, name);
+    jg_member* member = jg_index_add(&class_->member_index, name, NULL);
     jg_property_init(member, getter, setter);
 
 }

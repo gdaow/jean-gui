@@ -28,9 +28,10 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
     (void)item_cleanup;
 }
 
-void* jg_index_add(jg_index* index, const char* key) {
+void* jg_index_add(jg_index* index, const char* key, const void* item) {
     assert(index != NULL);
     (void)key;
+    (void)item;
     /*
     size_t count = 
     if(index->count == index->size) {

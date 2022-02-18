@@ -10,9 +10,11 @@
 
 jg_forward_declare(jg_vector)
 
+void test_index(jg_vector* tests);
 void test_vector(jg_vector* tests);
 
 void test_containers(jg_vector* tests) {
+    test_index(tests);
     test_vector(tests);
 }
 

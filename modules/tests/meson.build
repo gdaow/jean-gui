@@ -4,7 +4,8 @@ cmocka_dep = cmocka_project.get_variable('cmocka_dep')
 jg_test_src = files(
     'main.c',
     'tests/containers/_index.c',
-    'tests/containers/test_vector.c'
+    'tests/containers/test_index.c',
+    'tests/containers/test_vector.c',
 )
 
 executable(
