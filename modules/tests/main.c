@@ -36,11 +36,13 @@ int main(int argc, char** argv) {
     (void)argv;
     jg_vector tests = jg_vector_of(struct CMUnitTest);
     test_containers(&tests);
-    return _cmocka_run_group_tests(
+    int result = _cmocka_run_group_tests(
         "JGui Tests",
         jg_vector_front(&tests),
         jg_vector_size(&tests),
         NULL,
         NULL
     );
+    jg_vector_cleanup(&tests);
+    return result;
 }
