@@ -52,12 +52,16 @@ void test_vector_append(void** state) {
 
 void test_vector_front_at_back(void** state) {
     jg_vector* vector = *state;
+
     jg_vector_push(vector, items[0]);
     jg_vector_push(vector, items[1]);
     jg_vector_push(vector, items[2]);
+
     assert_string_equal(jg_vector_front(vector), items[0]);
     assert_string_equal(jg_vector_at(vector, 1), items[1]);
     assert_string_equal(jg_vector_back(vector), items[2]);
+
+    jg_vector_cleanup(vector);
 }
 
 
