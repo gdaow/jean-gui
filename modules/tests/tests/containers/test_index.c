@@ -16,15 +16,17 @@
 #include "tests/common/cmocka.h"
 
 #define test_item_size 48
-#define test_item_count 6
+#define test_item_count 8
 typedef const char key[test_item_size];
 static const key keys[test_item_count] = {
-    "Apples",
-    "Oranges",
-    "Peaches",
-    "Grapes",
+    "Apple",
+    "Orange",
+    "Peache",
+    "Grape",
     "Watermelon",
-    "T-34 85mm canon Soviet Tanks"
+    "Pear",
+    "Mango",
+    "T-34 85mm Soviet Tanks"
 };
 
 static const int items[test_item_count] = {
@@ -36,47 +38,45 @@ static const int items[test_item_count] = {
     9000
 };
 
+static void check_index_values(jg_index* index) {
+    assert_int_equal(-1, jg_index_get(index, "Not In The Index"));
 
-static void test_index_add(void** state) {
-    (void)state;
-}
-
-static void test_index_build(void** state) {
-    (void)state;
-}
-
-static void test_index_get(void** state) {
-    (void)state;
-}
-
-static void test_index_item_cleanup(void** state) {
-    (void)state;
-}
-
-static int setup(void **state) {
-    jg_index* index = jg_malloc(sizeof(jg_index));
-    jg_index_init(index, sizeof(int));
-    for(size_t i = 0; i < test_item_count; ++i) {
-        jg_index_add(index, keys[i], &items[i]);
+    for(int i = 0; i < index->count; ++i) {
+        const char* key = keys[i];
+        int* item = jg_index_get(index, key);
+        assert_int_equal(items[i], *item);
     }
-    *state = index;
-    return 0;
 }
 
-static int teardown(void **state) {
-    jg_index* index = *state;
-    jg_index_cleanup(index, NULL);
-    jg_free(index);
-    return 0;
+/** We should get items in the index before and after adding items to it **/
+static void test_index_add_build_get(void** state) {
+    (void)state;
+    jg_index index;
+
+    jg_index_init(&index, sizeof(int));
+    check_index_values(&index);
+
+    for(size_t i = 0; i < test_item_count / 2; ++i) {
+        jg_index_add(&index, keys[i], &items[i]);
+    }
+
+    check_index_values(&index);
+    jg_index_build(&index);
+    check_index_values(&index);
+
+    for(size_t i = test_item_count / 2; i < test_item_count; ++i) {
+        jg_index_add(&index, keys[i], &items[i]);
+    }
+
+    check_index_values(&index);
+    jg_index_build(&index);
+    check_index_values(&index);
 }
 
 void test_index(jg_vector* vector) {
     (void)vector;
     struct CMUnitTest vector_tests[] = {
-        cmocka_unit_test_setup_teardown(test_index_add, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_index_build, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_index_get, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_index_item_cleanup, setup, teardown),
+        cmocka_unit_test_setup_teardown(test_index_add_build_get, NULL, NULL),
     };
 
     jg_vector_append(vector, vector_tests, sizeof(vector_tests) / sizeof(struct CMUnitTest));

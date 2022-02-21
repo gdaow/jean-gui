@@ -14,14 +14,9 @@
 
 #include <stddef.h>
 
-typedef struct jg_index_s {
-    const char** keys;
-    void* items;
-    size_t count;
-    size_t size;
-    size_t item_size;
-    size_t packed_index;
-} jg_index;
+#include <jgui/misc/utils.h>
+
+jg_forward_declare(jg_index)
 
 void jg_index_init(jg_index* index, size_t item_size);
 
@@ -33,4 +28,14 @@ void jg_index_build(jg_index* index);
 
 void* jg_index_get(const jg_index* index, const char* key);
 
+typedef struct jg_index_s {
+    const char** keys;
+    void* items;
+    size_t count;
+    size_t size;
+    size_t item_size;
+    size_t packed_index;
+} jg_index;
+
 #endif
+
