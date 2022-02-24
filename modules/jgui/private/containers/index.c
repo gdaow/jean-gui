@@ -21,7 +21,7 @@ typedef char* index_key;
 static const size_t max_item_size = 1024;
 
 static void quick_sort(jg_index* index, int low, int high);
-static jg_index_key create_key(const char* key, char* buffer);
+static char* copy_key(const char* key);
 static void* item_at(const jg_index* index, size_t id);
 
 void jg_index_init(jg_index* index, size_t item_size) {
@@ -40,7 +40,7 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
     }
 
     char** keys = index->keys;
-    for(size_t key_id = index->packed_index; key_id < count; ++key_id) {
+    for(size_t key_id = 0; key_id < count; ++key_id) {
         jg_free(keys[key_id]);
     }
     jg_free(keys);
@@ -59,7 +59,7 @@ void* jg_index_add(jg_index* index, const char* key, const void* item) {
     }
 
     size_t count = index->count;
-    index->keys[count] = create_key(key, NULL);
+    index->keys[count] = copy_key(key);
 
     void* dst_item = item_at(index, count);
     memcpy(dst_item, item, index->item_size);
@@ -75,15 +75,14 @@ void jg_index_build(jg_index* index) {
     }
     assert(count < INT_MAX);
     quick_sort(index, 0, (int)count - 1);
+    index->packed_index = count;
 }
 
 static int binary_search(
-    const jg_index_key* index,
+    char** index,
     const char* key,
-    unsigned char key_size,
     int low,
-    int high,
-    int current_char_index
+    int high
 );
 
 static void* item_at(const jg_index* index, size_t id) {
@@ -103,17 +102,12 @@ void* jg_index_get(const jg_index* index, const char* key) {
     size_t packed_index = index->packed_index;
     size_t key_size = strlen(key);
     assert(key_size <= UCHAR_MAX);
-    jg_index_key* keys = index->keys;
+    char** keys = index->keys;
 
-    int result = binary_search(keys, key, (unsigned char)key_size, 0, (int)packed_index - 1, 0);
+    int result = binary_search(keys, key, 0, (int)packed_index - 1);
     if(result == -1) {
         for(size_t i = packed_index; i < index->count; ++i) {
-            const char* candidate = keys[i];
-            if((unsigned char)candidate[0] != key_size) {
-                continue;
-            }
-
-            if(memcmp(candidate + 1, key, key_size) == 0) {
+            if(strcmp(keys[i], key) == 0) {
                 return item_at(index, i);
             }
         }
@@ -129,10 +123,9 @@ void* jg_index_get(const jg_index* index, const char* key) {
     return &(item_data[(size_t)result * index->item_size]);
 }
 
-static int binary_search(const jg_index_key* index, const char* key, unsigned char key_size, int low, int high, int current_char_index) {
+static int binary_search(char** index, const char* key, int low, int high) {
     assert(index != NULL);
     assert(key != NULL);
-    assert(current_char_index >= 0 && (size_t)current_char_index <= strlen(key));
 
     if(low > high) {
         return -1;
@@ -140,24 +133,16 @@ static int binary_search(const jg_index_key* index, const char* key, unsigned ch
 
     int search_id = low + (high - low) / 2;
     const char* candidate = index[search_id];
-    assert(current_char_index >= 0 && current_char_index <= candidate[0]);
 
-    while(1) {
-        int diff = current_char_index == 0 ? candidate[0] - key_size : candidate[current_char_index] - key[current_char_index];
-        if(diff == 0) {
-            if(key[current_char_index] == 0) {
-                return search_id;
-            }
-
-            ++current_char_index;
-        }
-        else if(diff > 0) {
-            return binary_search(index, key, key_size, low, search_id - 1, current_char_index);
-        }
-        else {
-            return binary_search(index, key, key_size, search_id + 1, high, current_char_index);
-        }
+    int diff = strcmp(candidate, key);
+    if(diff == 0) {
+        return search_id;
     }
+    if(diff > 0) {
+        return binary_search(index, key, low, search_id - 1);
+    }
+
+    return binary_search(index, key, search_id + 1, high);
 }
 
 static void index_swap(jg_index* index, int a, int b) {
@@ -173,8 +158,8 @@ static void index_swap(jg_index* index, int a, int b) {
     memcpy(item_a, item_b, item_size);
     memcpy(item_b, tmp_item, item_size);
 
-    jg_index_key* keys = index->keys;
-    jg_index_key tmp = keys[a];
+    char** keys = index->keys;
+    char* tmp = keys[a];
     keys[a] = keys[b];
     keys[b] = tmp;
 }
@@ -205,12 +190,11 @@ static void quick_sort(jg_index* index, int low, int high) {
     }
 }
 
-static jg_index_key create_key(const char* key, char* buffer) {
+static char* copy_key(const char* key) {
     size_t length = strlen(key);
     assert(length < 255);
-    char* string_copy = buffer == NULL ? jg_malloc(sizeof(char) * (length + 1)) : buffer;
-    string_copy[0] = (char)length;
-    memcpy(string_copy + 1, key, length);  // NOLINT(bugprone-not-null-terminated-result)
+    char* string_copy = jg_malloc(sizeof(char) * (length + 1));
+    strcpy(string_copy, key);
     return string_copy;
 }
 

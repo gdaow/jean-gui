@@ -28,10 +28,8 @@ void jg_index_build(jg_index* index);
 
 void* jg_index_get(const jg_index* index, const char* key);
 
-typedef char* jg_index_key;
-
 typedef struct jg_index_s {
-    jg_index_key* keys;
+    char** keys;
     void* items;
     size_t count;
     size_t size;
