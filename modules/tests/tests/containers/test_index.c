@@ -39,28 +39,42 @@ static const int items[test_item_count] = {
 };
 
 static void check_index_values(jg_index* index) {
-    assert_int_equal(-1, jg_index_get(index, "Not In The Index"));
+    assert_int_equal(NULL, jg_index_get(index, "Not In The Index"));
 
     for(int i = 0; i < index->count; ++i) {
         const char* key = keys[i];
-        int* item = jg_index_get(index, key);
+        const int* item = jg_index_get(index, key);
         assert_int_equal(items[i], *item);
     }
 }
 
-/** We should get items in the index before and after adding items to it **/
-static void test_index_add_build_get(void** state) {
+/** We should get items in the index before and after adding them **/
+static void test_index_add_get(void** state) {
     (void)state;
     jg_index index;
 
     jg_index_init(&index, sizeof(int));
     check_index_values(&index);
 
+    for(size_t i = 0; i < test_item_count; ++i) {
+        jg_index_add(&index, keys[i], &items[i]);
+        check_index_values(&index);
+    }
+
+    jg_index_cleanup(&index, NULL);
+}
+
+/** We should get items in the index before and after building it **/
+static void test_index_build(void** state) {
+    (void)state;
+    jg_index index;
+
+    jg_index_init(&index, sizeof(int));
+
     for(size_t i = 0; i < test_item_count / 2; ++i) {
         jg_index_add(&index, keys[i], &items[i]);
     }
 
-    check_index_values(&index);
     jg_index_build(&index);
     check_index_values(&index);
 
@@ -71,12 +85,14 @@ static void test_index_add_build_get(void** state) {
     check_index_values(&index);
     jg_index_build(&index);
     check_index_values(&index);
+    jg_index_cleanup(&index, NULL);
 }
 
 void test_index(jg_vector* vector) {
     (void)vector;
     struct CMUnitTest vector_tests[] = {
-        cmocka_unit_test_setup_teardown(test_index_add_build_get, NULL, NULL),
+        cmocka_unit_test_setup_teardown(test_index_add_get, NULL, NULL),
+        cmocka_unit_test_setup_teardown(test_index_build, NULL, NULL),
     };
 
     jg_vector_append(vector, vector_tests, sizeof(vector_tests) / sizeof(struct CMUnitTest));
