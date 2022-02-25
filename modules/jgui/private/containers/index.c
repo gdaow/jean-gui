@@ -38,9 +38,15 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
     }
 
     char** keys = index->keys;
-    for(size_t key_id = 0; key_id < count; ++key_id) {
+
+    if(index->packed_index > 0) {
+        jg_free(keys[0]);
+    }
+
+    for(size_t key_id = index->packed_index; key_id < count; ++key_id) {
         jg_free(keys[key_id]);
     }
+
     jg_free(keys);
     jg_free(index->items);
 }
@@ -72,8 +78,39 @@ void jg_index_build(jg_index* index) {
         return;
     }
     assert(count < INT_MAX);
-    quick_sort(index, 0, (int)count - 1);
+
+    index->items = jg_realloc(index->items, index->count * index->item_size);
+    index->keys = jg_realloc(index->keys, index->count * sizeof(const char*));
+
+    char** keys = index->keys;
+    size_t keys_size = 0;
+    for(size_t i = 0; i < count; ++i) {
+        keys_size += strlen(keys[i]) + 1;
+    }
+
+    char* old_key_buffer = index->keys[0];
+    char* new_key_buffer = jg_malloc(keys_size);
+
+    for(size_t i = 0; i < count; ++i) {
+        char* key = keys[i];
+        size_t key_length = strlen(key);
+
+        strcpy(new_key_buffer, key);
+        keys[i] = new_key_buffer;
+        new_key_buffer += key_length + 1;
+
+        if(i >= index->packed_index) {
+            jg_free(key);
+        }
+    }
+
+    if(index->packed_index > 0) {
+        jg_free(old_key_buffer);
+    }
+
     index->packed_index = count;
+    index->size = count;
+    quick_sort(index, 0, (int)count - 1);
 }
 
 static int binary_search(
