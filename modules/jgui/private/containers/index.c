@@ -16,8 +16,6 @@
 #include "jgui/private/misc/utils.h"
 
 /* Static methods */
-typedef char* index_key;
-
 static const size_t max_item_size = 1024;
 
 static void quick_sort(jg_index* index, int low, int high);
