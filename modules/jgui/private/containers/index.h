@@ -24,17 +24,18 @@ void jg_index_cleanup(jg_index *index, void (*item_cleanup)(void *));
 
 void* jg_index_add(jg_index* index, const char* key, const void* item);
 
-void jg_index_build(jg_index* index);
+void jg_index_pack(jg_index* index);
 
 void* jg_index_get(const jg_index* index, const char* key);
 
 typedef struct jg_index_s {
-    char** keys;
-    void* items;
+    void* buffer;
     size_t count;
     size_t size;
     size_t item_size;
-    size_t packed_index;
+    size_t key_buffer_count;
+    size_t key_buffer_size;
+    size_t sorted_index;
 } jg_index;
 
 #endif

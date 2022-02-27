@@ -70,13 +70,13 @@ static void test_index_build(void** state) {
     jg_index index;
 
     jg_index_init(&index, sizeof(int));
-    jg_index_build(&index); // test build empty index
+    jg_index_pack(&index); // test build empty index
 
     for(size_t i = 0; i < test_item_count / 2; ++i) {
         jg_index_add(&index, keys[i], &items[i]);
     }
 
-    jg_index_build(&index);
+    jg_index_pack(&index);
     check_index_values(&index);
 
     for(size_t i = test_item_count / 2; i < test_item_count; ++i) {
@@ -85,7 +85,7 @@ static void test_index_build(void** state) {
 
     check_index_values(&index);
 
-    jg_index_build(&index);
+    jg_index_pack(&index);
     check_index_values(&index);
 
     jg_index_cleanup(&index, NULL);

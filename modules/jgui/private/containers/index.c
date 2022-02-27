@@ -9,6 +9,7 @@
 #include "jgui/private/containers/index.h"
 
 #include <string.h>
+#include <stdlib.h>
 #include <limits.h>
 
 #include "jgui/private/memory/alloc.h"
@@ -17,112 +18,59 @@
 
 /* Static methods */
 static const size_t max_item_size = 1024;
+static const size_t average_key_size = 24;
 
+static void* set_item_at(const jg_index* index, const void* value, size_t id);
+static void* get_item_at(const jg_index* index, size_t id);
+static void set_key_at(jg_index* index, const char* key, size_t id);
+static char* get_key_at(const jg_index* index, size_t id);
+
+static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size);
+static void index_grow(jg_index* index, size_t new_key_size);
 static void quick_sort(jg_index* index, int low, int high);
-static char* copy_key(const char* key);
-static void* item_at(const jg_index* index, size_t id);
+static int binary_search(const jg_index* index, const char* key, int low, int high);
 
 void jg_index_init(jg_index* index, size_t item_size) {
+    assert(index != NULL);
     assert(item_size < max_item_size);
+
     *index = (jg_index) {0};
     index->item_size = item_size;
 }
 
 void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
-    size_t count = index->count;
+    assert(index != NULL);
+
     if(item_cleanup != NULL) {
-        for(size_t i = 0; i < count; ++i) {
-            void* item = item_at(index, i);
+        for(size_t i = 0; i < index->count; ++i) {
+            void* item = get_item_at(index, i);
             item_cleanup(item);
         }
     }
 
-    char** keys = index->keys;
-
-    if(index->packed_index > 0) {
-        jg_free(keys[0]);
-    }
-
-    for(size_t key_id = index->packed_index; key_id < count; ++key_id) {
-        jg_free(keys[key_id]);
-    }
-
-    jg_free(keys);
-    jg_free(index->items);
+    jg_free(index->buffer);
 }
 
 void* jg_index_add(jg_index* index, const char* key, const void* item) {
     assert(index != NULL);
     assert(jg_index_get(index, key) == NULL);
-    assert(index->count <= index->size);
 
-    if(index->count == index->size) {
-        index->size += (index->size + 1) * 2;
-        index->items = jg_realloc(index->items, index->size * index->item_size);
-        index->keys = jg_realloc(index->keys, index->size * sizeof(const char*));
-    }
+    index_grow(index, strlen(key));
 
-    size_t count = index->count;
-    index->keys[count] = copy_key(key);
+    size_t count = index->count++;
 
-    void* dst_item = item_at(index, count);
-    memcpy(dst_item, item, index->item_size);
-    index->count += 1;
-    return dst_item;
+    set_key_at(index, key, count);
+    return set_item_at(index, item, count);
 }
 
-void jg_index_build(jg_index* index) {
+void jg_index_pack(jg_index* index) {
     assert(index != NULL);
+
     size_t count = index->count;
-    if(count == 0) {
-        return;
-    }
-    assert(count < INT_MAX);
 
-    index->items = jg_realloc(index->items, index->count * index->item_size);
-    index->keys = jg_realloc(index->keys, index->count * sizeof(const char*));
-
-    char** keys = index->keys;
-    size_t keys_size = 0;
-    for(size_t i = 0; i < count; ++i) {
-        keys_size += strlen(keys[i]) + 1;
-    }
-
-    char* old_key_buffer = index->keys[0];
-    char* new_key_buffer = jg_malloc(keys_size);
-
-    for(size_t i = 0; i < count; ++i) {
-        char* key = keys[i];
-        size_t key_length = strlen(key);
-
-        strcpy(new_key_buffer, key);
-        keys[i] = new_key_buffer;
-        new_key_buffer += key_length + 1;
-
-        if(i >= index->packed_index) {
-            jg_free(key);
-        }
-    }
-
-    if(index->packed_index > 0) {
-        jg_free(old_key_buffer);
-    }
-
-    index->packed_index = count;
-    index->size = count;
     quick_sort(index, 0, (int)count - 1);
-}
-
-static int binary_search(
-    char** index,
-    const char* key,
-    int low,
-    int high
-);
-
-static void* item_at(const jg_index* index, size_t id) {
-    char* item_data = index->items;
-    return &(item_data[index->item_size * id]);
+    index_realloc(index, count, index->key_buffer_count);
+    index->sorted_index = count;
 }
 
 void* jg_index_get(const jg_index* index, const char* key) {
@@ -134,16 +82,15 @@ void* jg_index_get(const jg_index* index, const char* key) {
         return NULL;
     }
 
-    size_t packed_index = index->packed_index;
-    size_t key_size = strlen(key);
-    assert(key_size <= UCHAR_MAX);
-    char** keys = index->keys;
+    size_t sorted_index = index->sorted_index;
 
-    int result = binary_search(keys, key, 0, (int)packed_index - 1);
+    int result = binary_search(index, key, 0, (int)sorted_index - 1);
+
     if(result == -1) {
-        for(size_t i = packed_index; i < index->count; ++i) {
-            if(strcmp(keys[i], key) == 0) {
-                return item_at(index, i);
+        for(size_t i = sorted_index; i < index->count; ++i) {
+            const char* candidate = get_key_at(index, i);
+            if(strcmp(candidate, key) == 0) {
+                return get_item_at(index, i);
             }
         }
     }
@@ -154,11 +101,118 @@ void* jg_index_get(const jg_index* index, const char* key) {
 
     assert(result >= 0 && (size_t)result < count);
 
-    char* item_data = index->items;
-    return &(item_data[(size_t)result * index->item_size]);
+    return get_item_at(index, (size_t)result);
 }
 
-static int binary_search(char** index, const char* key, int low, int high) {
+static size_t* get_key_indices(const jg_index* index) {
+    assert(index != NULL);
+
+    return (size_t*)((char*)index->buffer + index->item_size * index->size);
+}
+
+static char* get_key_buffer(const jg_index* index) {
+    assert(index != NULL);
+
+    return ((char*)index->buffer + (index->item_size + sizeof(size_t)) * index->size);
+}
+
+static void* set_item_at(const jg_index* index, const void* value, size_t id) {
+    void* result = get_item_at(index, id);
+
+    if(value != NULL) {
+        memcpy(result, value, index->item_size);
+    }
+
+    return result;
+}
+
+static void* get_item_at(const jg_index* index, size_t id) {
+    assert(index != NULL);
+    assert(id < index->count);
+
+    char* item_data = index->buffer;
+    return &(item_data[index->item_size * id]);
+}
+
+static void set_key_at(jg_index* index, const char* key, size_t id) {
+    assert(index != NULL);
+    assert(key != NULL);
+    assert(id < index->count);
+
+    size_t key_length = strlen(key) + 1; // for terminal null character
+    char* key_buffer = get_key_buffer(index) + index->key_buffer_count;
+    memcpy(key_buffer, key, key_length);
+
+    size_t* key_indices = get_key_indices(index);
+    key_indices[id] = index->key_buffer_count;
+
+    index->key_buffer_count += key_length;
+}
+
+static char* get_key_at(const jg_index* index, size_t id) {
+    assert(index != NULL);
+    assert(index->count > id);
+
+    size_t* key_indices = get_key_indices(index);
+    char* key_buffer = get_key_buffer(index);
+    size_t key_index = key_indices[id];
+    assert(key_index < index->key_buffer_count);
+
+    return &(key_buffer[key_index]);
+}
+
+static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size) {
+    assert(index != NULL);
+    assert(new_size >= index->count);
+    assert(new_key_buffer_size >= index->key_buffer_count);
+
+    size_t count = index->count;
+    size_t new_buffer_size = new_size * (index->item_size + sizeof(size_t)) + new_key_buffer_size;
+
+    char* old_items = index->buffer;
+    size_t* old_key_indices = get_key_indices(index);
+    char* old_key_buffer = get_key_buffer(index);
+
+    index->buffer = jg_malloc(new_buffer_size);
+    index->size = new_size;
+    index->key_buffer_size = new_key_buffer_size;
+
+    memcpy(index->buffer, old_items, count * index->item_size);
+
+    // copy keys one by one, as the order can have changed by sorting, so copy them in the index order.
+    index->key_buffer_count = 0;
+    for(size_t i = 0; i < count; ++i) {
+        char* old_key = old_key_buffer + old_key_indices[i];
+        set_key_at(index, old_key, i);
+    }
+
+    jg_free(old_items);
+}
+
+static void index_grow(jg_index* index, size_t new_key_size) {
+    assert(index != NULL);
+
+    size_t count = index->count;
+    size_t size = index->size;
+    size_t key_buffer_size = index->key_buffer_size;
+
+    if(count == size) {
+        size = (size + 1) * 2;
+    }
+
+    size_t key_buffer_count = index->key_buffer_count;
+    if(key_buffer_count + new_key_size > key_buffer_size) {
+        key_buffer_size = key_buffer_count + new_key_size + (size - count) * average_key_size;
+    }
+
+    if(size != index->size || key_buffer_size != index->key_buffer_size) {
+        index_realloc(index, size, key_buffer_size);
+    }
+
+    assert(index->count <= index->size);
+}
+
+static int binary_search(const jg_index* index, const char* key, int low, int high) {
     assert(index != NULL);
     assert(key != NULL);
 
@@ -167,12 +221,13 @@ static int binary_search(char** index, const char* key, int low, int high) {
     }
 
     int search_id = low + (high - low) / 2;
-    const char* candidate = index[search_id];
-
+    const char* candidate = get_key_at(index, (size_t)search_id);
     int diff = strcmp(candidate, key);
+
     if(diff == 0) {
         return search_id;
     }
+
     if(diff > 0) {
         return binary_search(index, key, low, search_id - 1);
     }
@@ -186,28 +241,27 @@ static void index_swap(jg_index* index, int a, int b) {
 
     size_t item_size = index->item_size;
     char tmp_item[max_item_size];
-    void* item_a = item_at(index, (size_t)a);
-    void* item_b = item_at(index, (size_t)b);
+    void* item_a = get_item_at(index, (size_t)a);
+    void* item_b = get_item_at(index, (size_t)b);
 
     memcpy(tmp_item, item_a, item_size);
     memcpy(item_a, item_b, item_size);
     memcpy(item_b, tmp_item, item_size);
 
-    char** keys = index->keys;
-    char* tmp = keys[a];
-    keys[a] = keys[b];
-    keys[b] = tmp;
+    size_t* key_indices = get_key_indices(index);
+    size_t tmp = key_indices[a];
+    key_indices[a] = key_indices[b];
+    key_indices[b] = tmp;
 }
 
 static int partition(jg_index* index, int low, int high) {
     assert(low < high);
-    char** keys = index->keys;
-
-    const char* pivot = keys[high];
+    const char* pivot = get_key_at(index, (size_t)high);
 
     int i = (low - 1);\
     for (int j = low; j <= high - 1; ++j) {
-        if (strcmp(keys[j], pivot) < 0) {
+        const char* key = get_key_at(index, (size_t)j);
+        if (strcmp(key, pivot) < 0) {
             ++i;
             index_swap(index, i, j);
         }
@@ -223,13 +277,5 @@ static void quick_sort(jg_index* index, int low, int high) {
         quick_sort(index, low, pivot_index - 1);
         quick_sort(index, pivot_index + 1, high);
     }
-}
-
-static char* copy_key(const char* key) {
-    size_t length = strlen(key);
-    assert(length < 255);
-    char* string_copy = jg_malloc(sizeof(char) * (length + 1));
-    strcpy(string_copy, key);
-    return string_copy;
 }
 
