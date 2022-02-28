@@ -25,7 +25,7 @@ static void* get_item_at(const jg_index* index, size_t id);
 static void set_key_at(jg_index* index, const char* key, size_t id);
 static char* get_key_at(const jg_index* index, size_t id);
 
-static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer);
+static void index_move(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer);
 static void index_grow(jg_index* index, size_t new_key_size);
 static void quick_sort(jg_index* index, int low, int high);
 static int binary_search(const jg_index* index, const char* key, int low, int high);
@@ -77,7 +77,7 @@ void jg_index_pack(jg_index* index, void* buffer) {
     size_t count = index->count;
 
     quick_sort(index, 0, (int)count - 1);
-    index_realloc(index, count, index->key_buffer_count, buffer);
+    index_move(index, count, index->key_buffer_count, buffer);
     index->packed_index = count;
 }
 
@@ -169,7 +169,7 @@ static char* get_key_at(const jg_index* index, size_t id) {
     return &(key_buffer[key_index]);
 }
 
-static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer) {
+static void index_move(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer) {
     assert(index != NULL);
     assert(new_size >= index->count);
     assert(new_key_buffer_size >= index->key_buffer_count);
@@ -218,7 +218,7 @@ static void index_grow(jg_index* index, size_t new_key_size) {
     if(size != index->size || key_buffer_size != index->key_buffer_size) {
         size_t new_buffer_size = size * (index->item_size + sizeof(size_t)) + key_buffer_size;
         void* buffer = jg_malloc(new_buffer_size);
-        index_realloc(index, size, key_buffer_size, buffer);
+        index_move(index, size, key_buffer_size, buffer);
     }
 
     assert(index->count <= index->size);
