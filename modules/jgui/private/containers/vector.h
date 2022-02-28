@@ -100,3 +100,4 @@ typedef struct jg_vector_s {
 } jg_vector;
 
 #endif
+

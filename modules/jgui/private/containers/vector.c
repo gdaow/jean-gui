@@ -81,3 +81,4 @@ const void* jg_vector_back(const jg_vector* vector) {
 size_t jg_vector_size(const jg_vector* vector) {
     return vector->_size;
 }
+
