@@ -37,7 +37,7 @@ typedef struct jg_index_s {
     size_t item_size;
     size_t key_buffer_count;
     size_t key_buffer_size;
-    size_t sorted_index;
+    size_t packed_index;
 } jg_index;
 
 #endif

@@ -48,7 +48,7 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
         }
     }
 
-    if(index->sorted_index != index->count) { // else, buffer is packed and the buffer doesn't belong to the index.
+    if(index->packed_index != index->count) { // else, buffer is packed and the buffer doesn't belong to the index.
         jg_free(index->buffer);
     }
 }
@@ -78,7 +78,7 @@ void jg_index_pack(jg_index* index, void* buffer) {
 
     quick_sort(index, 0, (int)count - 1);
     index_realloc(index, count, index->key_buffer_count, buffer);
-    index->sorted_index = count;
+    index->packed_index = count;
 }
 
 void* jg_index_get(const jg_index* index, const char* key) {
@@ -90,7 +90,7 @@ void* jg_index_get(const jg_index* index, const char* key) {
         return NULL;
     }
 
-    size_t sorted_index = index->sorted_index;
+    size_t sorted_index = index->packed_index;
 
     int result = binary_search(index, key, 0, (int)sorted_index - 1);
 
@@ -175,7 +175,7 @@ static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffe
     assert(new_key_buffer_size >= index->key_buffer_count);
 
     size_t count = index->count;
-    bool is_packed = index->sorted_index == index->count;
+    bool is_packed = index->packed_index == index->count;
 
     char* old_items = index->buffer;
     size_t* old_key_indices = get_key_indices(index);
