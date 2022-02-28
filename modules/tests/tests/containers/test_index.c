@@ -50,7 +50,7 @@ static const int items[test_item_count] = {
 static void check_index_values(jg_index* index) {
     assert_int_equal(NULL, jg_index_get(index, "Not In The Index"));
 
-    for(int i = 0; i < index->count; ++i) {
+    for(int i = 0; i < index->_count; ++i) {
         const char* key = keys[i];
         const int* item = jg_index_get(index, key);
         assert_int_equal(items[i], *item);
@@ -84,7 +84,7 @@ static void add_and_pack(jg_index* index, size_t start_item, size_t end_item, vo
     check_index_values(index);
 }
 
-/** We should get items in the index before and after building it **/
+/** We should get items in the index before and after packing it **/
 static void test_index_build(void** state) {
     (void)state;
 

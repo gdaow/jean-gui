@@ -28,6 +28,7 @@ static const item items[7] = {
 
 static const size_t item_count = sizeof(items) / sizeof(item);
 
+/* Items should correctly be pushed in a vector */
 static void test_vector_push(void** state) {
     jg_vector* vector = *state;
 
@@ -39,6 +40,7 @@ static void test_vector_push(void** state) {
     jg_vector_cleanup(vector);
 }
 
+/* Batch of items should be added to the vector. */
 void test_vector_append(void** state) {
     jg_vector* vector = *state;
 
@@ -50,6 +52,8 @@ void test_vector_append(void** state) {
     jg_vector_cleanup(vector);
 }
 
+
+/* jg_vector_front, jg_vector_at and jg_vector_end should return correct elements. */
 void test_vector_front_at_back(void** state) {
     jg_vector* vector = *state;
 
@@ -65,6 +69,7 @@ void test_vector_front_at_back(void** state) {
 }
 
 
+/* jg_vector_size should return the size of the vector. */
 void test_vector_size(void** state) {
     jg_vector* vector = *state;
     assert_int_equal(jg_vector_size(vector), 0);

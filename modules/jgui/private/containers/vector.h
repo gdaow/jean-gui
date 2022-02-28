@@ -23,7 +23,6 @@ jg_forward_declare(jg_vector)
   *
   * @param vector    Pointer on the vector to initialize.
   * @param item_size Size of an item in the array. Generally use sizeof(stored_type).
-  *
   */
 jg_vector jg_vector_init(size_t item_size);
 
@@ -49,7 +48,6 @@ void jg_vector_cleanup(jg_vector* vector);
   * @param item Pointer to the item to add. The item will be copied in the vector.
   *             If the memory pointed by item is smaller than the vector's item size,
   *             the behavior is undefined.
-  *
   */
 void jg_vector_push(jg_vector* vector, const void* item);
 
@@ -57,7 +55,6 @@ void jg_vector_push(jg_vector* vector, const void* item);
   * Adds an array of items at the end of this vector.
   *
   * @param items Pointer to an array of items.
-  *
   */
 void jg_vector_append(jg_vector* vector, const void* items, size_t item_count);
 
