@@ -24,7 +24,9 @@ void jg_index_cleanup(jg_index *index, void (*item_cleanup)(void *));
 
 void* jg_index_add(jg_index* index, const char* key, const void* item);
 
-void jg_index_pack(jg_index* index);
+size_t jg_index_packed_size(const jg_index* index);
+
+void jg_index_pack(jg_index* index, void* buffer);
 
 void* jg_index_get(const jg_index* index, const char* key);
 

@@ -25,7 +25,7 @@ static void* get_item_at(const jg_index* index, size_t id);
 static void set_key_at(jg_index* index, const char* key, size_t id);
 static char* get_key_at(const jg_index* index, size_t id);
 
-static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size);
+static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer);
 static void index_grow(jg_index* index, size_t new_key_size);
 static void quick_sort(jg_index* index, int low, int high);
 static int binary_search(const jg_index* index, const char* key, int low, int high);
@@ -48,7 +48,9 @@ void jg_index_cleanup(jg_index* index, void (*item_cleanup)(void*)) {
         }
     }
 
-    jg_free(index->buffer);
+    if(index->sorted_index != index->count) { // else, buffer is packed and the buffer doesn't belong to the index.
+        jg_free(index->buffer);
+    }
 }
 
 void* jg_index_add(jg_index* index, const char* key, const void* item) {
@@ -63,13 +65,17 @@ void* jg_index_add(jg_index* index, const char* key, const void* item) {
     return set_item_at(index, item, count);
 }
 
-void jg_index_pack(jg_index* index) {
+size_t jg_index_packed_size(const jg_index* index) {
+     return index->count * (index->item_size + sizeof(size_t)) + index->key_buffer_count;
+}
+
+void jg_index_pack(jg_index* index, void* buffer) {
     assert(index != NULL);
 
     size_t count = index->count;
 
     quick_sort(index, 0, (int)count - 1);
-    index_realloc(index, count, index->key_buffer_count);
+    index_realloc(index, count, index->key_buffer_count, buffer);
     index->sorted_index = count;
 }
 
@@ -161,19 +167,19 @@ static char* get_key_at(const jg_index* index, size_t id) {
     return &(key_buffer[key_index]);
 }
 
-static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size) {
+static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffer_size, void* buffer) {
     assert(index != NULL);
     assert(new_size >= index->count);
     assert(new_key_buffer_size >= index->key_buffer_count);
 
     size_t count = index->count;
-    size_t new_buffer_size = new_size * (index->item_size + sizeof(size_t)) + new_key_buffer_size;
+    bool is_packed = index->sorted_index == index->count;
 
     char* old_items = index->buffer;
     size_t* old_key_indices = get_key_indices(index);
     char* old_key_buffer = get_key_buffer(index);
 
-    index->buffer = jg_malloc(new_buffer_size);
+    index->buffer = buffer;
     index->size = new_size;
     index->key_buffer_size = new_key_buffer_size;
 
@@ -186,7 +192,9 @@ static void index_realloc(jg_index* index, size_t new_size, size_t new_key_buffe
         set_key_at(index, old_key, i);
     }
 
-    jg_free(old_items);
+    if(!is_packed) {
+        jg_free(old_items);
+    }
 }
 
 static void index_grow(jg_index* index, size_t new_key_size) {
@@ -206,7 +214,9 @@ static void index_grow(jg_index* index, size_t new_key_size) {
     }
 
     if(size != index->size || key_buffer_size != index->key_buffer_size) {
-        index_realloc(index, size, key_buffer_size);
+        size_t new_buffer_size = size * (index->item_size + sizeof(size_t)) + key_buffer_size;
+        void* buffer = jg_malloc(new_buffer_size);
+        index_realloc(index, size, key_buffer_size, buffer);
     }
 
     assert(index->count <= index->size);

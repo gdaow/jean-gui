@@ -15,9 +15,9 @@
 
 #include "tests/common/cmocka.h"
 
-#define test_item_size 48
-#define test_item_count 8
-typedef const char key[test_item_size];
+#define test_key_size 256
+#define test_item_count 9
+typedef const char key[test_key_size];
 static const key keys[test_item_count] = {
     "Apple",
     "Orange",
@@ -26,7 +26,15 @@ static const key keys[test_item_count] = {
     "Watermelon",
     "Pear",
     "Mango",
-    "T-34 85mm Soviet Tanks"
+    "T-34 85mm Soviet Tanks",
+    ("Debout les damnés de la terre"
+     "Debout les forçats de la faim"
+     "La raison tonne en son cratère"
+     "C'est l'éruption de la faim"
+     "Du passé faisons table rase"
+     "Foule esclave debout debout"
+     "Le monde va changer de base"
+     "Nous ne sommes rien soyons tout")
 };
 
 static const int items[test_item_count] = {
@@ -35,7 +43,8 @@ static const int items[test_item_count] = {
     3,
     4,
     5,
-    9000
+    9000,
+    -1,
 };
 
 static void check_index_values(jg_index* index) {
@@ -64,31 +73,37 @@ static void test_index_add_get(void** state) {
     jg_index_cleanup(&index, NULL);
 }
 
+static void add_and_pack(jg_index* index, size_t start_item, size_t end_item, void** pack_buffer) {
+    for(size_t i = start_item; i < end_item; ++i) {
+        jg_index_add(index, keys[i], &items[i]);
+    }
+    check_index_values(index);
+
+    *pack_buffer = jg_malloc(jg_index_packed_size(index));
+    jg_index_pack(index, *pack_buffer);
+    check_index_values(index);
+}
+
 /** We should get items in the index before and after building it **/
 static void test_index_build(void** state) {
     (void)state;
+
     jg_index index;
+    void* pack_buffers[3] = {0};
 
     jg_index_init(&index, sizeof(int));
-    jg_index_pack(&index); // test build empty index
 
-    for(size_t i = 0; i < test_item_count / 2; ++i) {
-        jg_index_add(&index, keys[i], &items[i]);
-    }
+    pack_buffers[0] = jg_malloc(jg_index_packed_size(&index));
+    jg_index_pack(&index, pack_buffers[0]); // test pack empty index
 
-    jg_index_pack(&index);
-    check_index_values(&index);
-
-    for(size_t i = test_item_count / 2; i < test_item_count; ++i) {
-        jg_index_add(&index, keys[i], &items[i]);
-    }
-
-    check_index_values(&index);
-
-    jg_index_pack(&index);
-    check_index_values(&index);
+    add_and_pack(&index, 0, test_item_count / 2, &(pack_buffers[1]));
+    add_and_pack(&index, test_item_count / 2, test_item_count, &(pack_buffers[2]));
 
     jg_index_cleanup(&index, NULL);
+
+    jg_free(pack_buffers[0]);
+    jg_free(pack_buffers[1]);
+    jg_free(pack_buffers[2]);
 }
 
 static int cleaned_item = 0;
