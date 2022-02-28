@@ -8,8 +8,8 @@
  * TODO: document.
  *
  */
-#ifndef JGUI_PUBLIC_JGUI_OBJECT_H
-#define JGUI_PUBLIC_JGUI_OBJECT_H
+#ifndef JGUI_OBJECT_MODEL_OBJECT_H
+#define JGUI_OBJECT_MODEL_OBJECT_H
 
 #include <stddef.h>
 
