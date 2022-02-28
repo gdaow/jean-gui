@@ -66,11 +66,13 @@ void* jg_index_add(jg_index* index, const char* key, const void* item) {
 }
 
 size_t jg_index_packed_size(const jg_index* index) {
-     return index->count * (index->item_size + sizeof(size_t)) + index->key_buffer_count;
+    assert(index != NULL);
+    return index->count * (index->item_size + sizeof(size_t)) + index->key_buffer_count;
 }
 
 void jg_index_pack(jg_index* index, void* buffer) {
     assert(index != NULL);
+    assert(buffer != NULL);
 
     size_t count = index->count;
 
