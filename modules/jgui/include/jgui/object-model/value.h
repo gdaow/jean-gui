@@ -13,8 +13,8 @@
  * of default conversion between supported types rapidly exploses, and with it the complexity.
  *
  */
-#ifndef JGUI_PUBLIC_JGUI_VALUE_H
-#define JGUI_PUBLIC_JGUI_VALUE_H
+#ifndef JGUI_INCLUDE_JGUI_VALUE_H
+#define JGUI_INCLUDE_JGUI_VALUE_H
 
 #include <stdbool.h>
 
