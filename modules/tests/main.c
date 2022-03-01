@@ -30,12 +30,17 @@ void jg_assert_impl(bool test_result, const char* test_expression, const char* f
 }
 
 void test_containers(jg_vector* tests);
+void test_object_model(jg_vector* tests);
 
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
+
     jg_vector tests = jg_vector_of(struct CMUnitTest);
+
     test_containers(&tests);
+    test_object_model(&tests);
+
     int result = _cmocka_run_group_tests(
         "JGui Tests",
         jg_vector_front(&tests),
@@ -46,3 +51,4 @@ int main(int argc, char** argv) {
     jg_vector_cleanup(&tests);
     return result;
 }
+
