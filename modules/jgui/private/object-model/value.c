@@ -105,3 +105,4 @@ void* jg_to_object(jg_value value) {
     assert(jg_is_object(value));
     return value._value._object;
 }
+
