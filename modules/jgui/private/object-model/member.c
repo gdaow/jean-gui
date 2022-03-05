@@ -7,6 +7,8 @@
  */
 #include "jgui/private/object-model/member.h"
 
+#include <jgui/object-model/value.h>
+
 #include "jgui/private/containers/index.h"
 #include "jgui/private/misc/assert.h"
 

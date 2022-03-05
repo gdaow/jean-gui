@@ -11,8 +11,6 @@
 #ifndef JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 #define JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 
-#include <jgui/object-model/member.h>
-
 #include <jgui/object-model/member_types.h>
 #include <jgui/misc/utils.h>
 
@@ -25,7 +23,6 @@ void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter);
 jg_value jg_property_get(void* object, jg_member* member);
 
 void jg_property_set(void* object, jg_member* member, jg_value value);
-
 
 void jg_member_cleanup(void* member);
 

@@ -6,7 +6,7 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 
-#include <jgui/object-model/member.h>
+#include <jgui/object-model/value.h>
 
 #include "jgui/private/containers/vector.h"
 #include "jgui/private/object-model/member.h"
