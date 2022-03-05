@@ -19,9 +19,15 @@
 #include "jgui/private/misc/utils.h"
 
 forward_declare(jg_class)
+forward_declare(jg_member)
+
+void jg_class_index_init(jg_index* index);
 
 void jg_class_init(jg_class* class_, const jg_class* parent, size_t size);
 
 void jg_class_cleanup(void* class_);
 
+jg_member* jg_class_get_member(jg_class* class_, const char* member_name);
+
 #endif
+

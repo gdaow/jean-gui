@@ -27,8 +27,6 @@ typedef enum {
 struct user_s {
     const char* name;
     team* team;
-    jg_id constructed_class_id;
-    jg_id* destructed_class_id;
 };
 
 struct admin_s {
@@ -40,10 +38,3 @@ struct team_s {
     const char* name;
 };
 
-jg_id user_class_id();
-jg_id admin_class_id();
-jg_id team_class_id();
-
-void user_model_plugin(jg_context* context);
-
-bool user_has_permission(user* user, permission_flags flags);

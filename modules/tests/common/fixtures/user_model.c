@@ -16,6 +16,7 @@
 
 #include "user_model.h"
 
+/*C
 static void register_user_class(jg_context* context);
 static void register_admin_class(jg_context* context);
 static void register_team_class(jg_context* context);
@@ -126,18 +127,15 @@ static void admin_destructor(void* object) {
         *(admin->base.destructed_class_id) = admin_class_id();
     }
 }
-*/
 
 static jg_value admin_has_permission(jg_arguments* args) {
     (void)args;
-    /*
     int flags = jg_pop_int(args);
     if(jg_arguments_error(args)) {
         return jg_none();
     }
 
     return jg_bool(flags & PERM_ALL);
-    */
     return jg_none();
 }
 
@@ -172,4 +170,6 @@ void register_team_class(jg_context* context) {
     );
     jg_class_add_property(class_, "name", team_get_name, team_set_name);
 }
+
+*/
 

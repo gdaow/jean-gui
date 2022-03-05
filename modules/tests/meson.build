@@ -8,6 +8,7 @@ jg_test_src = files(
     'tests/containers/test_vector.c',
     'tests/object-model/_index.c',
     'tests/object-model/test_value.c',
+    'tests/object-model/test_member.c',
 )
 
 executable(

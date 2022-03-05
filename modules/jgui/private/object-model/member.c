@@ -7,35 +7,34 @@
  */
 #include "jgui/private/object-model/member.h"
 
-typedef struct jg_member_s {
-    enum {
-        JG_MEMBER_PROPERTY,
-        JG_MEMBER_METHOD
-    } type;
-    union {
-        struct {
-            jg_getter getter;
-            jg_setter setter;
-        } property;
-        jg_method method;
-    } data;
-} jg_member;
+#include "jgui/private/containers/index.h"
+#include "jgui/private/misc/assert.h"
 
 void jg_method_init(jg_member* member, jg_method method) {
     *member = (jg_member) {
-        .data.method = method,
-        .type = JG_MEMBER_METHOD
+        ._data._method = method,
+        ._type = JG_MEMBER_METHOD
     };
 }
 
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter) {
     *member = (jg_member) {
-        .type = JG_MEMBER_PROPERTY,
-        .data.property = {
-            .getter = getter,
-            .setter = setter
+        ._type = JG_MEMBER_PROPERTY,
+        ._data._property = {
+            ._getter = getter,
+            ._setter = setter
         }
     };
+}
+
+jg_value jg_property_get(void* object, jg_member* member) {
+    assert(member->_type == JG_MEMBER_PROPERTY);
+    return (*(member->_data._property._getter))(object);
+}
+
+void jg_property_set(void* object, jg_member* member, jg_value value) {
+    assert(member->_type == JG_MEMBER_PROPERTY);
+    (*(member->_data._property._setter))(object, value);
 }
 
 void jg_member_cleanup(void* member) {
@@ -276,3 +275,4 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
 }
 
 */
+

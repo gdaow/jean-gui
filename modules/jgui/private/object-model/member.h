@@ -18,10 +18,30 @@
 
 jg_forward_declare(jg_member)
 
+void jg_method_init(jg_member* member, jg_method method);
+
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter);
 
-void jg_method_init(jg_member* member, jg_method method);
+jg_value jg_property_get(void* object, jg_member* member);
+
+void jg_property_set(void* object, jg_member* member, jg_value value);
+
 
 void jg_member_cleanup(void* member);
 
+typedef struct jg_member_s {
+    enum {
+        JG_MEMBER_PROPERTY,
+        JG_MEMBER_METHOD
+    } _type;
+    union {
+        struct {
+            jg_getter _getter;
+            jg_setter _setter;
+        } _property;
+        jg_method _method;
+    } _data;
+} jg_member;
+
 #endif
+

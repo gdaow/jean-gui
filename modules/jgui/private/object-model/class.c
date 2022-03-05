@@ -59,3 +59,4 @@ void jg_class_init(jg_class* class_, const jg_class* parent, size_t size) {
 void jg_class_cleanup(void* class_) {
     jg_index_cleanup(&((jg_class*)class_)->member_index, jg_member_cleanup);
 }
+
