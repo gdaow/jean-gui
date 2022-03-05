@@ -21,6 +21,7 @@ jg_src = files(
     'private/memory/arena.c',
     'private/memory/string.c',
     'private/misc/assert.c',
+    'private/object-model/argument.c',
     'private/object-model/class.c',
     'private/object-model/member.c',
     'private/object-model/module.c',
