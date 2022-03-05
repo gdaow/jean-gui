@@ -11,7 +11,7 @@
 #ifndef JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 #define JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 
-#include <jgui/object-model/member_types.h>
+#include <jgui/object-model/member.h>
 #include <jgui/misc/utils.h>
 
 jg_forward_declare(jg_member)

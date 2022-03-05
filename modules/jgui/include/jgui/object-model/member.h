@@ -9,15 +9,13 @@
  *  - document.
  *
  */
-#ifndef JGUI_PUBLIC_JGUI_MEMBER_TYPES_H
-#define JGUI_PUBLIC_JGUI_MEMBER_TYPES_H
+#ifndef JGUI_PUBLIC_JGUI_MEMBER_H
+#define JGUI_PUBLIC_JGUI_MEMBER_H
 
 #include <jgui/misc/utils.h>
 
 jg_forward_declare(jg_value)
 jg_forward_declare(jg_arguments)
-
-typedef struct jg_arguments_s jg_arguments;
 
 typedef jg_value (*jg_method)(jg_arguments*);
 

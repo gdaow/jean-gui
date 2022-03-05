@@ -13,7 +13,7 @@
 #define JGUI_PUBLIC_JGUI_CLASS_H
 
 #include <jgui/misc/utils.h>
-#include <jgui/object-model/member_types.h>
+#include <jgui/object-model/member.h>
 
 jg_forward_declare(jg_class)
 jg_forward_declare(jg_arguments)
