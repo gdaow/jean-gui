@@ -9,6 +9,7 @@ jg_test_src = files(
     'tests/object-model/_index.c',
     'tests/object-model/test_value.c',
     'tests/object-model/test_member.c',
+    'tests/object-model/test_arguments.c',
 )
 
 executable(

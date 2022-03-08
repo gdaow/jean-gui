@@ -11,10 +11,12 @@
 jg_forward_declare(jg_vector)
 
 void test_value(jg_vector* tests);
+void test_arguments(jg_vector* tests);
 void test_member(jg_vector* tests);
 
 void test_object_model(jg_vector* tests) {
     test_value(tests);
+    test_arguments(tests);
     test_member(tests);
 }
 
