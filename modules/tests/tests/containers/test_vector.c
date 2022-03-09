@@ -84,9 +84,6 @@ void test_vector_size(void** state) {
 
 static int setup(void **state) {
     jg_vector* vector = jg_malloc(sizeof(jg_vector));
-    if (vector == NULL) {
-        return -1;
-    }
     jg_vector init_vector = jg_vector_of(item);
     memcpy(vector, &init_vector, sizeof(jg_vector));
     *state = vector;
