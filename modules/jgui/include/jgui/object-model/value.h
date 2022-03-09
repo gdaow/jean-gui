@@ -220,7 +220,7 @@ const void* jg_to_raw(jg_value value);
   *
   * @param value Value to unwrap.
   *
-  *
+  * @return The unwrapped object.
   */
 void* jg_to_object(jg_value value);
 
