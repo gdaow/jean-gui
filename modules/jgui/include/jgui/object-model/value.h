@@ -15,8 +15,8 @@
  * by larger memory representation shouldn't be an issue.
  *
  */
-#ifndef JGUI_INCLUDE_JGUI_VALUE_H
-#define JGUI_INCLUDE_JGUI_VALUE_H
+#ifndef JGUI_OBJECT_MODEL_VALUE_H
+#define JGUI_OBJECT_MODEL_VALUE_H
 
 #include <stdbool.h>
 
