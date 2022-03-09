@@ -9,43 +9,42 @@
 
 #include <jgui/object-model/value.h>
 
+#include "jgui/private/misc//assert.h"
+
 jg_arguments jg_arguments_init(jg_value* arguments, size_t size) {
-    (void)arguments;
-    (void)size;
-    return (jg_arguments) {0};
+    return (jg_arguments) {
+        ._start = arguments,
+        ._end = arguments + size
+    };
 }
 
 jg_value jg_argument_pop(jg_arguments* arguments) {
-    (void)arguments;
-    return jg_none();
+    jg_value* start = arguments->_start++;
+    assert(start < arguments->_end);
+    return *start;
 }
 
 bool jg_pop_bool(jg_arguments* arguments) {
-    (void)arguments;
-    return false;
+    return jg_to_bool(jg_argument_pop(arguments));
 }
 
 int jg_pop_int(jg_arguments* arguments) {
-    (void)arguments;
-    return 0;
+    return jg_to_int(jg_argument_pop(arguments));
 }
 
 double jg_pop_double(jg_arguments* arguments) {
-    (void)arguments;
-    return .0;
+    return jg_to_double(jg_argument_pop(arguments));
 }
 
 const char* jg_pop_string(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+    return jg_to_string(jg_argument_pop(arguments));
 }
 
-void* jg_pop_raw(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+const void* jg_pop_raw(jg_arguments* arguments) {
+    return jg_to_raw(jg_argument_pop(arguments));
 }
 
 void* jg_pop_object(jg_arguments* arguments) {
-    (void)arguments;
-    return NULL;
+    return jg_to_object(jg_argument_pop(arguments));
 }
+
