@@ -18,12 +18,6 @@
 #include "private/containers/index.h"
 #include "private/object-model/member.h"
 
-struct jg_class_s {
-    jg_index member_index;
-    const jg_class* parent;
-    size_t size;
-};
-
 void jg_class_add_method(jg_class* class_, const char* name, jg_method method) {
     assert(class_ != NULL);
     assert(!jg_null_or_empty(name));
@@ -54,6 +48,12 @@ void jg_class_init(jg_class* class_, const jg_class* parent, size_t size) {
         .parent = parent,
         .size = size
     };
+}
+
+const jg_member* jg_class_get_member(const jg_class* class_, const char* member_name) {
+    (void)class_;
+    (void)member_name;
+    return NULL;
 }
 
 static void item_cleanup(void* item) { jg_member_cleanup(item); }

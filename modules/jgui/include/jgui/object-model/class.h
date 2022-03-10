@@ -23,3 +23,4 @@ void jg_class_add_method(jg_class* class_, const char* name, jg_method method);
 void jg_class_add_property(jg_class* class_, const char* name, jg_getter getter, jg_setter setter);
 
 #endif
+
