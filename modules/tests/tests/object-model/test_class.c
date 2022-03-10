@@ -114,12 +114,30 @@ static void test_duplicated_member_fail(void** state) {
     jg_class_cleanup(&class_);
 }
 
+/** jg_class_get_member should return NULL when queried a not declared member. */
+static void test_undeclared_member(void** state) {
+    (void)state;
+    jg_class child_class;
+    jg_class parent_class;
+
+    jg_class_init(&parent_class, NULL, sizeof(char));
+    jg_class_init(&child_class, NULL, sizeof(char));
+    jg_class_add_method(&child_class, "child_method", &parent_method);
+
+    assert_null(jg_class_get_member(&parent_class, "child_method"));
+    assert_null(jg_class_get_member(&child_class, "undeclared_member"));
+
+    jg_class_cleanup(&child_class);
+    jg_class_cleanup(&parent_class);
+}
+
 void test_class(jg_vector* vector) {
     (void)vector;
     struct CMUnitTest class_tests[] = {
         cmocka_unit_test(test_add_property),
         cmocka_unit_test(test_add_method),
         cmocka_unit_test(test_duplicated_member_fail),
+        cmocka_unit_test(test_undeclared_member),
     };
 
     jg_vector_append(vector, class_tests, sizeof(class_tests) / sizeof(struct CMUnitTest));
