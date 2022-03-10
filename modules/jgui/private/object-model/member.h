@@ -35,7 +35,7 @@ void jg_method_init(jg_member* member, jg_method method);
  *
  * @return The wrapped return value of the method call.
  */
-jg_value jg_method_call(jg_member* member, jg_arguments* arguments);
+jg_value jg_method_call(jg_member* method, jg_arguments* arguments);
 
 /**
  * Initialize a member as a property using the given getter and setter.
@@ -54,7 +54,7 @@ void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter);
  *
  * @return The property value.
  */
-jg_value jg_property_get(void* object, jg_member* member);
+jg_value jg_property_get(jg_member* property, void* object);
 
 /**
  * Set the value of the given property on the given object.
@@ -64,7 +64,7 @@ jg_value jg_property_get(void* object, jg_member* member);
  * @param object Object to set the property on.
  * @param value  The property value to set.
  */
-void jg_property_set(void* object, jg_member* member, jg_value value);
+void jg_property_set(jg_member* property, void* object, jg_value value);
 
 /**
  * Releases memory used by a member.

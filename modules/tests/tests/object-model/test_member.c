@@ -33,7 +33,7 @@ static void test_property_get(void** state) {
     };
 
     jg_property_init(&member, user_get_name, user_set_name);
-    jg_value property_value = jg_property_get(&test_user, &member);
+    jg_value property_value = jg_property_get(&member, &test_user);
 
     assert_string_equal(test_user.name, jg_to_string(property_value));
 }
@@ -46,7 +46,7 @@ static void test_property_set(void** state) {
     };
 
     jg_property_init(&member, user_get_name, user_set_name);
-    jg_property_set(&test_user, &member, jg_string("Krascuky"));
+    jg_property_set(&member, &test_user, jg_string("Krascuky"));
 
     assert_string_equal(test_user.name, "Krascuky");
 }

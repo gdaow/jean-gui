@@ -19,9 +19,9 @@ void jg_method_init(jg_member* member, jg_method method) {
     };
 }
 
-jg_value jg_method_call(jg_member* member, jg_arguments* arguments) {
-    assert(member->_type == JG_MEMBER_METHOD);
-    return (*(member->_data._method))(arguments);
+jg_value jg_method_call(jg_member* method, jg_arguments* arguments) {
+    assert(method->_type == JG_MEMBER_METHOD);
+    return (*(method->_data._method))(arguments);
 }
 
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter) {
@@ -34,14 +34,14 @@ void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter) {
     };
 }
 
-jg_value jg_property_get(void* object, jg_member* member) {
-    assert(member->_type == JG_MEMBER_PROPERTY);
-    return (*(member->_data._property._getter))(object);
+jg_value jg_property_get(jg_member* property, void* object) {
+    assert(property->_type == JG_MEMBER_PROPERTY);
+    return (*(property->_data._property._getter))(object);
 }
 
-void jg_property_set(void* object, jg_member* member, jg_value value) {
-    assert(member->_type == JG_MEMBER_PROPERTY);
-    (*(member->_data._property._setter))(object, value);
+void jg_property_set(jg_member* property, void* object, jg_value value) {
+    assert(property->_type == JG_MEMBER_PROPERTY);
+    (*(property->_data._property._setter))(object, value);
 }
 
 void jg_member_cleanup(void* member) {
