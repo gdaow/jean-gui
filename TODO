@@ -13,4 +13,5 @@
  * jg_arguments could be renamed to jg_call_context actually, and we could provide
    methods to call error on it. Maybe push the function result in it too.
  * Use dynamic allocation policy : pass it to the context.
+ * Normalize spaces in documentation comments (in vector.h)
 
