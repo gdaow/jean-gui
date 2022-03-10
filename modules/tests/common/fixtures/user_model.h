@@ -9,32 +9,27 @@
  *
  */
 #pragma once
-#include <jgui/core/context.h>
 #include <stdbool.h>
 
-typedef struct admin_s admin;
-typedef struct team_s team;
-typedef struct user_s user;
+#include <jgui/misc/utils.h>
 
-typedef enum {
-    PERM_LOGIN = 1,
-    PERM_CHANGE_PASSWORD = 0x2,
-    PERM_CREATE_USER = 0x4,
-    PERM_DELETE_USER = 0x8,
-    PERM_ALL = PERM_LOGIN | PERM_CHANGE_PASSWORD | PERM_CREATE_USER | PERM_DELETE_USER
-} permission_flags;
+jg_forward_declare(test_team)
 
-struct user_s {
+typedef struct test_user_s {
     const char* name;
-    team* team;
-};
+    test_team* team;
+} test_user;
 
-struct admin_s {
-    user base;
+typedef struct test_admin_s {
+    test_user base;
     const char* role;
-};
+} test_admin;
 
-struct team_s {
+typedef struct test_team_s {
     const char* name;
-};
+} test_team;
+
+const char* user_get_name(const test_user* user);
+
+void user_set_name(test_user* user, const char* name);
 

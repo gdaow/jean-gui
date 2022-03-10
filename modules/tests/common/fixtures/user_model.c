@@ -16,6 +16,16 @@
 
 #include "user_model.h"
 
+const char* user_get_name(const test_user* user) {
+    assert(user != NULL);
+    return user->name;
+}
+
+void user_set_name(test_user* user, const char* name) {
+    assert(user != NULL);
+    user->name = name;
+}
+
 /*C
 static void register_user_class(jg_context* context);
 static void register_admin_class(jg_context* context);
@@ -81,7 +91,6 @@ bool user_has_permission(user* user, permission_flags flags) {
 
 static jg_value user_has_permission_impl(jg_arguments* args) {
     (void)args;
-    /*
     int flags = jg_pop_int(args);
 
     if(jg_arguments_error(args)) {
@@ -89,7 +98,6 @@ static jg_value user_has_permission_impl(jg_arguments* args) {
     }
 
     return jg_bool(flags & (PERM_LOGIN | PERM_CHANGE_PASSWORD));
-    */
     return jg_none();
 }
 
@@ -115,7 +123,6 @@ static void admin_set_role(void* object, jg_value value) {
     admin->role = jg_to_string(value);
 }
 
-/*
 static void admin_constructor(void* object) {
     admin* admin = object;
     admin->base.constructed_class_id = admin_class_id();

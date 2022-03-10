@@ -3,13 +3,14 @@ cmocka_dep = cmocka_project.get_variable('cmocka_dep')
 
 jg_test_src = files(
     'main.c',
+    'common/fixtures/user_model.c',
     'tests/containers/_index.c',
     'tests/containers/test_index.c',
     'tests/containers/test_vector.c',
     'tests/object-model/_index.c',
-    'tests/object-model/test_value.c',
-    'tests/object-model/test_member.c',
     'tests/object-model/test_arguments.c',
+    'tests/object-model/test_member.c',
+    'tests/object-model/test_value.c',
 )
 
 executable(

@@ -15,29 +15,27 @@
 
 #include "tests/common/cmocka.h"
 
-static jg_value user_get_name(const void* object) {
-    const user* user = object;
-    return jg_string(user->name);
+static jg_value user_name_getter(const void* object) {
+    return jg_string(user_get_name(object));
 }
 
-static void user_set_name(void* object, jg_value value) {
-    user* user = object;
-    user->name = jg_to_string(value);
+static void user_name_setter(void* object, jg_value value) {
+    user_set_name(object, jg_to_string(value));
 }
 
 static void test_property_get(void** state) {
     (void)state;
     jg_member member;
-    user test_user = (user) {
+    test_user user = (test_user) {
         .name = "Henri"
     };
 
 
-    jg_property_init(&member, user_get_name, user_set_name);
+    jg_property_init(&member, user_name_getter, user_name_setter);
 
-    jg_value property_value = jg_property_get(&member, &test_user);
+    jg_value property_value = jg_property_get(&member, &user);
 
-    assert_string_equal(test_user.name, jg_to_string(property_value));
+    assert_string_equal(user.name, jg_to_string(property_value));
 
     jg_arguments arguments = jg_arguments_new(jg_none());
     expect_assert_failure(jg_method_call(&member, &arguments));
@@ -46,14 +44,15 @@ static void test_property_get(void** state) {
 static void test_property_set(void** state) {
     (void)state;
     jg_member member;
-    user test_user = (user) {
+    test_user user = (test_user) {
         .name = "Georges"
     };
 
-    jg_property_init(&member, user_get_name, user_set_name);
-    jg_property_set(&member, &test_user, jg_string("Krascuky"));
+    jg_property_init(&member, user_name_getter, user_name_setter);
 
-    assert_string_equal(test_user.name, "Krascuky");
+    jg_property_set(&member, &user, jg_string("Krascuky"));
+
+    assert_string_equal(user.name, "Krascuky");
 
     jg_arguments arguments = jg_arguments_new(jg_none());
     expect_assert_failure(jg_method_call(&member, &arguments));
@@ -74,7 +73,7 @@ static void test_method_call(void** state) {
 
     assert_string_equal(jg_to_string(result), "Krascuky");
 
-    expect_assert_failure(jg_property_get(&member, &(user){}));
+    expect_assert_failure(jg_property_get(&member, &(test_user){}));
 }
 
 void test_member(jg_vector* vector) {
