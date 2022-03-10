@@ -35,6 +35,8 @@ static void get_property(jg_class* class_, const char* property_name, const char
     assert_string_equal(jg_to_string(value), expected_value);
 }
 
+
+/** Properties should be correctly registered in class, and retrieved, including overriden ones. */
 static void test_add_property(void** state) {
     (void)state;
     jg_class child_class;
@@ -72,6 +74,7 @@ static void call_method(jg_class* class_, const char* method_name, const char* e
     assert_string_equal(jg_to_string(return_value), expected_return);
 }
 
+/** Methods should be correctly registered in class, and retrieved, including overriden ones. */
 static void test_add_method(void** state) {
     (void)state;
     jg_class child_class;
@@ -91,12 +94,24 @@ static void test_add_method(void** state) {
     call_method(&child_class, "overriden_method", "child");
 }
 
+/** Registering two members with the same name should raise an assert. */
+static void test_duplicated_member_fail(void** state) {
+    (void)state;
+    jg_class class_;
+
+    jg_class_init(&class_, NULL, sizeof(char));
+    jg_class_add_method(&class_, "member", &parent_method);
+
+    expect_assert_failure(jg_class_add_method(&class_, "member", &child_method));
+    expect_assert_failure(jg_class_add_property(&class_, "member", &child_getter, NULL));
+}
 
 void test_class(jg_vector* vector) {
     (void)vector;
     struct CMUnitTest class_tests[] = {
         cmocka_unit_test(test_add_property),
         cmocka_unit_test(test_add_method),
+        cmocka_unit_test(test_duplicated_member_fail),
     };
 
     jg_vector_append(vector, class_tests, sizeof(class_tests) / sizeof(struct CMUnitTest));
