@@ -39,189 +39,189 @@ typedef struct jg_value_s {
 jg_value jg_none();
 
 /**
-  * Wrap the given bool value into a generic jg_value.
-  *
-  * @param value Value to wrap.
-  *
-  * @return The wrapped bool value.
-  */
+ * Wrap the given bool value into a generic jg_value.
+ *
+ * @param value Value to wrap.
+ *
+ * @return The wrapped bool value.
+ */
 jg_value jg_bool(bool value);
 
 /**
-  * Wrap the given int value into a generic jg_value.
-  *
-  * @param value Value to wrap.
-  *
-  * @return The wrapped int value.
-  */
+ * Wrap the given int value into a generic jg_value.
+ *
+ * @param value Value to wrap.
+ *
+ * @return The wrapped int value.
+ */
 jg_value jg_int(int value);
 
 /**
-  * Wrap the given double value into a generic jg_value.
-  *
-  * @param value Value to wrap.
-  *
-  * @return The wrapped double value.
-  */
+ * Wrap the given double value into a generic jg_value.
+ *
+ * @param value Value to wrap.
+ *
+ * @return The wrapped double value.
+ */
 jg_value jg_double(double value);
 
 /**
-  * Wrap the given string value into a generic jg_value.
-  *
-  * The string isn't copied, lifetime of the returned jg_value should be less than the given
-  * string.
-  *
-  * @param value Value to wrap.
-  *
-  * @return The wrapped string value.
-  */
+ * Wrap the given string value into a generic jg_value.
+ *
+ * The string isn't copied, lifetime of the returned jg_value should be less than the given
+ * string.
+ *
+ * @param value Value to wrap.
+ *
+ * @return The wrapped string value.
+ */
 jg_value jg_string(const char* value);
 
 /**
-  * Wrap the given raw pointer into a generic jg_value.
-  *
-  * @param value Value to wrap.
-  *
-  * @return The wrapped raw pointer value.
-  */
+ * Wrap the given raw pointer into a generic jg_value.
+ *
+ * @param value Value to wrap.
+ *
+ * @return The wrapped raw pointer value.
+ */
 jg_value jg_raw(void* value);
 
 /**
-  * Wrap the given object into a generic jg_value.
-  *
-  * @param value Object to wrap.
-  *
-  * @return The wrapped object value.
-  */
+ * Wrap the given object into a generic jg_value.
+ *
+ * @param value Object to wrap.
+ *
+ * @return The wrapped object value.
+ */
 jg_value jg_object(void* value);
 
 /**
-  * Check if a jg_value is the none value.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value is none.
-  */
+ * Check if a jg_value is the none value.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value is none.
+ */
 bool jg_is_none();
 
 /**
-  * Check if a jg_value wraps a bool.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a bool.
-  */
+ * Check if a jg_value wraps a bool.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a bool.
+ */
 bool jg_is_bool(jg_value value);
 
 /**
-  * Check if a jg_value wraps an int.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a int.
-  */
+ * Check if a jg_value wraps an int.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a int.
+ */
 bool jg_is_int(jg_value value);
 
 /**
-  * Check if a jg_value wraps an double.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a double.
-  */
+ * Check if a jg_value wraps an double.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a double.
+ */
 bool jg_is_double(jg_value value);
 
 /**
-  * Check if a jg_value wraps an string.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a string.
-  */
+ * Check if a jg_value wraps an string.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a string.
+ */
 bool jg_is_string(jg_value value);
 
 /**
-  * Check if a jg_value wraps an raw pointer.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a raw pointer.
-  */
+ * Check if a jg_value wraps an raw pointer.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a raw pointer.
+ */
 bool jg_is_raw(jg_value value);
 
 /**
-  * Check if a jg_value wraps an object.
-  *
-  * @param value Value to check.
-  *
-  * @return True if the given value wraps a object.
-  */
+ * Check if a jg_value wraps an object.
+ *
+ * @param value Value to check.
+ *
+ * @return True if the given value wraps a object.
+ */
 bool jg_is_object(jg_value value);
 
 /**
-  * Unwrap a jg_value to a bool value.
-  *
-  * If the value doesn't wrap a bool, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped bool value.
-  */
+ * Unwrap a jg_value to a bool value.
+ *
+ * If the value doesn't wrap a bool, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped bool value.
+ */
 bool jg_to_bool(jg_value value);
 
 /**
-  * Unwrap a jg_value to an int value.
-  *
-  * If the value doesn't wrap an int, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped int value.
-  */
+ * Unwrap a jg_value to an int value.
+ *
+ * If the value doesn't wrap an int, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped int value.
+ */
 int jg_to_int(jg_value value);
 
 /**
-  * Unwrap a jg_value to a double value.
-  *
-  * If the value doesn't wrap a double, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped double value.
-  */
+ * Unwrap a jg_value to a double value.
+ *
+ * If the value doesn't wrap a double, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped double value.
+ */
 double jg_to_double(jg_value value);
 
 /**
-  * Unwrap a jg_value to a string value.
-  *
-  * If the value doesn't wrap a string, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped string value.
-  */
+ * Unwrap a jg_value to a string value.
+ *
+ * If the value doesn't wrap a string, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped string value.
+ */
 const char* jg_to_string(jg_value value);
 
 /**
-  * Unwrap a jg_value to a raw pointer value.
-  *
-  * If the value doesn't wrap a raw pointer, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped raw pointer value.
-  */
+ * Unwrap a jg_value to a raw pointer value.
+ *
+ * If the value doesn't wrap a raw pointer, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped raw pointer value.
+ */
 const void* jg_to_raw(jg_value value);
 
 /**
-  * Unwrap a jg_value to a object value.
-  *
-  * If the value doesn't wrap a object, the behavior is undefined.
-  *
-  * @param value Value to unwrap.
-  *
-  * @return The unwrapped object.
-  */
+ * Unwrap a jg_value to a object value.
+ *
+ * If the value doesn't wrap a object, the behavior is undefined.
+ *
+ * @param value Value to unwrap.
+ *
+ * @return The unwrapped object.
+ */
 void* jg_to_object(jg_value value);
 
 #endif

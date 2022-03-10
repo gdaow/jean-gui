@@ -27,12 +27,12 @@ jg_forward_declare(jg_vector)
 jg_vector jg_vector_init(size_t item_size);
 
 /**
- * Helper macro to initialize a vector with item_size set as the size of the given type.
- *
- * @param type Type of items stored in the vector.
- *
- * @return The initialized vector.
- */
+  * Helper macro to initialize a vector with item_size set as the size of the given type.
+  *
+  * @param type Type of items stored in the vector.
+  *
+  * @return The initialized vector.
+  */
 #define jg_vector_of(type) jg_vector_init(sizeof(type))
 
 /**
@@ -90,8 +90,8 @@ const void* jg_vector_back(const jg_vector* vector);
 size_t jg_vector_size(const jg_vector* vector);
 
 /**
- * /!\ Private struct (see doc-private-struct) /!\
- */
+  * /!\ Private struct (see doc-private-struct) /!\
+  */
 typedef struct jg_vector_s {
     char* _data;
     const size_t _item_size;

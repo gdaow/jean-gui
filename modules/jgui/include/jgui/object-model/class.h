@@ -22,26 +22,26 @@ jg_forward_declare(jg_class)
 jg_forward_declare(jg_arguments)
 
 /**
-  * Add a method to this class.
-  *
-  * If a property or a method with the same name is already registered in this
-  * class, the behavior is undefined.
-  *
-  * @param name   Name used to identify this method.
-  * @param method Pointer to the method function to bind to the method name.
-  */
+ * Add a method to this class.
+ *
+ * If a property or a method with the same name is already registered in this
+ * class, the behavior is undefined.
+ *
+ * @param name   Name used to identify this method.
+ * @param method Pointer to the method function to bind to the method name.
+ */
 void jg_class_add_method(jg_class* class_, const char* name, jg_method method);
 
 /**
-  * Add a property to this class.
-  *
-  * If a property or a method with the same name is already registered in this
-  * class, the behavior is undefined.
-  *
-  * @param name   Name used to identify this property.
-  * @param getter Pointer to the getter function to bind to this property name.
-  * @param setter Pointer to the setter function to bind to this property name.
-  */
+ * Add a property to this class.
+ *
+ * If a property or a method with the same name is already registered in this
+ * class, the behavior is undefined.
+ *
+ * @param name   Name used to identify this property.
+ * @param getter Pointer to the getter function to bind to this property name.
+ * @param setter Pointer to the setter function to bind to this property name.
+ */
 void jg_class_add_property(jg_class* class_, const char* name, jg_getter getter, jg_setter setter);
 
 #endif

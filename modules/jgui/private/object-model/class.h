@@ -23,28 +23,28 @@ forward_declare(jg_class)
 forward_declare(jg_member)
 
 /**
-  * Initialize a class.
-  *
-  * @param parent Parent class, or NULL.
-  * @param size   Size of object this class describes. Usually sizeof(wrapped_c_type).
-  */
+ * Initialize a class.
+ *
+ * @param parent Parent class, or NULL.
+ * @param size   Size of object this class describes. Usually sizeof(wrapped_c_type).
+ */
 void jg_class_init(jg_class* class_, const jg_class* parent, size_t size);
 
 /**
-  * Retrieve a member that was previously registered in this class using
-  * jg_class_add_method or jg_class_add_property. If the member is not defined on this
-  * class, it will be recursively searched in parent classes.
-  *
-  * @param member_name Name of the member to retrieve.
-  *
-  * @return A pointer to the retrieved member, or NULL if the member was not found in
-  *         this class or it's parents.
-  */
+ * Retrieve a member that was previously registered in this class using
+ * jg_class_add_method or jg_class_add_property. If the member is not defined on this
+ * class, it will be recursively searched in parent classes.
+ *
+ * @param member_name Name of the member to retrieve.
+ *
+ * @return A pointer to the retrieved member, or NULL if the member was not found in
+ *         this class or it's parents.
+ */
 const jg_member* jg_class_get_member(const jg_class* class_, const char* member_name);
 
 /**
-  * Release memory owned by this class instance.
-  */
+ * Release memory owned by this class instance.
+ */
 void jg_class_cleanup(void* class_);
 
 /**
