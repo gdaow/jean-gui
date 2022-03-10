@@ -14,9 +14,12 @@ jg_test_src = files(
     'tests/object-model/test_value.c',
 )
 
-executable(
+unit_tests = executable(
     'jg-tests',
     jg_test_src,
     dependencies: [jg_dep, cmocka_dep],
     include_directories: ['..']
 )
+
+test('all-tests', unit_tests)
+

@@ -1,0 +1,26 @@
+name: checks
+on: [push]
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+
+      - name: Install dev dependencies
+        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev
+
+      - uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+          directory: .build
+          setup-options: -Db_coverage=true
+          options: --verbose
+          meson-version: 0.61.2
+          ninja-version: 1.9.0.post1
+          gcovr-version: 4.2
+
+
+      - name: Unit Test
+        run: .build/modules/tests/jg-tests
+
