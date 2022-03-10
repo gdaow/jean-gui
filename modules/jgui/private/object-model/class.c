@@ -33,7 +33,6 @@ void jg_class_add_property(jg_class* class_, const char* name, jg_getter getter,
     assert(class_ != NULL);
     assert(!jg_null_or_empty(name));
     assert(getter != NULL);
-    assert(setter != NULL);
 
     //TODO(corentin@ki-dour.org) : handle case where member of the same name is already
     //registered
@@ -48,11 +47,20 @@ void jg_class_init(jg_class* class_, const jg_class* parent, size_t size) {
         .parent = parent,
         .size = size
     };
+    jg_index_init(&class_->member_index, sizeof(jg_member));
 }
 
 const jg_member* jg_class_get_member(const jg_class* class_, const char* member_name) {
-    (void)class_;
-    (void)member_name;
+    jg_member* member = jg_index_get(&class_->member_index, member_name);
+    if(member != NULL) {
+        return member;
+    }
+
+    const jg_class* parent = class_->parent;
+    if(parent != NULL) {
+        return jg_class_get_member(parent, member_name);
+    }
+
     return NULL;
 }
 

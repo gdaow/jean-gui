@@ -46,7 +46,7 @@ static void test_add_property(void** state) {
 
     jg_class_init(&child_class, &parent_class, sizeof(char));
     jg_class_add_property(&child_class, "child_property", &child_getter, NULL);
-    jg_class_add_property(&parent_class, "overriden_property", &child_getter, NULL);
+    jg_class_add_property(&child_class, "overriden_property", &child_getter, NULL);
 
     get_property(&child_class, "parent_property", "parent");
     get_property(&child_class, "child_property", "child");
@@ -83,7 +83,7 @@ static void test_add_method(void** state) {
 
     jg_class_init(&child_class, &parent_class, sizeof(char));
     jg_class_add_method(&child_class, "child_method", &child_method);
-    jg_class_add_method(&parent_class, "overriden_method", &child_method);
+    jg_class_add_method(&child_class, "overriden_method", &child_method);
 
     call_method(&child_class, "parent_method", "parent");
     call_method(&child_class, "child_method", "child");
