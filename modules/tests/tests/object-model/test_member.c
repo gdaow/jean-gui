@@ -32,10 +32,15 @@ static void test_property_get(void** state) {
         .name = "Henri"
     };
 
+
     jg_property_init(&member, user_get_name, user_set_name);
+
     jg_value property_value = jg_property_get(&member, &test_user);
 
     assert_string_equal(test_user.name, jg_to_string(property_value));
+
+    jg_arguments arguments = jg_arguments_new(jg_none());
+    expect_assert_failure(jg_method_call(&member, &arguments));
 }
 
 static void test_property_set(void** state) {
@@ -49,6 +54,9 @@ static void test_property_set(void** state) {
     jg_property_set(&member, &test_user, jg_string("Krascuky"));
 
     assert_string_equal(test_user.name, "Krascuky");
+
+    jg_arguments arguments = jg_arguments_new(jg_none());
+    expect_assert_failure(jg_method_call(&member, &arguments));
 }
 
 static jg_value method_fixture(jg_arguments* arguments) {
@@ -65,6 +73,8 @@ static void test_method_call(void** state) {
     jg_value result = jg_method_call(&member, &args);
 
     assert_string_equal(jg_to_string(result), "Krascuky");
+
+    expect_assert_failure(jg_property_get(&member, &(user){}));
 }
 
 void test_member(jg_vector* vector) {

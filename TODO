@@ -18,4 +18,3 @@
  * Rename jg_module_add_class to jg_add_class, jg_class_add_method to jg_add_method.
  * Plug cmokca allocator when running unit tests.
  * Use dynamic allocation policy : pass it to the context.
- * tests: test asserts for bad members type.
