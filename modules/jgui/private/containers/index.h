@@ -23,11 +23,11 @@
 jg_forward_declare(jg_index)
 
 /**
-  * Initialize this index.
-  *
-  * @param index     Pointer on the index to initialize.
-  * @param item_size Size of an item in the index. Generally use sizeof(stored_type).
-  */
+ * Initialize this index.
+ *
+ * @param index     Pointer on the index to initialize.
+ * @param item_size Size of an item in the index. Generally use sizeof(stored_type).
+ */
 void jg_index_init(jg_index* index, size_t item_size);
 
 /**
