@@ -9,8 +9,8 @@
  *  - document.
  *
  */
-#ifndef JGUI_PUBLIC_JGUI_MEMBER_H
-#define JGUI_PUBLIC_JGUI_MEMBER_H
+#ifndef JGUI_OBJECT_MODEL_MEMBER_H
+#define JGUI_OBJECT_MODEL_MEMBER_H
 
 #include <jgui/misc/utils.h>
 

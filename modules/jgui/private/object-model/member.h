@@ -18,6 +18,8 @@ jg_forward_declare(jg_member)
 
 void jg_method_init(jg_member* member, jg_method method);
 
+jg_value jg_method_call(jg_member* member, jg_arguments* arguments);
+
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter);
 
 jg_value jg_property_get(void* object, jg_member* member);

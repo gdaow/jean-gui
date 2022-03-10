@@ -19,6 +19,11 @@ void jg_method_init(jg_member* member, jg_method method) {
     };
 }
 
+jg_value jg_method_call(jg_member* member, jg_arguments* arguments) {
+    assert(member->_type == JG_MEMBER_METHOD);
+    return (*(member->_data._method))(arguments);
+}
+
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter) {
     *member = (jg_member) {
         ._type = JG_MEMBER_PROPERTY,
