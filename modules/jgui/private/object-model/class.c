@@ -56,7 +56,9 @@ void jg_class_init(jg_class* class_, const jg_class* parent, size_t size) {
     };
 }
 
+static void item_cleanup(void* item) { jg_member_cleanup(item); }
+
 void jg_class_cleanup(void* class_) {
-    jg_index_cleanup(&((jg_class*)class_)->member_index, jg_member_cleanup);
+    jg_index_cleanup(&((jg_class*)class_)->member_index, item_cleanup);
 }
 
