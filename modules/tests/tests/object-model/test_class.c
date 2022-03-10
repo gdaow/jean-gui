@@ -54,6 +54,9 @@ static void test_add_property(void** state) {
     get_property(&child_class, "child_property", "child");
     get_property(&parent_class, "overriden_property", "parent");
     get_property(&child_class, "overriden_property", "child");
+
+    jg_class_cleanup(&parent_class);
+    jg_class_cleanup(&child_class);
 }
 
 static jg_value parent_method(jg_arguments* args) {
@@ -92,6 +95,9 @@ static void test_add_method(void** state) {
     call_method(&child_class, "child_method", "child");
     call_method(&parent_class, "overriden_method", "parent");
     call_method(&child_class, "overriden_method", "child");
+
+    jg_class_cleanup(&child_class);
+    jg_class_cleanup(&parent_class);
 }
 
 /** Registering two members with the same name should raise an assert. */
@@ -104,6 +110,8 @@ static void test_duplicated_member_fail(void** state) {
 
     expect_assert_failure(jg_class_add_method(&class_, "member", &child_method));
     expect_assert_failure(jg_class_add_property(&class_, "member", &child_getter, NULL));
+
+    jg_class_cleanup(&class_);
 }
 
 void test_class(jg_vector* vector) {
