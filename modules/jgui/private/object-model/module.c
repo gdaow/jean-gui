@@ -15,12 +15,9 @@
 #include "jgui/private/misc/assert.h"
 #include "jgui/private/object-model/class.h"
 
-struct jg_module_s {
-    jg_index class_index;
-};
-
 void jg_module_init(jg_module* module) {
     *module = (jg_module) {0};
+    jg_index_init(&(module->class_index), sizeof(jg_class));
 }
 
 void jg_module_cleanup(jg_module* module) {

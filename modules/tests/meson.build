@@ -11,6 +11,7 @@ jg_test_src = files(
     'tests/object-model/test_arguments.c',
     'tests/object-model/test_class.c',
     'tests/object-model/test_member.c',
+    'tests/object-model/test_module.c',
     'tests/object-model/test_value.c',
 )
 

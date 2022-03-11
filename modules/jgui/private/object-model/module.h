@@ -16,6 +16,8 @@
 #include <jgui/misc/utils.h>
 #include <jgui/core/id.h>
 
+#include "jgui/private/containers/index.h"
+
 jg_forward_declare(jg_class)
 jg_forward_declare(jg_module)
 
@@ -30,5 +32,9 @@ jg_class* jg_module_add_class(
 );
 
 const jg_class* jg_module_get_class(const jg_module* module, const char* name);
+
+struct jg_module_s {
+    jg_index class_index;
+};
 
 #endif
