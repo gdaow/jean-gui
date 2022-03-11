@@ -25,6 +25,9 @@ static void test_add_class(void** state) {
 
     assert(retrieved_class == class_);
 
+    const jg_class* undeclared_class = jg_module_get_class(&module, "undeclared_class");
+    assert(undeclared_class == NULL);
+
     jg_module_cleanup(&module);
 }
 
