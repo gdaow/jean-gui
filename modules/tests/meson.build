@@ -7,6 +7,8 @@ jg_test_src = files(
     'tests/containers/_index.c',
     'tests/containers/test_index.c',
     'tests/containers/test_vector.c',
+    'tests/core/_index.c',
+    'tests/core/test_context.c',
     'tests/object-model/_index.c',
     'tests/object-model/test_arguments.c',
     'tests/object-model/test_class.c',

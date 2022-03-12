@@ -116,3 +116,4 @@ void jg_set_error_handler(jg_context* context, jg_error_handler handler) {
     }
     context->error_handler = handler;
 }
+

@@ -51,3 +51,4 @@ void jg_set_error_handler(jg_context* context, jg_error_handler handler);
 void jg_error(const jg_context* context, jg_error_code error_code, const char* format, ...);
 
 #endif
+

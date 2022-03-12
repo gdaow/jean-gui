@@ -19,6 +19,8 @@ typedef struct jg_id_s {
     const char* name;
 } jg_id;
 
+#define jg_id_none ((jg_id) { .namespace = NULL, .name = NULL })
+
 #define jg_id_new(in_namespace, in_name) (\
     (jg_id) {\
         .namespace = (in_namespace),\
