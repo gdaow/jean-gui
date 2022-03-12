@@ -9,8 +9,8 @@
  *  - document.
  *
  */
-#ifndef JGUI_INCLUDE_JGUI_CONTEXT_H
-#define JGUI_INCLUDE_JGUI_CONTEXT_H
+#ifndef JGUI_CORE_JGUI_CONTEXT_H
+#define JGUI_CORE_JGUI_CONTEXT_H
 
 #include <stddef.h>
 
