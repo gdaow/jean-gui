@@ -10,36 +10,22 @@
  *  - Use functions instead of macros here.
  *
  */
-#ifndef JGUI_INCLUDE_JGUI_CORE_ID_H
-#define JGUI_INCLUDE_JGUI_CORE_ID_H
+#ifndef JGUI_CORE_ID
+#define JGUI_CORE_ID
+
 #include <stdbool.h>
 
 typedef struct jg_id_s {
-    const char* namespace;
+    const char* namespace_;
     const char* name;
 } jg_id;
 
-#define jg_id_none ((jg_id) { .namespace = NULL, .name = NULL })
+extern const jg_id JG_ID_NONE;
 
-#define jg_id_new(in_namespace, in_name) (\
-    (jg_id) {\
-        .namespace = (in_namespace),\
-        .name = (in_name)\
-    }\
-)
+jg_id JG_ID(const char* namespace_, const char* name);
 
-bool jg_id_equal(jg_id a, jg_id b);
-
-#define jg_empty_id(id) ((id).namespace == NULL && (id).name == NULL)
-
-#define jg_valid_id(id) (\
-    jg_empty_id(id) || (\
-        (id).namespace != NULL &&\
-        strlen((id).namespace) > 0 &&\
-        (id).name != NULL &&\
-        strlen((id).name) > 0\
-    )\
-)
+bool jg_id_is_none(jg_id id);
+bool jg_id_is_valid(jg_id id);
 
 #endif
 

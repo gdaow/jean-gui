@@ -22,7 +22,7 @@ static jg_value initialize(jg_arguments* arguments) {
 }
 
 jg_id jg_core_class_id(const char* class_name) {
-    return jg_id_new("https://ki-dour.org/jean-gui/core", class_name);
+    return JG_ID("https://ki-dour.org/jean-gui/core", class_name);
 }
 
 jg_id jg_object_class_id() { return jg_core_class_id("Object"); }

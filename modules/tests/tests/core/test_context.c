@@ -15,7 +15,7 @@
 /** jg_context_load should correctly load plugins. */
 static void test_add_class(void** state) {
     jg_context* context = *state;
-    const jg_class* test_class = jg_context_get_class(context, jg_id_new("test_namespace", "test_class"));
+    const jg_class* test_class = jg_context_get_class(context, JG_ID("test_namespace", "test_class"));
     assert_non_null(test_class);
 }
 
@@ -33,7 +33,7 @@ static void test_error_handler(void **state) {
 }
 
 static void test_plugin(jg_context* context) {
-    jg_context_add_class(context, jg_id_new("test_namespace", "test_class"), jg_id_none, sizeof(char));
+    jg_context_add_class(context, JG_ID("test_namespace", "test_class"), JG_ID_NONE, sizeof(char));
     jg_set_error_handler(context, error_handler);
 }
 

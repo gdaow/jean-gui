@@ -62,19 +62,19 @@ void jg_context_free(jg_context* context) {
 
 jg_class* jg_context_add_class(jg_context* context, jg_id id, jg_id parent_id, size_t size) {
     assert(context != NULL);
-    assert(jg_valid_id(id));
-    assert(jg_valid_id(parent_id));
+    assert(jg_id_is_valid(id));
+    assert(jg_id_is_valid(parent_id));
 
     const jg_class* parent = NULL;
-    if(!jg_empty_id(parent_id)) {
+    if(!jg_id_is_none(parent_id)) {
         parent = jg_context_get_class(context, parent_id);
     }
 
     jg_index* module_index = &context->module_index;
 
-    jg_module* module = jg_index_get(module_index, id.namespace);
+    jg_module* module = jg_index_get(module_index, id.namespace_);
     if(module == NULL) {
-        module = jg_index_add(module_index, id.namespace, NULL);
+        module = jg_index_add(module_index, id.namespace_, NULL);
         assert(module != NULL);
         jg_module_init(module);
     }
@@ -84,9 +84,9 @@ jg_class* jg_context_add_class(jg_context* context, jg_id id, jg_id parent_id, s
 
 const jg_class* jg_context_get_class(const jg_context* context, jg_id id) {
     assert(context != NULL);
-    assert(jg_valid_id(id));
+    assert(jg_id_is_valid(id));
 
-    const jg_module* module = jg_index_get(&context->module_index, id.namespace);
+    const jg_module* module = jg_index_get(&context->module_index, id.namespace_);
     if(module == NULL) {
         return NULL;
     }

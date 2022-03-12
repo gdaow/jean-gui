@@ -17,6 +17,7 @@ jg_src = files(
     'private/containers/vector.c',
     'private/core/context.c',
     'private/core/core_plugin.c',
+    'private/core/id.c',
     'private/memory/alloc.c',
     'private/memory/arena.c',
     'private/memory/string.c',
