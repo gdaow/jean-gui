@@ -15,11 +15,11 @@
 #include <jgui/core/error_code.h>
 #include <jgui/core/id.h>
 
+#include "jgui/private/containers/index.h"
 #include "jgui/private/core/core_plugin.h"
 #include "jgui/private/memory/alloc.h"
-#include "jgui/private/containers/index.h"
-#include "jgui/private/object-model/module.h"
 #include "jgui/private/misc/assert.h"
+#include "jgui/private/object-model/module.h"
 
 /* structures definitions */
 
