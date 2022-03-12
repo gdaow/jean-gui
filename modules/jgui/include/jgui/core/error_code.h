@@ -8,8 +8,8 @@
  * Context error code enum declaration.
  *
  */
-#ifndef JGUI_INCLUDE_JGUI_ERROR_CODE_H
-#define JGUI_INCLUDE_JGUI_ERROR_CODE_H
+#ifndef JGUI_CORE_ERROR_CODE_H
+#define JGUI_CORE_ERROR_CODE_H
 
 /**
  * Error code, usable in @ref jg_context_error and error hanlders set
