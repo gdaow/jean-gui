@@ -12,8 +12,8 @@
  * jg_object_call, jg_object_get and jg_object_set methods.
  *
  */
-#ifndef JGUI_PUBLIC_JGUI_CLASS_H
-#define JGUI_PUBLIC_JGUI_CLASS_H
+#ifndef JGUI_OBJECT_MODEL_CLASS_H
+#define JGUI_OBJECT_MODEL_CLASS_H
 
 #include <jgui/misc/utils.h>
 #include <jgui/object-model/member.h>
