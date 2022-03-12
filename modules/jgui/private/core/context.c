@@ -34,9 +34,8 @@ struct jg_context_s {
 
 jg_context* jg_context_load(jg_plugin* plugins) {
     jg_context* context = jg_malloc(sizeof(jg_context));
-    *context = (jg_context) {
-        .error_handler = NULL,
-    };
+    *context = (jg_context) { 0 };
+    jg_index_init(&context->module_index, sizeof(jg_module));
 
     jgui_core_plugin(context);
 
@@ -51,8 +50,13 @@ jg_context* jg_context_load(jg_plugin* plugins) {
     return context; // TODO(corentin@ki-dour.org) : build indexes.
 }
 
+static void module_cleanup(void* module) {
+    jg_module_cleanup(module);
+}
+
 void jg_context_free(jg_context* context) {
     assert(context != NULL);
+    jg_index_cleanup(&context->module_index, module_cleanup);
     jg_free(context);
 }
 

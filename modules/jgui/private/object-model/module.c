@@ -32,7 +32,6 @@ jg_class* jg_module_add_class(
 ) {
     assert(module != NULL);
     assert(!jg_null_or_empty(name));
-    assert(size > 0);
     //TODO(corentin@ki-dour.org) : handle case where class is already registered
     jg_class* class_ = jg_index_add(&module->class_index, name, NULL);
     jg_class_init(class_, parent, size);
