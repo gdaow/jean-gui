@@ -1,18 +1,22 @@
-name: checks
+name: Checks
 on: [push]
 jobs:
   unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Install dev dependencies
+      - name: Setup Python
+        uses: actions/setup-python@v1
+
+      - name: Setup Dependencies
         run: |
           sudo apt update
           sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
 
-      - name: Build & run unit tests
+      - name: Build and Run Unit tests
         uses: BSFishy/meson-build@v1.0.3
         with:
           action: test
@@ -21,7 +25,7 @@ jobs:
           options: --verbose
           meson-version: 0.61.2
 
-      - name: Publish Unit Test Results
+      - name: Publish Unit Tests Result
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
@@ -42,12 +46,16 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   include-what-you-use:
+    name: Include What You Use
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Install dev dependencies
+      - name: Setup Python
+        uses: actions/setup-python@v1
+
+      - name: Set Up Dependencies
         run: |
           sudo apt update
           sudo apt-get install -y iwyu libclang-9-dev
