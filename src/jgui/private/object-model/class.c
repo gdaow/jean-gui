@@ -5,14 +5,11 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include <jgui/object-model/class.h>
 #include "jgui/private/object-model/class.h"
 
-#include <stdalign.h>
-#include <stdbool.h>
+#include <jgui/object-model/member.h>
 
-#include <jgui/object-model/value.h>
-
-#include "jgui/object-model/class.h"
 #include "jgui/private/memory/string.h"
 #include "jgui/private/misc/assert.h"
 #include "private/containers/index.h"

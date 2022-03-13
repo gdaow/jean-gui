@@ -5,9 +5,11 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include <stddef.h>
+
 #include "jgui/private/object-model/module.h"
 
-#include "jgui/private/containers/vector.h"
+#include "jgui/private/misc/assert.h"
 #include "jgui/private/object-model/class.h"
 
 #include "common/cmocka.h"

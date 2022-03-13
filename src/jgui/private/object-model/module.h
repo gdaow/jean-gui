@@ -16,9 +16,10 @@
 #include <stddef.h>
 
 #include <jgui/misc/utils.h>
-#include <jgui/core/id.h>
 
 #include "jgui/private/containers/index.h"
+
+struct jg_module_s;
 
 jg_forward_declare(jg_class)
 jg_forward_declare(jg_module)

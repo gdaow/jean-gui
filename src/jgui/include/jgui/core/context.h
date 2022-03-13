@@ -16,8 +16,8 @@
 
 #include <stddef.h>
 
-#include <jgui/core/id.h>
 #include <jgui/core/error-code.h>
+#include <jgui/core/id.h>
 #include <jgui/misc/utils.h>
 
 jg_forward_declare(jg_class)

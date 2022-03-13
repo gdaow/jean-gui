@@ -20,6 +20,8 @@
 
 #include <jgui/misc/utils.h>
 
+struct jg_index_s;
+
 jg_forward_declare(jg_index)
 
 /**

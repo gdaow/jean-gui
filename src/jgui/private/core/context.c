@@ -5,14 +5,14 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include "jgui/private/core/context.h"
+#include <jgui/core/context.h>
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include <jgui/core/error-code.h>
+#include <jgui/static-config.h>
+
 #include <jgui/core/id.h>
 
 #include "jgui/private/containers/index.h"

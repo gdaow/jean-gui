@@ -14,7 +14,6 @@
 #include <stdbool.h>
 
 #include <jgui/static-config.h>
-#include <jgui/misc/utils.h>
 
 #if JG_ENABLE_ASSERTS
 #   define assert(TEST) (jg_assert_impl(TEST, #TEST, __FILE__, __LINE__))

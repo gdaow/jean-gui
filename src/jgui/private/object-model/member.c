@@ -5,11 +5,9 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include <jgui/object-model/member.h>
 #include "jgui/private/object-model/member.h"
 
-#include <jgui/object-model/value.h>
-
-#include "jgui/private/containers/index.h"
 #include "jgui/private/misc/assert.h"
 
 void jg_method_init(jg_member* member, jg_method method) {

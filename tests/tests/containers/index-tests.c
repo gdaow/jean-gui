@@ -6,11 +6,9 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
-#include "jgui/private/containers/index.h"
-
 #include <string.h>
 
-#include "jgui/private/containers/vector.h"
+#include "jgui/private/containers/index.h"
 #include "jgui/private/memory/alloc.h"
 
 #include "common/cmocka.h"

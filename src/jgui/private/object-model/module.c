@@ -10,7 +10,6 @@
 #include <string.h>
 
 #include "jgui/private/containers/index.h"
-#include "jgui/private/memory/alloc.h"
 #include "jgui/private/memory/string.h"
 #include "jgui/private/misc/assert.h"
 #include "jgui/private/object-model/class.h"

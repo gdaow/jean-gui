@@ -9,9 +9,9 @@
  *
  */
 #pragma once
-#include <stdbool.h>
-
 #include <jgui/misc/utils.h>
+
+struct test_team_s;
 
 jg_forward_declare(test_team)
 

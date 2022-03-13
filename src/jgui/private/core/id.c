@@ -6,12 +6,13 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  *
  */
+#include <jgui/core/id.h>
+
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <jgui/core/id.h>
-
-#include <jgui/private/misc/assert.h>
+#include "jgui/private/misc/assert.h"
 
 const jg_id JG_ID_NULL = { .namespace_ = NULL, .name = NULL };
 

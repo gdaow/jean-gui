@@ -12,12 +12,12 @@
 #ifndef JGUI_PRIVATE_OBJECT_MODEL_CLASS_H
 #define JGUI_PRIVATE_OBJECT_MODEL_CLASS_H
 
-#include <jgui/object-model/class.h>
-
 #include <stddef.h>
 
 #include "jgui/private/containers/index.h"
 #include "jgui/private/misc/utils.h"
+
+struct jg_class_s;
 
 forward_declare(jg_class)
 forward_declare(jg_member)

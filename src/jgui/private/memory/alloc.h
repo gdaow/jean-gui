@@ -11,7 +11,6 @@
 
 #include <stddef.h>
 
-#include <jgui/misc/utils.h>
 #include <jgui/static-config.h>
 
 #if JG_MEMORY_DEBUG

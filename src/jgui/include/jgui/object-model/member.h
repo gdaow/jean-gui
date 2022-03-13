@@ -14,6 +14,8 @@
 
 #include <jgui/misc/utils.h>
 
+#include <jgui/object-model/value.h>
+
 jg_forward_declare(jg_value)
 jg_forward_declare(jg_arguments)
 

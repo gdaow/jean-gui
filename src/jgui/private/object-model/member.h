@@ -15,6 +15,8 @@
 #include <jgui/object-model/member.h>
 #include <jgui/misc/utils.h>
 
+struct jg_member_s;
+
 jg_forward_declare(jg_member)
 
 /**

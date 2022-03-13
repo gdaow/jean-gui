@@ -8,13 +8,11 @@
  */
 #include "jgui/private/containers/index.h"
 
+#include <stdbool.h>
 #include <string.h>
-#include <stdlib.h>
-#include <limits.h>
 
 #include "jgui/private/memory/alloc.h"
 #include "jgui/private/misc/assert.h"
-#include "jgui/private/misc/utils.h"
 
 /* Static methods */
 static const size_t max_item_size = 1024;
