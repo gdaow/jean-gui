@@ -5,7 +5,7 @@
       "configuration": {
         "type":    "cppdbg",
         "request": "launch",
-        "program": "${workspaceRoot}/.build/tests/jg-tests",
+        "program": "${workspaceRoot}/.build/tests/test-object-model-class",
         "cwd": "${workspaceRoot}",
         "externalConsole": true,
         "stopAtEntry": false,

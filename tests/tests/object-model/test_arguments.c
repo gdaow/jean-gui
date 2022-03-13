@@ -35,13 +35,7 @@ static void test_arguments_pop(void** state) {
     assert(jg_pop_raw(&args) == (void*)0xDEADBEEF);
 }
 
-void test_arguments(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest arguments_tests[] = {
-        cmocka_unit_test(test_arguments_pop),
-    };
-
-    jg_vector_append(vector, arguments_tests, sizeof(arguments_tests) / sizeof(struct CMUnitTest));
-}
-
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_arguments_pop),
+jg_end_tests()
 

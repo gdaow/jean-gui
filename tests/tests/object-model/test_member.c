@@ -76,14 +76,9 @@ static void test_method_call(void** state) {
     expect_assert_failure(jg_property_get(&member, &(test_user){}));
 }
 
-void test_member(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest member_tests[] = {
-        cmocka_unit_test(test_property_get),
-        cmocka_unit_test(test_property_set),
-        cmocka_unit_test(test_method_call),
-    };
-
-    jg_vector_append(vector, member_tests, sizeof(member_tests) / sizeof(struct CMUnitTest));
-}
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_property_get),
+    cmocka_unit_test(test_property_set),
+    cmocka_unit_test(test_method_call),
+jg_end_tests()
 

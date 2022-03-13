@@ -137,3 +137,10 @@ void test_index(jg_vector* vector) {
     jg_vector_append(vector, vector_tests, sizeof(vector_tests) / sizeof(struct CMUnitTest));
 }
 
+
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_index_add_get),
+    cmocka_unit_test(test_index_build),
+    cmocka_unit_test(test_index_cleanup),
+jg_end_tests();
+

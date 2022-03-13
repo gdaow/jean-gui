@@ -131,16 +131,10 @@ static void test_undeclared_member(void** state) {
     jg_class_cleanup(&parent_class);
 }
 
-void test_class(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest class_tests[] = {
-        cmocka_unit_test(test_add_property),
-        cmocka_unit_test(test_add_method),
-        cmocka_unit_test(test_duplicated_member_fail),
-        cmocka_unit_test(test_undeclared_member),
-    };
-
-    jg_vector_append(vector, class_tests, sizeof(class_tests) / sizeof(struct CMUnitTest));
-}
-
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_add_property),
+    cmocka_unit_test(test_add_method),
+    cmocka_unit_test(test_duplicated_member_fail),
+    cmocka_unit_test(test_undeclared_member),
+jg_end_tests()
 

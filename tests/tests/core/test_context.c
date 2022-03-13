@@ -47,13 +47,8 @@ static int teardown(void** state) {
     return 0;
 }
 
-void test_context(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest context_tests[] = {
-        cmocka_unit_test_setup_teardown(test_add_class, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_error_handler, setup, teardown),
-    };
-
-    jg_vector_append(vector, context_tests, sizeof(context_tests) / sizeof(struct CMUnitTest));
-}
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test_setup_teardown(test_add_class, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_error_handler, setup, teardown),
+jg_end_tests()
 

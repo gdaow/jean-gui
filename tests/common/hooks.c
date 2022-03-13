@@ -5,6 +5,8 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include <stdlib.h>
+#include <stdio.h>
 #include "jgui/private/containers/vector.h"
 
 #include "common/cmocka.h"
@@ -26,31 +28,10 @@ void jg_free_impl(void* ptr, const char* file, int line) {
 }
 
 void jg_assert_impl(bool test_result, const char* test_expression, const char* file, int line) {
+    if(!test_result && !global_expecting_assert) {
+        fprintf(stderr, "Assertion failed (%s:%i): %s\n", file, line, test_expression);
+    }
+    
     mock_assert(test_result, test_expression, file, line);
-}
-
-void test_containers(jg_vector* tests);
-void test_core(jg_vector* tests);
-void test_object_model(jg_vector* tests);
-
-int main(int argc, char** argv) {
-    (void)argc;
-    (void)argv;
-
-    jg_vector tests = jg_vector_of(struct CMUnitTest);
-
-    test_containers(&tests);
-    test_core(&tests);
-    test_object_model(&tests);
-
-    int result = _cmocka_run_group_tests(
-        "JGui Tests",
-        jg_vector_front(&tests),
-        jg_vector_size(&tests),
-        NULL,
-        NULL
-    );
-    jg_vector_cleanup(&tests);
-    return result;
 }
 

@@ -34,13 +34,8 @@ static void test_jg_id_create(void** state) {
     JG_ID("namespace", "name");
 }
 
-void test_id(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest id_tests[] = {
-        cmocka_unit_test(test_jg_id_none),
-        cmocka_unit_test(test_jg_id_create),
-    };
-
-    jg_vector_append(vector, id_tests, sizeof(id_tests) / sizeof(struct CMUnitTest));
-}
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_jg_id_none),
+    cmocka_unit_test(test_jg_id_create),
+jg_end_tests()
 

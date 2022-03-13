@@ -31,14 +31,7 @@ static void test_add_class(void** state) {
     jg_module_cleanup(&module);
 }
 
-void test_module(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest module_tests[] = {
-        cmocka_unit_test(test_add_class),
-    };
-
-    jg_vector_append(vector, module_tests, sizeof(module_tests) / sizeof(struct CMUnitTest));
-}
-
-
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_add_class),
+jg_end_tests()
 

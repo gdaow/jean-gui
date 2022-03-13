@@ -95,15 +95,10 @@ static int teardown(void **state) {
     return 0;
 }
 
-void test_vector(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest vector_tests[] = {
-        cmocka_unit_test_setup_teardown(test_vector_push, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_vector_append, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_vector_front_at_back, setup, teardown),
-        cmocka_unit_test_setup_teardown(test_vector_size, setup, teardown),
-    };
-
-    jg_vector_append(vector, vector_tests, sizeof(vector_tests) / sizeof(struct CMUnitTest));
-}
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test_setup_teardown(test_vector_push, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_vector_append, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_vector_front_at_back, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_vector_size, setup, teardown),
+jg_end_tests()
 

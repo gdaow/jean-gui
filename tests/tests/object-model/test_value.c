@@ -117,17 +117,12 @@ static void test_jg_value_object(void** state) {
     */
 }
 
-void test_value(jg_vector* vector) {
-    (void)vector;
-    struct CMUnitTest value_tests[] = {
-        cmocka_unit_test(test_jg_value_bool),
-        cmocka_unit_test(test_jg_value_int),
-        cmocka_unit_test(test_jg_value_double),
-        cmocka_unit_test(test_jg_value_string),
-        cmocka_unit_test(test_jg_value_raw),
-        cmocka_unit_test(test_jg_value_object)
-    };
-
-    jg_vector_append(vector, value_tests, sizeof(value_tests) / sizeof(struct CMUnitTest));
-}
+jg_begin_tests(NULL, NULL)
+    cmocka_unit_test(test_jg_value_bool),
+    cmocka_unit_test(test_jg_value_int),
+    cmocka_unit_test(test_jg_value_double),
+    cmocka_unit_test(test_jg_value_string),
+    cmocka_unit_test(test_jg_value_raw),
+    cmocka_unit_test(test_jg_value_object)
+jg_end_tests()
 

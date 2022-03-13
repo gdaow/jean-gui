@@ -17,4 +17,15 @@
 
 #include "jgui/private/misc/assert.h"
 
+#define jg_begin_tests(setup, teardown)\
+int main (void) {\
+    int (*_setup)(void**) = setup;\
+    int (*_teardown)(void**) = teardown;\
+    const struct CMUnitTest tests [] = {
+
+#define jg_end_tests()\
+    };\
+    return cmocka_run_group_tests(tests, _setup, _teardown);\
+}
+
 #endif
