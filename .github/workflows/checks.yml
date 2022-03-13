@@ -8,13 +8,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v1
-
       - name: Setup Dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
+          sudo apt-get install -y python3 wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
 
       - name: Build and Run Unit tests
         uses: BSFishy/meson-build@v1.0.3
@@ -52,13 +49,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v1
-
       - name: Set Up Dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y iwyu libclang-9-dev
+          sudo apt-get install -y python3 iwyu libclang-9-dev
 
       - name: Run Include What You Use
         uses: BSFishy/meson-build@v1.0.3
@@ -75,13 +69,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Python
-        uses: actions/setup-python@v1
-
       - name: Set Up Dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y clang-format
+          sudo apt-get install -y python3 clang-format
 
       - name: Run Include clang-format
         uses: BSFishy/meson-build@v1.0.3
