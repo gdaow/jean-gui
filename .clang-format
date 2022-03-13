@@ -1,0 +1,7 @@
+---
+Language: Cpp
+IndentWidth: 4
+PointerAlignment: Left
+CommentPragmas:  '^@.+'
+---
+
