@@ -5,14 +5,16 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include "jgui/core/context.h"
+
 #include <stddef.h>
+
+#include "jgui/core/error-code.h"
+#include "jgui/core/id.h"
 
 #include "jgui/private/misc/assert.h"
 
 #include "common/cmocka.h"
-#include <jgui/core/context.h>
-#include <jgui/core/error-code.h>
-#include <jgui/core/id.h>
 
 /** jg_context_load should correctly load plugins. */
 static void test_context_add_class(void** state) {

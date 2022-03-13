@@ -9,11 +9,12 @@
 
 #include <stddef.h>
 
+#include "jgui/object-model/arguments.h"
+#include "jgui/object-model/member.h"
+#include "jgui/object-model/value.h"
+
 #include "common/cmocka.h"
 #include "common/fixtures/user_model.h"
-#include <jgui/object-model/arguments.h>
-#include <jgui/object-model/member.h>
-#include <jgui/object-model/value.h>
 
 static jg_value user_name_getter(const void* object) {
 	return jg_string(user_get_name(object));

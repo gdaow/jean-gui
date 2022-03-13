@@ -5,12 +5,13 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include "jgui/core/id.h"
+
 #include <stddef.h>
 
 #include "jgui/private/misc/assert.h"
 
 #include "common/cmocka.h"
-#include <jgui/core/id.h>
 
 /** jg_id_is_none should return true only for JG_ID_NONE. */
 static void test_jg_id_none(void** state) {

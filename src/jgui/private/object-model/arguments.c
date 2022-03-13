@@ -5,10 +5,11 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include "jgui/private/misc//assert.h"
+#include "jgui/object-model/arguments.h"
 
-#include <jgui/object-model/arguments.h>
-#include <jgui/object-model/value.h>
+#include "jgui/object-model/value.h"
+
+#include "jgui/private/misc//assert.h"
 
 jg_arguments jg_arguments_init(jg_value* arguments, size_t size) {
 	return (jg_arguments) {._start = arguments, ._end = arguments + size};

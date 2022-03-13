@@ -11,7 +11,7 @@
 #ifndef JGUI_PRIVATE_CORE_PLUGIN_H
 #define JGUI_PRIVATE_CORE_PLUGIN_H
 
-#include <jgui/misc/utils.h>
+#include "jgui/misc/utils.h"
 
 jg_forward_declare(jg_context);
 

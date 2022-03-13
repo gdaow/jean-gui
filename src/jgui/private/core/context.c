@@ -5,20 +5,20 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include "jgui/core/context.h"
+
 #include <stdarg.h>
 #include <stdio.h>
+
+#include "jgui/core/error-code.h"
+#include "jgui/core/id.h"
+#include "jgui/static-config.h"
 
 #include "jgui/private/containers/index.h"
 #include "jgui/private/core/core-plugin.h"
 #include "jgui/private/memory/alloc.h"
 #include "jgui/private/misc/assert.h"
 #include "jgui/private/object-model/module.h"
-
-#include <jgui/core/context.h>
-#include <jgui/core/error-code.h>
-#include <jgui/core/id.h>
-#include <jgui/static-config.h>
-
 /* structures definitions */
 
 struct jg_context_s {

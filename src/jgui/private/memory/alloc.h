@@ -11,7 +11,7 @@
 
 #include <stddef.h>
 
-#include <jgui/static-config.h>
+#include "jgui/static-config.h"
 
 #if JG_MEMORY_DEBUG
 void* jg_malloc_impl(size_t size, const char* file, int line);

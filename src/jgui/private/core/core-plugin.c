@@ -8,12 +8,12 @@
  */
 #include "jgui/private/core/core-plugin.h"
 
-#include <jgui/core/context.h>
-#include <jgui/core/core.h>
-#include <jgui/core/id.h>
-#include <jgui/object-model/class.h>
-#include <jgui/object-model/member.h>
-#include <jgui/object-model/value.h>
+#include "jgui/core/context.h"
+#include "jgui/core/core.h"
+#include "jgui/core/id.h"
+#include "jgui/object-model/class.h"
+#include "jgui/object-model/member.h"
+#include "jgui/object-model/value.h"
 
 const char* jg_core_ns = "https://ki-dour.org/jean-gui/core";
 

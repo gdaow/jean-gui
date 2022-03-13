@@ -5,11 +5,12 @@
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include "jgui/object-model/value.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 
 #include "common/cmocka.h"
-#include <jgui/object-model/value.h>
 
 typedef bool (*jg_check_function_t)(jg_value);
 

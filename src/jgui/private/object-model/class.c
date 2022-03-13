@@ -7,13 +7,14 @@
  */
 #include "jgui/private/object-model/class.h"
 
+#include "jgui/object-model/class.h"
+#include "jgui/object-model/member.h"
+
 #include "jgui/private/memory/string.h"
 #include "jgui/private/misc/assert.h"
 
 #include "private/containers/index.h"
 #include "private/object-model/member.h"
-#include <jgui/object-model/class.h>
-#include <jgui/object-model/member.h>
 
 void jg_class_add_method(jg_class* class_, const char* name, jg_method method) {
 	assert(class_ != NULL);

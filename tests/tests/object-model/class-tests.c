@@ -9,12 +9,13 @@
 
 #include <stddef.h>
 
+#include "jgui/object-model/arguments.h"
+#include "jgui/object-model/class.h"
+#include "jgui/object-model/value.h"
+
 #include "jgui/private/object-model/member.h"
 
 #include "common/cmocka.h"
-#include <jgui/object-model/arguments.h>
-#include <jgui/object-model/class.h>
-#include <jgui/object-model/value.h>
 
 static jg_value parent_getter(const void* object) {
 	(void)object;

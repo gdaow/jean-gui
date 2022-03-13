@@ -7,9 +7,9 @@
  */
 #include "jgui/private/object-model/member.h"
 
-#include "jgui/private/misc/assert.h"
+#include "jgui/object-model/member.h"
 
-#include <jgui/object-model/member.h>
+#include "jgui/private/misc/assert.h"
 
 void jg_method_init(jg_member* member, jg_method method) {
 	*member = (jg_member) {._data._method = method, ._type = JG_MEMBER_METHOD};

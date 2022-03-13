@@ -15,9 +15,9 @@
 
 #include <stddef.h>
 
-#include "jgui/private/containers/index.h"
+#include "jgui/misc/utils.h"
 
-#include <jgui/misc/utils.h>
+#include "jgui/private/containers/index.h"
 
 struct jg_module_s;
 

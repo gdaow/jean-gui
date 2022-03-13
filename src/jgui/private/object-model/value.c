@@ -6,9 +6,9 @@
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
 
-#include "jgui/private/misc/assert.h"
+#include "jgui/object-model/value.h"
 
-#include <jgui/object-model/value.h>
+#include "jgui/private/misc/assert.h"
 
 typedef enum {
 	JG_NONE,
