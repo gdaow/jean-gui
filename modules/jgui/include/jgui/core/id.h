@@ -24,7 +24,7 @@ typedef struct jg_id_s {
 } jg_id;
 
 /** NULL identifier constant */
-extern const jg_id JG_ID_NONE;
+extern const jg_id JG_ID_NULL;
 
 /*
  * Create a new identifier.
@@ -43,7 +43,7 @@ jg_id JG_ID(const char* namespace_, const char* name);
  *
  * @return True if the given identifier is the NULL identifier, true otherwise.
  */
-bool jg_id_is_none(jg_id id);
+bool jg_id_is_null(jg_id id);
 
 /*
  * Check if an identifier is correctly constructed.

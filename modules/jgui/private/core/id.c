@@ -11,18 +11,18 @@
 
 #include <jgui/core/id.h>
 
-const jg_id JG_ID_NONE = { .namespace_ = NULL, .name = NULL };
+const jg_id JG_ID_NULL = { .namespace_ = NULL, .name = NULL };
 
 jg_id JG_ID(const char* namespace_, const char* name) {
     return (jg_id) { .namespace_ = namespace_, .name = name };
 }
 
-bool jg_id_is_none(jg_id id) {
+bool jg_id_is_null(jg_id id) {
     return id.namespace_ == NULL && id.name == NULL;
 }
 
 bool jg_id_is_valid(jg_id id) {
-    return jg_id_is_none(id) || (
+    return jg_id_is_null(id) || (
 	id.namespace_ != NULL &&
 	strlen(id.namespace_) > 0 &&
 	id.name != NULL &&

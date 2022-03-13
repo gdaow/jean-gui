@@ -66,7 +66,7 @@ jg_class* jg_context_add_class(jg_context* context, jg_id id, jg_id parent_id, s
     assert(jg_id_is_valid(parent_id));
 
     const jg_class* parent = NULL;
-    if(!jg_id_is_none(parent_id)) {
+    if(!jg_id_is_null(parent_id)) {
         parent = jg_context_get_class(context, parent_id);
     }
 

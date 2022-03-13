@@ -33,7 +33,7 @@ static void test_error_handler(void **state) {
 }
 
 static void test_plugin(jg_context* context) {
-    jg_context_add_class(context, JG_ID("test_namespace", "test_class"), JG_ID_NONE, sizeof(char));
+    jg_context_add_class(context, JG_ID("test_namespace", "test_class"), JG_ID_NULL, sizeof(char));
     jg_set_error_handler(context, error_handler);
 }
 
