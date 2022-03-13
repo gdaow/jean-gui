@@ -11,8 +11,10 @@
 jg_forward_declare(jg_vector)
 
 void test_context(jg_vector* tests);
+void test_id(jg_vector* tests);
 
 void test_core(jg_vector* tests) {
     test_context(tests);
+    test_id(tests);
 }
 
