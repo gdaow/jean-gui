@@ -4,10 +4,7 @@ project('jg', 'c', 'cpp', default_options: [
 ])
 
 subdir('src/jgui')
-subdir('src/jgui-wx')
-subdir('src/samples')
 subdir('tests')
-subdir('tools/wx-bind')
 
 clangtidy = find_program('clang-tidy', required: false)
 if clangtidy.found()
