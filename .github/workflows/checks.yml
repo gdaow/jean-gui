@@ -68,3 +68,26 @@ jobs:
           options: iwyu
           meson-version: 0.61.2
 
+  clang-format:
+    name: Clang Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+
+      - name: Set Up Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y clang-format
+
+      - name: Run Include clang-format
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+          directory: .build
+          options: clang-format-check
+          meson-version: 0.61.2
+
