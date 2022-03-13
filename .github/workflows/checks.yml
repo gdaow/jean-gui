@@ -20,8 +20,6 @@ jobs:
           setup-options: -Db_coverage=true
           options: --verbose
           meson-version: 0.61.2
-          ninja-version: 1.9.0.post1
-          gcovr-version: 4.2
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -62,6 +60,4 @@ jobs:
           directory: .build
           options: iwyu
           meson-version: 0.61.2
-          ninja-version: 1.9.0.post1
-          gcovr-version: 4.2
 
