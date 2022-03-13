@@ -12,7 +12,7 @@
 #include <stddef.h>
 
 #include <jgui/misc/utils.h>
-#include <jgui/static_config.h>
+#include <jgui/static-config.h>
 
 #if JG_MEMORY_DEBUG
     void* jg_malloc_impl(size_t size, const char* file, int line);

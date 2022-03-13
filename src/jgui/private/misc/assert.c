@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <jgui/static_config.h>
+#include <jgui/static-config.h>
 
 #if JG_ENABLE_ASSERTS
 

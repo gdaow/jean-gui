@@ -1,18 +1,18 @@
 test_suites = {
     'containers': {
-        'index': 'containers/test_index.c',
-        'vector': 'containers/test_vector.c'
+        'index': 'containers/index-tests.c',
+        'vector': 'containers/vector-tests.c'
     },
     'core' : {
-        'context': 'core/test_context.c',
-        'id': 'core/test_id.c',
+        'context': 'core/context-tests.c',
+        'id': 'core/id-tests.c',
     },
     'object-model': {
-        'arguments': 'object-model/test_arguments.c',
-        'class': 'object-model/test_class.c',
-        'member': 'object-model/test_member.c',
-        'module': 'object-model/test_module.c',
-        'value': 'object-model/test_value.c',
+        'arguments': 'object-model/arguments-tests.c',
+        'class': 'object-model/class-tests.c',
+        'member': 'object-model/member-tests.c',
+        'module': 'object-model/module-tests.c',
+        'value': 'object-model/value-tests.c',
     }
 }
 

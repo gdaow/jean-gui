@@ -13,7 +13,7 @@
 
 const char* jg_core_ns = "https://ki-dour.org/jean-gui/core";
 
-#include "core_plugin.h"
+#include "core-plugin.h"
 #include "context.h"
 
 static jg_value initialize(jg_arguments* arguments) {

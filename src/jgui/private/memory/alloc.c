@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 
-#include <jgui/static_config.h>
+#include <jgui/static-config.h>
 
 #if JG_MEMORY_DEBUG
 

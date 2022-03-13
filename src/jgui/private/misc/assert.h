@@ -13,7 +13,7 @@
 #define JGUI_PRIVATE_MISC_ASSERT_H
 #include <stdbool.h>
 
-#include <jgui/static_config.h>
+#include <jgui/static-config.h>
 #include <jgui/misc/utils.h>
 
 #if JG_ENABLE_ASSERTS
