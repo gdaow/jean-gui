@@ -1,10 +1,10 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
- * 
+ *
  * jg_id is a generic identifier, consisting of a namespace and a name.
  * It's used to avoid name collisions for objects named with a string in
  * Jean-Gui (like classes).
@@ -16,11 +16,11 @@
 #include <stdbool.h>
 
 /**
-  * /!\ Private struct (see doc-private-struct) /!\
-  */
+ * /!\ Private struct (see doc-private-struct) /!\
+ */
 typedef struct jg_id_s {
-    const char* namespace_;
-    const char* name;
+	const char* namespace_;
+	const char* name;
 } jg_id;
 
 /** NULL identifier constant */
@@ -46,4 +46,3 @@ jg_id JG_ID(const char* namespace_, const char* name);
 bool jg_id_is_null(jg_id id);
 
 #endif
-

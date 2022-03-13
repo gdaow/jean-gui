@@ -1,49 +1,43 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
-#include <jgui/object-model/member.h>
 #include "jgui/private/object-model/member.h"
 
 #include "jgui/private/misc/assert.h"
 
+#include <jgui/object-model/member.h>
+
 void jg_method_init(jg_member* member, jg_method method) {
-    *member = (jg_member) {
-        ._data._method = method,
-        ._type = JG_MEMBER_METHOD
-    };
+	*member = (jg_member) {._data._method = method, ._type = JG_MEMBER_METHOD};
 }
 
 jg_value jg_method_call(const jg_member* method, jg_arguments* arguments) {
-    assert(method->_type == JG_MEMBER_METHOD);
-    return (*(method->_data._method))(arguments);
+	assert(method->_type == JG_MEMBER_METHOD);
+	return (*(method->_data._method))(arguments);
 }
 
 void jg_property_init(jg_member* member, jg_getter getter, jg_setter setter) {
-    *member = (jg_member) {
-        ._type = JG_MEMBER_PROPERTY,
-        ._data._property = {
-            ._getter = getter,
-            ._setter = setter
-        }
-    };
+	*member =
+	    (jg_member) {._type = JG_MEMBER_PROPERTY,
+	                 ._data._property = {._getter = getter, ._setter = setter}};
 }
 
 jg_value jg_property_get(const jg_member* property, void* object) {
-    assert(property->_type == JG_MEMBER_PROPERTY);
-    return (*(property->_data._property._getter))(object);
+	assert(property->_type == JG_MEMBER_PROPERTY);
+	return (*(property->_data._property._getter))(object);
 }
 
 void jg_property_set(const jg_member* property, void* object, jg_value value) {
-    assert(property->_type == JG_MEMBER_PROPERTY);
-    (*(property->_data._property._setter))(object, value);
+	assert(property->_type == JG_MEMBER_PROPERTY);
+	(*(property->_data._property._setter))(object, value);
 }
 
 void jg_member_cleanup(jg_member* member) {
-    (void)member;
+	(void)member;
 }
 
 /*
@@ -61,12 +55,14 @@ static jg_value pop(jg_arguments* arguments, bool (*check_type)(jg_value)) {
     }
 
     if(!check_type(*argument)) {
-        //TODO(corentin@ki-dour.org) Improve error feedback by giving expected and actual
+        //TODO(corentin@ki-dour.org) Improve error feedback by giving expected
+and actual
         //argument.
         jg_error(
             arguments->context,
             JG_ERROR_UNEXPECTED_ARGUMENT,
-            "Got argument of the wrong type when calling method %s", arguments->method_name
+            "Got argument of the wrong type when calling method %s",
+arguments->method_name
         );
         arguments->has_error = true;
         return jg_none();
@@ -132,16 +128,15 @@ bool jg_arguments_error(jg_arguments* arguments) {
 static const char* get_class_id_and_next(const void** item);
 static void build_class(const void* item, int sorted_id, void* user_data);
 
-void jg_member_init(jg_member_index* index, jg_member_pool pool, jg_named_node_index node_index) {
-    size_t count = jg_index_size(node_index);
+void jg_member_init(jg_member_index* index, jg_member_pool pool,
+jg_named_node_index node_index) { size_t count = jg_index_size(node_index);
     jg_member_index* member_array = jg_fixed_pool_alloc(pool, count);
     const char** key
 
     for(size_t i = 0 ; i < count; ++i) {
         jg_named_node* node = jg_index_get(elements, i);
-        jg_member_builder* builder = container_of(node, jg_member_builder, node);
-        char* key = jg_string_copy(string_pool, )
-        jg_index_set(member_index, i, )
+        jg_member_builder* builder = container_of(node, jg_member_builder,
+node); char* key = jg_string_copy(string_pool, ) jg_index_set(member_index, i, )
 
         member_array = (jg_member) {
             .type = member_builder->type,
@@ -166,9 +161,8 @@ void jg_member_init(jg_member_index* index, jg_member_pool pool, jg_named_node_i
     return class_index;
 }
 
-const jg_member* jg_class_get_member(const jg_class* class_, const char* id, jg_member_type type) {
-    assert(class_ != NULL);
-    assert(id != NULL);
+const jg_member* jg_class_get_member(const jg_class* class_, const char* id,
+jg_member_type type) { assert(class_ != NULL); assert(id != NULL);
 
     while(class_) {
         int member_id = jg_index_search(&(class_->member_index), id);
@@ -244,8 +238,8 @@ static const char* get_class_id_and_next(const void** item) {
     return id;
 }
 
-static jg_index build_member_index(const jg_member_builder* first_member, jg_pool* pool) {
-    assert(pool != NULL);
+static jg_index build_member_index(const jg_member_builder* first_member,
+jg_pool* pool) { assert(pool != NULL);
 
     return jg_index_build(
         first_member,
@@ -280,4 +274,3 @@ static void build_class(const void* item, int sorted_id, void* user_data) {
 }
 
 */
-

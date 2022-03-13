@@ -1,24 +1,24 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
  */
+#include "user_model.h"
+
 #include <stddef.h>
 
 #include "jgui/private/misc/assert.h"
 
-#include "user_model.h"
-
 const char* user_get_name(const test_user* user) {
-    assert(user != NULL);
-    return user->name;
+	assert(user != NULL);
+	return user->name;
 }
 
 void user_set_name(test_user* user, const char* name) {
-    assert(user != NULL);
-    user->name = name;
+	assert(user != NULL);
+	user->name = name;
 }
 
 /*C
@@ -105,7 +105,8 @@ void register_user_class(jg_context* context) {
     );
     jg_class_add_property(class_, "name", user_get_name, user_set_name);
     jg_class_add_property(class_, "team", user_get_team, user_set_team);
-    jg_class_add_method(class_, user_has_permission_id, user_has_permission_impl);
+    jg_class_add_method(class_, user_has_permission_id,
+user_has_permission_impl);
 }
 
 static jg_value admin_get_role(const void* object) {
@@ -174,4 +175,3 @@ void register_team_class(jg_context* context) {
 }
 
 */
-

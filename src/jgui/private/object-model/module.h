@@ -1,6 +1,6 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -15,9 +15,9 @@
 
 #include <stddef.h>
 
-#include <jgui/misc/utils.h>
-
 #include "jgui/private/containers/index.h"
+
+#include <jgui/misc/utils.h>
 
 struct jg_module_s;
 
@@ -45,12 +45,10 @@ void jg_module_cleanup(jg_module* module);
  *         properties in it using jg_class_add_property and
  *         jg_class_add_method.
  */
-jg_class* jg_module_add_class(
-    jg_module* module,
-    const char* name,
-    const jg_class* parent,
-    size_t size
-);
+jg_class* jg_module_add_class(jg_module* module,
+                              const char* name,
+                              const jg_class* parent,
+                              size_t size);
 
 /**
  * Retrieve a class that was previously registered in the module using
@@ -64,7 +62,7 @@ jg_class* jg_module_add_class(
 const jg_class* jg_module_get_class(const jg_module* module, const char* name);
 
 struct jg_module_s {
-    jg_index class_index;
+	jg_index class_index;
 };
 
 #endif

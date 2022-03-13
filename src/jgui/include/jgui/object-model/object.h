@@ -1,10 +1,10 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
- * 
+ *
  * TODO: document.
  *
  */
@@ -56,6 +56,8 @@ void jg_object_set(void* object, const char* property_id, jg_value value);
  * @param property_id Name of the property to set.
  * @return            The property value.
  */
-jg_value jg_object_call(const void* object, const char* method_id, jg_value* arguments);
+jg_value jg_object_call(const void* object,
+                        const char* method_id,
+                        jg_value* arguments);
 
 #endif

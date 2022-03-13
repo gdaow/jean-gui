@@ -1,6 +1,6 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- * 
+ *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -12,8 +12,8 @@
 #ifndef JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 #define JGUI_PRIVATE_OBJECT_MODEL_MEMBER_H
 
-#include <jgui/object-model/member.h>
 #include <jgui/misc/utils.h>
+#include <jgui/object-model/member.h>
 
 struct jg_member_s;
 
@@ -74,18 +74,17 @@ void jg_property_set(const jg_member* property, void* object, jg_value value);
 void jg_member_cleanup(jg_member* member);
 
 typedef struct jg_member_s {
-    enum {
-        JG_MEMBER_PROPERTY,
-        JG_MEMBER_METHOD
-    } _type;
-    union {
-        struct {
-            jg_getter _getter;
-            jg_setter _setter;
-        } _property;
-        jg_method _method;
-    } _data;
+	enum {
+		JG_MEMBER_PROPERTY,
+		JG_MEMBER_METHOD
+	} _type;
+	union {
+		struct {
+			jg_getter _getter;
+			jg_setter _setter;
+		} _property;
+		jg_method _method;
+	} _data;
 } jg_member;
 
 #endif
-
