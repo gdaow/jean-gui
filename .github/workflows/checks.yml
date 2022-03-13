@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-python@v1
 
       - name: Install dev dependencies
-        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov
+        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
 
 
       - name: Build & run unit tests

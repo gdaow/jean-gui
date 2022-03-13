@@ -16,7 +16,26 @@ test_suites = {
     }
 }
 
-add_test_setup('default', is_default: true, env: {'CMOCKA_MESSAGE_OUTPUT': 'TAP' })
+valgrind = find_program('valgrind', required: false)
+
+if valgrind.found()
+    add_test_setup(
+        'default',
+        is_default: true,
+        env: {
+            'CMOCKA_MESSAGE_OUTPUT': 'TAP'
+        },
+        exe_wrapper: ['valgrind', '--leak-check=full', '--track-origins=yes', '--error-exitcode=1']
+    )
+else
+    add_test_setup(
+        'default',
+        is_default: true,
+        env: {
+            'CMOCKA_MESSAGE_OUTPUT': 'TAP'
+        }
+    )
+endif
 
 cmocka_project = subproject('cmocka')
 cmocka_dep = cmocka_project.get_variable('cmocka_dep')
