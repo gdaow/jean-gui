@@ -13,7 +13,7 @@
 #include "jgui/private/containers/vector.h"
 #include "jgui/private/memory/alloc.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 #define test_key_size 256
 #define test_item_count 9

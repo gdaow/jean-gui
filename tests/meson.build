@@ -22,7 +22,7 @@ unit_tests = executable(
     'jg-tests',
     jg_test_src,
     dependencies: [jg_dep, cmocka_dep],
-    include_directories: ['..']
+    include_directories: ['../src', '.']
 )
 
 test('all-tests', unit_tests)
@@ -34,7 +34,7 @@ if iwyu.found()
         command: [
             iwyu,
             '-p', meson.build_root(),
-            meson.source_root() + '/modules'
+            meson.source_root() + '/src'
         ]
     )
 endif

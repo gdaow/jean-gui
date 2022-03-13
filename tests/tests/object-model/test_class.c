@@ -15,7 +15,7 @@
 #include "jgui/private/containers/vector.h"
 #include "jgui/private/object-model/member.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 static jg_value parent_getter(const void* object) {
     (void)object;

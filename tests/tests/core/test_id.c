@@ -10,7 +10,7 @@
 
 #include "jgui/private/containers/vector.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 /** jg_id_is_none should return true only for JG_ID_NONE. */
 static void test_jg_id_none(void** state) {

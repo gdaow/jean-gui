@@ -12,7 +12,7 @@
 
 #include "jgui/private/containers/vector.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 static const double test_double = 42.24;
 

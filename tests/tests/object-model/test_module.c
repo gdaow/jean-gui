@@ -10,7 +10,7 @@
 #include "jgui/private/containers/vector.h"
 #include "jgui/private/object-model/class.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 /** Classe should correctly be registered in modules. */
 static void test_add_class(void** state) {

@@ -10,7 +10,7 @@
 
 #include "jgui/private/containers/vector.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 typedef bool (*jg_check_function_t)(jg_value);
 

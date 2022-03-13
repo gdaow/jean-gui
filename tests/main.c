@@ -7,7 +7,7 @@
  */
 #include "jgui/private/containers/vector.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 void* jg_malloc_impl(size_t size, const char* file, int line) {
     return _test_malloc(size, file, line);

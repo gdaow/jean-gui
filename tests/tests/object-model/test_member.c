@@ -11,9 +11,9 @@
 
 #include "jgui/private/containers/vector.h"
 #include "jgui/private/object-model/member.h"
-#include "tests/common/fixtures/user_model.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
+#include "common/fixtures/user_model.h"
 
 static jg_value user_name_getter(const void* object) {
     return jg_string(user_get_name(object));

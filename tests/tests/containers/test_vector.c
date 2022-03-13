@@ -12,7 +12,7 @@
 
 #include "jgui/private/memory/alloc.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 #define test_item_size 54
 typedef const char item[test_item_size];

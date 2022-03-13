@@ -10,7 +10,7 @@
 
 #include "jgui/private/containers/vector.h"
 
-#include "tests/common/cmocka.h"
+#include "common/cmocka.h"
 
 /** jg_context_load should correctly load plugins. */
 static void test_add_class(void** state) {
