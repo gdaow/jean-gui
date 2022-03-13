@@ -27,3 +27,15 @@ unit_tests = executable(
 
 test('all-tests', unit_tests)
 
+iwyu = find_program('iwyu_tool', required: false)
+if iwyu.found()
+    iwyu_target = run_target(
+        'iwyu',
+        command: [
+            iwyu,
+            '-p', meson.build_root(),
+            meson.source_root() + '/modules'
+        ]
+    )
+endif
+
