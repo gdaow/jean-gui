@@ -11,22 +11,16 @@
 
 #include <jgui/core/id.h>
 
+#include <jgui/private/misc/assert.h>
+
 const jg_id JG_ID_NULL = { .namespace_ = NULL, .name = NULL };
 
 jg_id JG_ID(const char* namespace_, const char* name) {
+    assert(namespace_ != NULL && name != NULL && strlen(namespace_) > 0 && strlen(name) > 0);
     return (jg_id) { .namespace_ = namespace_, .name = name };
 }
 
 bool jg_id_is_null(jg_id id) {
     return id.namespace_ == NULL && id.name == NULL;
-}
-
-bool jg_id_is_valid(jg_id id) {
-    return jg_id_is_null(id) || (
-	id.namespace_ != NULL &&
-	strlen(id.namespace_) > 0 &&
-	id.name != NULL &&
-	strlen(id.name) > 0
-    );
 }
 
