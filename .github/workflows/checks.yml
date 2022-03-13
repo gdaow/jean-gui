@@ -10,7 +10,9 @@ jobs:
       - name: Install dev dependencies
         run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev
 
-      - uses: BSFishy/meson-build@v1.0.3
+
+      - name: Build & run unit tests
+        uses: BSFishy/meson-build@v1.0.3
         with:
           action: test
           directory: .build
@@ -19,4 +21,10 @@ jobs:
           meson-version: 0.61.2
           ninja-version: 1.9.0.post1
           gcovr-version: 4.2
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: .build/meson-logs/testlog.junit.xml
 
