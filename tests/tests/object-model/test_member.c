@@ -23,6 +23,7 @@ static void user_name_setter(void* object, jg_value value) {
     user_set_name(object, jg_to_string(value));
 }
 
+/** jg_property_get should retrieve the object's property value */
 static void test_property_get(void** state) {
     (void)state;
     jg_member member;
@@ -41,6 +42,7 @@ static void test_property_get(void** state) {
     expect_assert_failure(jg_method_call(&member, &arguments));
 }
 
+/** jg_property_set should set the object's property value */
 static void test_property_set(void** state) {
     (void)state;
     jg_member member;
@@ -63,6 +65,7 @@ static jg_value method_fixture(jg_arguments* arguments) {
     return jg_string("Krascuky");
 }
 
+/** jg_method_call should call the wrapped function pointer */
 static void test_method_call(void** state) {
     (void)state;
     jg_member member;

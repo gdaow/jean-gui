@@ -13,7 +13,7 @@
 #include "common/cmocka.h"
 
 /** jg_context_load should correctly load plugins. */
-static void test_add_class(void** state) {
+static void test_context_add_class(void** state) {
     jg_context* context = *state;
     const jg_class* test_class = jg_context_get_class(context, JG_ID("test_namespace", "test_class"));
     assert_non_null(test_class);
@@ -25,7 +25,8 @@ static void error_handler(jg_error_code error_code, const char* message) {
     function_called();
 }
 
-static void test_error_handler(void **state) {
+/** jg_set_error_handler should correctly set custom error handler. */
+static void test_context_error_handler(void **state) {
     jg_context* context = *state;
 
     expect_function_call(error_handler);
@@ -48,7 +49,7 @@ static int teardown(void** state) {
 }
 
 jg_begin_tests(NULL, NULL)
-    cmocka_unit_test_setup_teardown(test_add_class, setup, teardown),
-    cmocka_unit_test_setup_teardown(test_error_handler, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_context_add_class, setup, teardown),
+    cmocka_unit_test_setup_teardown(test_context_error_handler, setup, teardown),
 jg_end_tests()
 

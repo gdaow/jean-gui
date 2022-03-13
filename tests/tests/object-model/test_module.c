@@ -13,7 +13,7 @@
 #include "common/cmocka.h"
 
 /** Classe should correctly be registered in modules. */
-static void test_add_class(void** state) {
+static void test_module_add_class(void** state) {
     (void)state;
     jg_module module;
     jg_module_init(&module);
@@ -32,6 +32,6 @@ static void test_add_class(void** state) {
 }
 
 jg_begin_tests(NULL, NULL)
-    cmocka_unit_test(test_add_class),
+    cmocka_unit_test(test_module_add_class),
 jg_end_tests()
 

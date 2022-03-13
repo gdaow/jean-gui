@@ -36,7 +36,7 @@ static void check_is_functions(jg_value value, jg_check_function_t expected_true
 }
 
 /** jg_bool, jg_is_bool and jg_to_bool should correctly handle boolean values. */
-static void test_jg_value_bool(void** state) {
+static void test_value_bool(void** state) {
     (void)state;
     jg_value false_ = jg_bool(false);
     jg_value true_ = jg_bool(true);
@@ -52,7 +52,7 @@ static void test_jg_value_bool(void** state) {
 }
 
 /** jg_int, jg_is_int and jg_to_int should correctly handle boolean values. */
-static void test_jg_value_int(void** state) {
+static void test_value_int(void** state) {
     (void)state;
 
     const int test_int = 42; // If bugs happen with edge cases, put them in regression tests.
@@ -64,7 +64,7 @@ static void test_jg_value_int(void** state) {
 }
 
 /** jg_double, jg_is_double and jg_to_double should correctly handle boolean values. */
-static void test_jg_value_double(void** state) {
+static void test_value_double(void** state) {
     (void)state;
     const double test_double = .42; // If bugs happen with edge cases, put them in regression tests.
     jg_value value = jg_double(test_double);
@@ -75,7 +75,7 @@ static void test_jg_value_double(void** state) {
 }
 
 /** jg_string, jg_is_string and jg_to_string should correctly handle boolean values. */
-static void test_jg_value_string(void** state) {
+static void test_value_string(void** state) {
     (void)state;
     // If bugs happen with edge cases, put them in regression tests.
     const char* test_string = "Jean-Mi Mo";
@@ -87,7 +87,7 @@ static void test_jg_value_string(void** state) {
 }
 
 /** jg_raw, jg_is_raw and jg_to_raw should correctly handle boolean values. */
-static void test_jg_value_raw(void** state) {
+static void test_value_raw(void** state) {
     (void)state;
     void* test_raw = (void*)(0xDEADBEEF); // NOLINT RAW BEEF XD XD XD
     jg_value value = jg_raw(test_raw);
@@ -98,7 +98,7 @@ static void test_jg_value_raw(void** state) {
 }
 
 /** jg_object, jg_is_object and jg_to_object should correctly handle boolean values. */
-static void test_jg_value_object(void** state) {
+static void test_value_object(void** state) {
     (void)state;
     /*
      * TODO
@@ -118,11 +118,11 @@ static void test_jg_value_object(void** state) {
 }
 
 jg_begin_tests(NULL, NULL)
-    cmocka_unit_test(test_jg_value_bool),
-    cmocka_unit_test(test_jg_value_int),
-    cmocka_unit_test(test_jg_value_double),
-    cmocka_unit_test(test_jg_value_string),
-    cmocka_unit_test(test_jg_value_raw),
-    cmocka_unit_test(test_jg_value_object)
+    cmocka_unit_test(test_value_bool),
+    cmocka_unit_test(test_value_int),
+    cmocka_unit_test(test_value_double),
+    cmocka_unit_test(test_value_string),
+    cmocka_unit_test(test_value_raw),
+    cmocka_unit_test(test_value_object)
 jg_end_tests()
 
