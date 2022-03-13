@@ -13,7 +13,7 @@
 
 struct test_team_s;
 
-jg_forward_declare(test_team)
+jg_forward_declare(test_team);
 
 typedef struct test_user_s {
     const char* name;

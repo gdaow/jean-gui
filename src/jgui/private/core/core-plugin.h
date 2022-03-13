@@ -13,7 +13,7 @@
 
 #include <jgui/misc/utils.h>
 
-jg_forward_declare(jg_context)
+jg_forward_declare(jg_context);
 
 /**
  * Base functionalities of Jean GUI.

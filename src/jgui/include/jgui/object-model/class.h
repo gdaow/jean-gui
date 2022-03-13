@@ -18,8 +18,8 @@
 #include <jgui/misc/utils.h>
 #include <jgui/object-model/member.h>
 
-jg_forward_declare(jg_class)
-jg_forward_declare(jg_arguments)
+jg_forward_declare(jg_class);
+jg_forward_declare(jg_arguments);
 
 /**
  * Add a method to this class.

@@ -16,8 +16,8 @@
 
 #include <jgui/object-model/value.h>
 
-jg_forward_declare(jg_value)
-jg_forward_declare(jg_arguments)
+jg_forward_declare(jg_value);
+jg_forward_declare(jg_arguments);
 
 /**
  * Pointer to a dynamic method that can be registered in a jg_class.

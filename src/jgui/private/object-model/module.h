@@ -21,8 +21,8 @@
 
 struct jg_module_s;
 
-jg_forward_declare(jg_class)
-jg_forward_declare(jg_module)
+jg_forward_declare(jg_class);
+jg_forward_declare(jg_module);
 
 /**
  * Initialize a module.

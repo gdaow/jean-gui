@@ -18,7 +18,7 @@
 
 struct jg_vector_s;
 
-jg_forward_declare(jg_vector)
+jg_forward_declare(jg_vector);
 
 /**
  * Initialize this vector.

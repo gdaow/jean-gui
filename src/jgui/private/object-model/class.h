@@ -19,8 +19,8 @@
 
 struct jg_class_s;
 
-forward_declare(jg_class)
-forward_declare(jg_member)
+forward_declare(jg_class);
+forward_declare(jg_member);
 
 /**
  * Initialize a class.

@@ -20,8 +20,8 @@
 #include <jgui/core/id.h>
 #include <jgui/misc/utils.h>
 
-jg_forward_declare(jg_class)
-jg_forward_declare(jg_module)
+jg_forward_declare(jg_class);
+jg_forward_declare(jg_module);
 
 typedef struct jg_context_s jg_context;
 

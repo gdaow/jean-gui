@@ -17,7 +17,7 @@
 
 struct jg_member_s;
 
-jg_forward_declare(jg_member)
+jg_forward_declare(jg_member);
 
 /**
  * Initialize a member as a method wrapping the given function pointer.

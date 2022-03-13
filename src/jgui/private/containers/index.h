@@ -22,7 +22,7 @@
 
 struct jg_index_s;
 
-jg_forward_declare(jg_index)
+jg_forward_declare(jg_index);
 
 /**
  * Initialize this index.

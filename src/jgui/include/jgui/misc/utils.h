@@ -13,7 +13,7 @@
 #define JGUI_PUBLIC_MISC_UTILS_H
 
 #define jg_forward_declare(type)\
-    typedef struct type##_s type;
+    typedef struct type##_s type
 
 #define JG_WEAK __attribute__((weak))
 #endif

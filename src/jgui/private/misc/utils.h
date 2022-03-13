@@ -21,7 +21,7 @@
 }
 
 #define forward_declare(type)\
-    typedef struct type##_s type;
+    typedef struct type##_s type
 
 #endif
 
