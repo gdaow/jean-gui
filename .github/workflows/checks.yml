@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-python@v1
 
       - name: Install dev dependencies
-        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev
+        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov
 
 
       - name: Build & run unit tests
@@ -27,4 +27,18 @@ jobs:
         if: always()
         with:
           files: .build/meson-logs/testlog.junit.xml
+
+      - name: Generate Coverage Info
+        if: always()
+        run: |
+          lcov -c -i -d .build/src -o zero_coverage.info
+          lcov -c -d .build/src -o test_coverage.info
+          lcov -a zero_coverage.info -a test_coverage.info -o coverage.info
+
+      - name: Publish Coverage
+        if: always()
+        uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: coverage.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
