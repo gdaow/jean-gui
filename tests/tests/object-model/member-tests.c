@@ -10,7 +10,6 @@
 #include <stddef.h>
 
 #include "jgui/object-model/arguments.h"
-#include "jgui/object-model/member.h"
 #include "jgui/object-model/value.h"
 
 #include "common/cmocka.h"
