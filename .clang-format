@@ -1,7 +1,74 @@
 ---
-Language: Cpp
+AlignEscapedNewlines: Left
+AlignOperands: AlignAfterOperator
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakBeforeMultilineStrings: true
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Attach
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit: 80
+EmptyLineBeforeAccessModifier: Always
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '"jgui/private/.*"'
+    Priority:        4
+  - Regex:           '"jgui/.*"'
+    Priority:        3
+  - Regex:           '<(yaml/|cmocka.h)>'
+    Priority:        2
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        1
+  - Regex:           '.*'
+    Priority:        5
+IncludeIsMainRegex: "(-tests)?$"
+IndentCaseBlocks: true
+IndentCaseLabels: true
+IndentExternBlock: Indent
+IndentPPDirectives: AfterHash
+IndentWrappedFunctionNames: true
+# InsertBraces: true
 IndentWidth: 4
+KeepEmptyLinesAtTheStartOfBlocks: false
+MacroBlockBegin: "^jg_begin_tests"
+MacroBlockEnd: "^jg_end_tests"
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: None
+ReferenceAlignment: Left
+ReflowComments: true
+Language: Cpp
 PointerAlignment: Left
-CommentPragmas:  '^@.+'
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 1
+SpacesInAngles: Never
+SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+UseCRLF: false
+UseTab: ForIndentation
+TabWidth: 4
 ---
 
