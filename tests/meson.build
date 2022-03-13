@@ -32,7 +32,7 @@ else
         'default',
         is_default: true,
         env: {
-            'CMOCKA_MESSAGE_OUTPUT': 'TAP'
+            'CMOCKA_MESSAGE_OUTPUT' : 'TAP'
         }
     )
 endif
@@ -58,17 +58,16 @@ foreach suite_name, suite_config : test_suites
     endforeach
 endforeach
 
-iwyu = find_program('iwyu_tool', required: false)
-if iwyu.found()
-    iwyu_target = run_target(
-        'iwyu',
-        command: [
-            iwyu,
-            '-p', meson.build_root(),
-            meson.source_root() + '/src',
-            meson.source_root() + '/tests',
-            meson.source_root() + '/tools'
-        ]
-    )
-endif
+iwyu_target = run_target(
+    'iwyu',
+    command: [
+        'python3',
+        meson.source_root() + '/tools/dev-tools/iwyu/iwyu_tool.py',
+        '-p', meson.build_root(),
+        '-o', 'clang',
+        meson.source_root() + '/src',
+        meson.source_root() + '/tests',
+        '--', '-Xiwyu', '--mapping_file=' + meson.source_root() + '/.iwyu-mappings.imp'
+    ]
+)
 

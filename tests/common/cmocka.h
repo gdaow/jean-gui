@@ -14,9 +14,7 @@
 #include <setjmp.h>
 #include <stddef.h>
 
-// IWYU pragma: begin_exports
 #include <cmocka.h>
-// IWYU pragma: end_exports
 
 #include "jgui/private/misc/assert.h"
 

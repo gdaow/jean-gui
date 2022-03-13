@@ -2,14 +2,15 @@ name: checks
 on: [push]
 jobs:
   unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
 
       - name: Install dev dependencies
-        run: sudo apt update && sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
-
+        run: |
+          sudo apt update
+          sudo apt-get install -y wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
 
       - name: Build & run unit tests
         uses: BSFishy/meson-build@v1.0.3
@@ -41,4 +42,26 @@ jobs:
         with:
           path-to-lcov: coverage.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  include-what-you-use:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+
+      - name: Install dev dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y iwyu libclang-9-dev
+          iwyu --version
+
+      - name: Run Include What You Use
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+          directory: .build
+          options: iwyu
+          meson-version: 0.61.2
+          ninja-version: 1.9.0.post1
+          gcovr-version: 4.2
 

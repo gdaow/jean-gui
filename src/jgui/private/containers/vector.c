@@ -8,6 +8,7 @@
  */
 #include "jgui/private/containers/vector.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "jgui/private/memory/alloc.h"
