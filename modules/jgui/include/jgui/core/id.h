@@ -45,16 +45,5 @@ jg_id JG_ID(const char* namespace_, const char* name);
  */
 bool jg_id_is_null(jg_id id);
 
-/*
- * Check if an identifier is correctly constructed.
- * That is, either it's the NULL identifier, either both namespace and name are
- * defined and not empty.
- *
- * @param id The identifier to check.
- *
- * @return True if the given identifier correctly constructed, false otherwise.
- */
-bool jg_id_is_valid(jg_id id);
-
 #endif
 
