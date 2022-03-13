@@ -34,7 +34,9 @@ if iwyu.found()
         command: [
             iwyu,
             '-p', meson.build_root(),
-            meson.source_root() + '/src'
+            meson.source_root() + '/src',
+            meson.source_root() + '/tests',
+            meson.source_root() + '/tools'
         ]
     )
 endif
