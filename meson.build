@@ -3,11 +3,8 @@ project('jg', 'c', 'cpp', default_options: [
     'cpp_std=c++2a'
 ])
 
-subdir('modules/jgui')
-subdir('modules/jgui-wx')
-subdir('modules/samples')
-subdir('modules/tests')
-subdir('tools/wx-bind')
+subdir('src/jgui')
+subdir('tests')
 
 clangtidy = find_program('clang-tidy', required: false)
 if clangtidy.found()

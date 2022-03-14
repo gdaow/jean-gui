@@ -2043,7 +2043,7 @@ void expect_assert_failure(function fn_call);
     const int result = setjmp(global_expect_assert_env); \
     global_expecting_assert = 1; \
     if (result) { \
-      print_message("Expected assertion %s occurred\n", \
+      print_message("# Expected assertion %s occurred\n", \
                     global_last_failed_assert); \
       global_expecting_assert = 0; \
     } else { \
