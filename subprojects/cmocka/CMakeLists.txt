@@ -56,11 +56,11 @@ add_subdirectory(src)
 add_subdirectory(doc)
 
 include(AddCMockaTest)
-if (UNIT_TESTING)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND UNIT_TESTING)
     add_subdirectory(tests)
-endif (UNIT_TESTING)
+endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND UNIT_TESTING)
 
-if (WITH_EXAMPLES)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND WITH_EXAMPLES)
     add_subdirectory(example)
 endif ()
 

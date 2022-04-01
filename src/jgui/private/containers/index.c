@@ -106,9 +106,7 @@ void* jg_index_get(const jg_index* index, const char* key) {
 				return get_item_at(index, i);
 			}
 		}
-	}
 
-	if (result == -1) {
 		return NULL;
 	}
 

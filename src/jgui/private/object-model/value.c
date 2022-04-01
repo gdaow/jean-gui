@@ -10,7 +10,8 @@
 
 #include "jgui/private/misc/assert.h"
 
-typedef enum {
+typedef enum
+{
 	JG_NONE,
 	JG_BOOLEAN,
 	JG_INTEGER,

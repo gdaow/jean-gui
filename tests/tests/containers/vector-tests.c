@@ -1,6 +1,5 @@
 /**
  * Copyright © 2022 Corentin Séchet <corentin@ki-dour.org>
- *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING file for more details.
@@ -9,6 +8,7 @@
 #include "jgui/private/containers/vector.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "jgui/private/memory/alloc.h"
 
@@ -31,12 +31,14 @@ static const size_t item_count = sizeof(items) / sizeof(item);
 static void test_vector_push(void** state) {
 	jg_vector* vector = *state;
 
-	for (size_t i = 0; i < item_count; ++i) {
-		jg_vector_push(vector, items[i]);
-		assert_int_equal(jg_vector_size(vector), i + 1);
-		assert_string_equal(jg_vector_back(vector), items[i]);
-	}
-	jg_vector_cleanup(vector);
+    {
+        for (size_t i = 0; i < item_count; ++i) {
+            jg_vector_push(vector, items[i]);
+            assert_int_equal(jg_vector_size(vector), i + 1);
+            assert_string_equal(jg_vector_back(vector), items[i]);
+        }
+        jg_vector_cleanup(vector);
+    }
 }
 
 /* Batch of items should be added to the vector. */

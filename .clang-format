@@ -43,7 +43,7 @@ MacroBlockBegin: "^jg_begin_tests"
 MacroBlockEnd: "^jg_end_tests"
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
-ReferenceAlignment: Left
+# ReferenceAlignment: Left
 ReflowComments: true
 Language: Cpp
 PointerAlignment: Left
@@ -61,7 +61,7 @@ SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: Never
+SpacesInAngles: false
 SpacesInCStyleCastParentheses: false
 SpacesInConditionalStatement: false
 SpacesInContainerLiterals: false
