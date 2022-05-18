@@ -1,0 +1,16 @@
+ * It'll be complicated to create objects around without having a context available, but I'm not fond
+   of creating static variables, for sake of testability and reentrance. We may should store the
+   context in classes.
+ * Setup CI on github.
+ * Add a magic number and an assert to raise early on UlgObjects pointer errors in debug.
+ * Expose UlgProperty publicly : Maybe not. Actually, it may be a good idea to not even Expose
+ * jg_object_get and jg_object_set publicly : all data modification may be done 'the native way',
+   and data binding updates trigerred by calling event handlers. Only the binding system could access
+   property getter / setters.
+ * Handle OOM
+ * Move jg_pool to another file than context.h
+ * Use a struct for class ids to ease declaration.
+ * jg_arguments could be renamed to jg_call_context actually, and we could provide
+   methods to call error on it. Maybe push the function result in it too.
+ * Use dynamic allocation policy : pass it to the context.
+

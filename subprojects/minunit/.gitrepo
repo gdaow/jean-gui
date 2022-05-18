@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/siu/minunit
+	branch = master
+	commit = b15ad0ae28f1a7a43881ea17defb0a4367d9582d
+	parent = 741f8b1c6dae98e8c5f8ba48a85ccff3a7b8be92
+	method = merge
+	cmdver = 0.4.0

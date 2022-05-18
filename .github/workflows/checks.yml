@@ -1,0 +1,84 @@
+name: Checks
+on: [push]
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y python3 wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
+
+      - name: Build and Run Unit tests
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: test
+          directory: .build
+          setup-options: -Db_coverage=true
+          options: --verbose
+          meson-version: 0.61.2
+
+      - name: Publish Unit Tests Result
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: .build/meson-logs/testlog.junit.xml
+
+      - name: Generate Coverage Info
+        if: always()
+        run: |
+          lcov -c -i -d .build/src -o zero_coverage.info
+          lcov -c -d .build/src -o test_coverage.info
+          lcov -a zero_coverage.info -a test_coverage.info -o coverage.info
+
+      - name: Publish Coverage
+        if: always()
+        uses: coverallsapp/github-action@master
+        with:
+          path-to-lcov: coverage.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  include-what-you-use:
+    name: Include What You Use
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Up Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y python3 iwyu libclang-9-dev
+
+      - name: Run Include What You Use
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+          directory: .build
+          options: iwyu
+          meson-version: 0.61.2
+
+  clang-format:
+    name: Clang Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Up Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y python3 clang-format
+
+      - name: Run Include clang-format
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+          directory: .build
+          options: clang-format-check
+          meson-version: 0.61.2
+

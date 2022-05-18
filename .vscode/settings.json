@@ -1,0 +1,45 @@
+{
+    "mesonbuild.buildFolder": ".build",
+    "clang.cflags": [
+        "-I${workspaceRoot}/subprojects/wxc/include",
+        "-I${workspaceRoot}/.build/subprojects/check/__CMake_build/src",
+        "-I../subprojects/libyaml/include",
+        "-I${workspaceRoot}/include",
+        "-Wno-pragma-once-outside-header"
+    ],
+    "files.associations": {
+        "admin.h": "c",
+        "ranges": "c",
+        "object.h": "c",
+        "hash_map": "c",
+        "chrono": "c",
+        "algorithm": "c",
+        "optional": "c",
+        "istream": "c",
+        "ostream": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c"
+    },
+    "cmake.configureOnOpen": true,
+    "clang-tidy.buildPath": ".build",
+    "clang-tidy.checks": [
+        
+        "bugprone-*",
+        "cert*",
+        "clang-*",
+        "llvm-*",
+        "modernize-*",
+        "performance-*",
+        "readability-*",
+        "misc-*"
+    ],
+    "python.pythonPath": "tools/wx-bind/.env/bin/python3.9",
+    "lldb.displayFormat": "auto",
+    "lldb.showDisassembly": "auto",
+    "lldb.dereferencePointers": true
+}
