@@ -16,7 +16,7 @@
 #include "jgui/static-config.h"
 
 
-void shut_up_clang_tidy() __attribute__((analyzer_noreturn)) {}
+static void shut_up_clang_tidy() {}
 
 #if JG_ENABLE_ASSERTS
 #	define assert(TEST) {(jg_assert_impl(TEST, #    TEST, __FILE__, __LINE__)); if (!(TEST)) shut_up_clang_tidy(); }
