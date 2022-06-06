@@ -6,7 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/tools/dev-tools/cmake")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(CTest)
-include(checks)
+include(common)
 
 enable_testing()
 

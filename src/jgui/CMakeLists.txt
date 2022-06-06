@@ -23,5 +23,5 @@ target_include_directories(
 	PRIVATE ..
 )
 
-check(jgui)
+jgui_target(jgui)
 
