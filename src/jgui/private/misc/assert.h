@@ -16,10 +16,21 @@
 #include "jgui/static-config.h"
 
 
-void shut_up_clang_tidy() __attribute__((analyzer_noreturn)) {}
+#if __clang__
+#endif
 
 #if JG_ENABLE_ASSERTS
-#	define assert(TEST) {(jg_assert_impl(TEST, #    TEST, __FILE__, __LINE__)); if (!(TEST)) shut_up_clang_tidy(); }
+#	if __clang__
+#		pragma clang diagnostic push
+#		pragma clang diagnostic ignored "-Wunused-function"
+
+			static void shut_up_clang_tidy() __attribute__((analyzer_noreturn)) {}
+
+#		pragma clang diagnostic pop
+#		define assert(TEST) {(jg_assert_impl(TEST, #    TEST, __FILE__, __LINE__)); if (!(TEST)) shut_up_clang_tidy(); }
+#else
+#		define assert(TEST) {(jg_assert_impl(TEST, #    TEST, __FILE__, __LINE__)); }
+#endif
 
 void jg_assert_impl(bool test_result,
                     const char* test_expression,
