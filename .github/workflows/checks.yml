@@ -13,20 +13,11 @@ jobs:
           sudo apt update
           sudo apt-get install -y python3 wx3.0-headers libwxgtk3.0-gtk3-dev libclang1 libclang-12-dev lcov valgrind
 
-      - name: Build and Run Unit tests
-        uses: BSFishy/meson-build@v1.0.3
-        with:
-          action: test
-          directory: .build
-          setup-options: -Db_coverage=true
-          options: --verbose
-          meson-version: 0.61.2
-
-      - name: Publish Unit Tests Result
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: .build/meson-logs/testlog.junit.xml
+      - name: Run Tests
+        run: |
+          cmake -B .build
+          make -C .build
+          ctest --test-dir .build -T memcheck
 
       - name: Generate Coverage Info
         if: always()
@@ -52,15 +43,12 @@ jobs:
       - name: Set Up Dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y python3 iwyu libclang-9-dev
+          sudo apt-get install -y python3 iwyu libclang-9-dev cmake
 
       - name: Run Include What You Use
-        uses: BSFishy/meson-build@v1.0.3
-        with:
-          action: build
-          directory: .build
-          options: iwyu
-          meson-version: 0.61.2
+        run: |
+          cmake -B .build
+          make -C .build iwyu
 
   clang-format:
     name: Clang Format
@@ -72,13 +60,44 @@ jobs:
       - name: Set Up Dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y python3 clang-format
+          sudo apt-get install -y python3 cmake clang-format
 
-      - name: Run Include clang-format
-        uses: BSFishy/meson-build@v1.0.3
-        with:
-          action: build
-          directory: .build
-          options: clang-format-check
-          meson-version: 0.61.2
+      - name: Run clang-format
+        run: |
+          cmake -B .build
+          make -C .build clang-format
+ 
+  clang-tidy:
+    name: Clang Tidy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Up Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y python3 cmake clang-tidy
+
+      - name: Run clang-format
+        run: |
+          cmake -B .build
+          make -C .build clang-tidy
+
+  cppcheck:
+    name: CPPCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set Up Dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y python3 cmake cppcheck
+
+      - name: Run cppcheck
+        run: |
+          cmake -B .build
+          make -C .build cppcheck
 
