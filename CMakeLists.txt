@@ -12,6 +12,6 @@ enable_testing()
 
 add_subdirectory(src/jgui)
 
-add_subdirectory(subprojects/cmocka)
+add_subdirectory(third-party)
 
 add_subdirectory(tests)
