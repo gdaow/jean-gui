@@ -18,15 +18,14 @@
 
 #include "jgui/private/misc/assert.h"
 
-#define jg_begin_tests(setup, teardown)      \
+#define jg_suite(setup, teardown, ...)      \
 	int main(void) {                         \
-		int (*_setup)(void**) = setup;       \
-		int (*_teardown)(void**) = teardown; \
-		const struct CMUnitTest tests[] = {
-#define jg_end_tests()                                       \
-	}                                                        \
-	;                                                        \
-	return cmocka_run_group_tests(tests, _setup, _teardown); \
+		const struct CMUnitTest tests[] = { __VA_ARGS__}; \
+		return _cmocka_run_group_tests("Tests", tests, sizeof(tests) / sizeof((tests)[0]), setup, teardown); \
 	}
+
+#define jg_test_st(test, setup, teardown) cmocka_unit_test_setup_teardown(test, setup, teardown)
+
+#define jg_test(test) cmocka_unit_test(test)
 
 #endif

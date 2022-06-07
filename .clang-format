@@ -39,8 +39,6 @@ IndentWrappedFunctionNames: true
 # InsertBraces: true
 IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: false
-MacroBlockBegin: "^jg_begin_tests"
-MacroBlockEnd: "^jg_end_tests"
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 # ReferenceAlignment: Left

@@ -95,10 +95,8 @@ static int teardown(void** state) {
 	return 0;
 }
 
-jg_begin_tests(NULL, NULL)
-	cmocka_unit_test_setup_teardown(test_vector_push, setup, teardown),
-	    cmocka_unit_test_setup_teardown(test_vector_append, setup, teardown),
-	    cmocka_unit_test_setup_teardown(
-	        test_vector_front_at_back, setup, teardown),
-	    cmocka_unit_test_setup_teardown(test_vector_size, setup, teardown),
-jg_end_tests()
+jg_suite(NULL, NULL,
+	jg_test_st(test_vector_push, setup, teardown),
+	jg_test_st(test_vector_append, setup, teardown),
+    jg_test_st(test_vector_front_at_back, setup, teardown),
+	jg_test_st(test_vector_size, setup, teardown))
