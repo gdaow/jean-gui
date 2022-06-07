@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://git.cryptomilk.org/projects/cmocka.git
+	branch = master
+	commit = 6066c5ccde99304e4850caa96137869a6bc57b72
+	parent = d28fb5276a4dce085ca1cd913ca095e94694e9b1
+	method = merge
+	cmdver = 0.4.3
